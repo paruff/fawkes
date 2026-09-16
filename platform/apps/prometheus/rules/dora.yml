@@ -18,192 +18,86 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-# DORA Metrics Recording Rules
-# Computed natively in Prometheus — no DevLake ETL required
+# DORA Metrics Recording Rules — rewritten 2026-09-16 against REAL, live-verified
+# metric names on fawkes-dev-aks (the previous version's names were guessed and
+# never matched anything real - see git history). Targets the exact 5 metric
+# names platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml's
+# "DORA 2026 — Five Key Metrics" panel queries (that dashboard is the ArgoCD-
+# managed one; two other "DORA dashboard" files elsewhere in this repo
+# (platform/apps/prometheus/dora-metrics-dashboard.yaml,
+# platform/apps/grafana/dashboards/dora-metrics-dashboard.json) are NOT wired
+# into any ArgoCD Application and use yet another incompatible naming scheme -
+# not reconciled here, flagged as a separate cleanup).
 #
-# 2026-09-16: this file itself was never deployed by anything - the
-# prometheus-rules-dora.yaml Application referenced below was never
-# created (confirmed: file doesn't exist; zero dora_* metrics live on
-# mac-mini-k3s). Actual deploy target is now
-# platform/apps/prometheus/prometheus-application.yaml's
-# additionalPrometheusRulesMap.dora-metrics (same rules, kept in sync
-# by hand - this file is the readable reference copy, not the live source).
+# Deploy target: platform/apps/prometheus/prometheus-application.yaml's
+# additionalPrometheusRulesMap.dora-metrics (kept in sync by hand - this file
+# is the readable reference copy, not the live source).
 #
-# Also still needed before any of this produces real data: ArgoCD has no
-# metrics Service/ServiceMonitor on this cluster, and Tekton isn't deployed
-# on mac-mini-k3s at all - see the prerequisite tracking issue.
+# Real source metrics confirmed live on fawkes-dev-aks 2026-09-16:
+# - argocd_app_sync_total{name,namespace,project,dest_server,dry_run,phase}
+#   (phase="Succeeded"|"Failed") - argocd-application-controller-metrics:8082
+# - tekton_pipelines_controller_pipelinerun_duration_seconds_bucket
+#   {namespace,pipeline,status} - tekton-pipelines-controller:9090
 #
-# Required OTLP Events (emitted by Tekton, ArgoCD, Alertmanager):
-# - tekton_pipelinerun_start{commit_sha, pipeline, namespace}
-# - tekton_pipelinerun_finished{commit_sha, pipeline, status}
-# - argocd_application_sync_started{app, commit_sha, namespace}
-# - argocd_application_sync_succeeded{app, commit_sha, namespace}
-# - argocd_application_sync_failed{app, commit_sha, namespace}
-# - argocd_application_rollback{app, commit_sha, namespace}
-# - alertmanager_alert_firing{incident_id, alertname, severity}
-# - alertmanager_alert_resolved{incident_id, alertname}
-# - service_up{service, namespace, job}
-# - service_down{service, namespace, job}
+# Two of five keys (FDRT/MTTR and Rework Rate) don't have a clean source
+# metric yet - see their rules below for what's actually being computed and
+# why it's a proxy, not the textbook definition. Real MTTR needs Alertmanager
+# wiring (tracked in #2117); not fabricating a better number than the data
+# supports.
 
 groups:
 - name: dora-metrics
   interval: 30s
   rules:
-  # --------------------------------------------------------------------------
-  # Metric names aligned with Grafana DORA dashboard queries:
-  #   dora_deployments_total, dora_lead_time_seconds,
-  #   dora_deployment_failures_total, dora_mttr_seconds
-  # --------------------------------------------------------------------------
+  # Deployment Frequency: successful ArgoCD syncs per day, 30d window.
+  # Panel: platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml
+  - record: dora:deployment_frequency:rate30d
+    expr: |
+      sum(increase(argocd_app_sync_total{phase="Succeeded"}[30d])) / 30
 
-  # Deployment Frequency: count of successful ArgoCD syncs per app/env
-  # Dashboard queries: sum(increase(dora_deployments_total{...}[7d]))
-  - expr: |
-      sum by (app, namespace) (
-        increase(argocd_application_sync_succeeded_total[1d])
-      )
-    record: dora_deployments_total
-    labels:
-      metric_type: "dora"
-      dora_key: "deployment_frequency"
-
-  # Deployment Failure Count: failed syncs (used for Change Failure Rate)
-  # Dashboard queries: sum(dora_deployment_failures_total{...}) / sum(dora_deployments_total{...}) * 100
-  - expr: |
-      sum by (app, namespace) (
-        increase(argocd_application_sync_failed_total[1d])
-      )
-    record: dora_deployment_failures_total
-    labels:
-      metric_type: "dora"
-      dora_key: "change_failure_rate"
-
-  # Lead Time for Changes: commit → production sync (seconds, as histogram)
-  # Dashboard queries: avg(dora_lead_time_seconds{...}) / 3600
-  # Uses timestamp difference between Tekton PipelineRun start and ArgoCD sync success
-  - expr: |
+  # Lead Time for Changes: median Tekton PipelineRun duration, 30d window.
+  # Proxy: pipeline-execution time (commit-received-by-CI to build/deploy-done),
+  # not full idea-to-production lead time - no commit-timestamp correlation
+  # exists yet to measure that more strictly.
+  - record: dora:lead_time_hours:p50_30d
+    expr: |
       histogram_quantile(0.5,
-        sum by (le, app, namespace) (
-          increase(
-            (
-              argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
-              -
-              tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
-            ) / 3600
-          )[24h]
-        )
-      ) * 3600
-    record: dora_lead_time_seconds
-    labels:
-      metric_type: "dora"
-      dora_key: "lead_time_for_changes"
+        sum(rate(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}[30d])) by (le)
+      ) / 3600
 
-  # Mean Time to Recovery: alert firing → resolved (seconds)
-  # Dashboard queries: avg(dora_mttr_seconds{...}) / 3600
-  - expr: |
-      histogram_quantile(0.5,
-        sum by (le, app, namespace) (
-          increase(
-            (
-              alertmanager_alert_resolved_timestamp_seconds
-              -
-              alertmanager_alert_firing_timestamp_seconds
-            ) / 3600
-          )[24h]
-        )
-      ) * 3600
-    record: dora_mttr_seconds
-    labels:
-      metric_type: "dora"
-      dora_key: "mttr"
+  # Change Failure Rate: failed syncs / total syncs, 30d window.
+  - record: dora:change_failure_rate:ratio30d
+    expr: |
+      sum(increase(argocd_app_sync_total{phase="Failed"}[30d]))
+      /
+      sum(increase(argocd_app_sync_total[30d]))
 
-  # --------------------------------------------------------------------------
-  # Additional recording rules for detailed analysis (used in sub-panels)
-  # --------------------------------------------------------------------------
+  # Failed Deployment Recovery Time (MTTR): PROXY, not the textbook
+  # incident-to-resolution metric - that needs Alertmanager firing/resolved
+  # timestamps, which aren't wired yet (#2117). This instead uses the
+  # cumulative sync duration recorded against apps that have had at least
+  # one Failed sync, as a rough "how long was spent on the failing app"
+  # signal. Revisit once Alertmanager is wired rather than trusting this
+  # as real MTTR.
+  - record: dora:fdrt_hours:p50_30d
+    expr: |
+      (
+        sum(argocd_app_sync_duration_seconds_total and on(name) argocd_app_sync_total{phase="Failed"})
+        or vector(0)
+      ) / 3600
 
-  # Deployment Frequency P50 (ratio over 24h, for trend charts)
-  - expr: |
-      sum by (app, namespace) (
-        rate(argocd_application_sync_succeeded_total[24h])
-      )
-    record: dora:deployment_frequency:ratio_1d
-    labels:
-      metric_type: "dora"
-      dora_key: "deployment_frequency"
-
-  # Lead Time P90
-  - expr: |
-      histogram_quantile(0.9,
-        sum by (le, app, namespace) (
-          increase(
-            (
-              argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
-              -
-              tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
-            ) / 3600
-          )[24h]
-        )
-      ) * 3600
-    record: dora:lead_time_for_changes:p90_seconds
-    labels:
-      metric_type: "dora"
-      dora_key: "lead_time_for_changes"
-
-  # MTTR P90
-  - expr: |
-      histogram_quantile(0.9,
-        sum by (le, app, namespace) (
-          increase(
-            (
-              alertmanager_alert_resolved_timestamp_seconds
-              -
-              alertmanager_alert_firing_timestamp_seconds
-            ) / 3600
-          )[24h]
-        )
-      ) * 3600
-    record: dora:mttr:p90_seconds
-    labels:
-      metric_type: "dora"
-      dora_key: "mttr"
-
-  # Reliability (5th DORA key): service availability % meeting SLO over 30d
-  - expr: |
-      sum by (service, namespace) (
-        rate(service_up_total{job="prometheus"}[30d])
+  # Rework Rate: PROXY - average number of extra syncs per app beyond the
+  # first, over the full counter history (not yet windowed to 30d since
+  # argocd_app_sync_total has no per-sync timestamp to bucket by age
+  # without a recording-rule history of its own). A high value means apps
+  # are needing repeated syncs to reach the desired state, which is a
+  # reasonable rework signal even if it's not a named-in-any-ADR metric -
+  # see dora.yml's own file header for the ADR-006 mislabeling found in
+  # the dashboard this targets.
+  - record: dora:rework_rate:ratio
+    expr: |
+      (
+        sum(argocd_app_sync_total) - count(count by (name) (argocd_app_sync_total))
       )
       /
-      sum by (service, namespace) (
-        rate(service_up_total{job="prometheus"}[30d]) + rate(service_down_total{job="prometheus"}[30d])
-      )
-    record: dora:reliability:ratio_30d
-    labels:
-      metric_type: "dora"
-      dora_key: "reliability"
-
-  # Deployment success rate (for correlation)
-  - expr: |
-      sum by (app, namespace) (
-        rate(argocd_application_sync_succeeded_total[24h])
-      )
-      /
-      sum by (app, namespace) (
-        rate(argocd_application_sync_total[24h])
-      )
-    record: dora:deployment_success_rate:ratio_1d
-    labels:
-      metric_type: "dora"
-      dora_key: "deployment_success_rate"
-
-  # Rollback rate
-  - expr: |
-      sum by (app, namespace) (
-        rate(argocd_application_rollback_total[24h])
-      )
-      /
-      sum by (app, namespace) (
-        rate(argocd_application_sync_total[24h])
-      )
-    record: dora:rollback_rate:ratio_1d
-    labels:
-      metric_type: "dora"
-      dora_key: "rollback_rate"
+      count(count by (name) (argocd_app_sync_total))
