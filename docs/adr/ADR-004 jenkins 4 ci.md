@@ -2,6 +2,14 @@
 
 ## Status
 
+**Superseded by [ADR-036: Tekton for CI/CD](ADR-036%20tekton-for-ci-cd.md)** - 2026-09-16
+
+> Fawkes runs Tekton in-cluster today (`platform/apps/tekton/`), not
+> Jenkins — see ADR-036 and `AGENTS.md` §5 ("Tekton CI (In-Cluster)"). This
+> ADR is kept for historical context (why Jenkins was chosen originally)
+> but its Decision section no longer reflects the platform. Do not treat
+> anything below as current.
+
 **Accepted** - October 8, 2025
 
 ## Context

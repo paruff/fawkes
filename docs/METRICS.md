@@ -7,9 +7,25 @@
 
 ## 1. Rework Rate Definition
 
-**Rework rate** measures the percentage of pull requests that required follow-up fixes
-within seven days of merging (bug fixes, reverts, or hotfixes traceable to a recently
-merged PR).
+**Resolved 2026-09-16**, grounded in Google DORA's AI-era research (referenced in
+`docs/research/dora/README.md`: the 2025 DORA AI Capabilities Model, the 2025 State of
+AI-Assisted Software Development report, and the 2026 ROI of AI-Assisted Software
+Development report). Those three PDFs are image/CID-font marketing documents with no
+extractable text layer via this repo's available tooling, so the definition below is
+grounded in the DORA 2026 framing already embedded in this repo's own Grafana panel
+(`platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml`): *"Fraction of
+AI output requiring rework (5th DORA metric, DORA 2026)."*
+
+**Rework rate** = the percentage of AI-assisted merged PRs (commits carrying this repo's
+own `Co-Authored-By: Claude` attribution trailer) that needed a fix/revert follow-up PR
+within seven days of merging. This approximates "AI output requiring rework" using signals
+this repo already produces — no new label convention, no IDE-level suggestion
+accept/reject telemetry Fawkes doesn't collect.
+
+Two other definitions exist elsewhere in this repo's history and are superseded by this
+one: ADR-016's "Jenkins rebuilds / unique commits" (dead — Jenkins was replaced by Tekton,
+see the ADR index) and `docs/research/dora/README.md`'s "PR labels (rework) / total PRs"
+proxy (never implemented — no label convention was ever adopted).
 
 | Threshold | Status                     | Action                                                 |
 | --------- | -------------------------- | ------------------------------------------------------ |
@@ -17,36 +33,46 @@ merged PR).
 | 10 – 20 % | 🟡 **YELLOW — Watch**      | Review recent PRs for patterns. Schedule a retro item. |
 | > 20 %    | 🔴 **RED — Stop features** | Halt new feature work. Conduct a root-cause analysis.  |
 
-These thresholds align with DORA's definition of _change failure rate_ and are applied to
+These thresholds align with DORA's definition of *change failure rate* and are applied to
 the Fawkes mono-repo across all layers (services, infra, platform, scripts, docs).
+
+**Known limitation**: `scripts/weekly-metrics.sh` counts a fix/revert PR as a follow-up
+based on time proximity (merged within 7 days), not file-overlap with the AI PR it's
+"reworking" — see the script's header comment for why (added API cost on a repo that
+regularly merges 200+ PRs per 14 days). Read the computed rate as an upper bound.
 
 ---
 
-## 2. How to Read the DevLake Rework Dashboard
+## 2. How to Compute the Rework Rate
 
-1. Open Grafana at `http://devlake-grafana.127.0.0.1.nip.io` (local) or the environment
-   URL configured in your `GRAFANA_URL` environment variable.
-2. Navigate to **Dashboards → DORA Metrics → Rework Rate**.
-3. Set the time range to **Last 7 days** (use the date picker in the top-right corner).
-4. Key panels:
-   - **Rework Rate (%)** — headline percentage for the selected period.
-   - **Rework PRs** — list of individual PRs counted as rework.
-   - **Trend** — 12-week rolling chart; look for sustained upward movement.
-5. Hover over any bar in the **Rework PRs** panel to see the PR title, author, and the
-   original PR it is fixing.
+`scripts/weekly-metrics.sh` computes this directly from GitHub via the `gh` CLI — no
+DevLake dependency (DevLake was decommissioned 2026-09-16 in favor of native PromQL DORA
+metrics, see `platform/apps/prometheus/rules/dora.yml`).
+
+```bash
+./scripts/weekly-metrics.sh            # updates section 3's baseline table
+./scripts/weekly-metrics.sh --dry-run  # prints the status without writing the table
+```
+
+It prints the traffic-light status plus the underlying counts (`reworked/total AI-assisted
+PRs`) and updates the baseline table below. Requires `gh auth login` to have been run
+locally or in CI.
 
 ---
 
 ## 3. Current Baseline
 
-> **Status as of last update:** TBD — baseline not yet established.
+> **Status as of last update:** 🔴 RED (2026-09-16) — first real baseline, established during
+> this session's methodology switch from DevLake to GitHub-derived data. See the "Known
+> limitation" note in Section 1: this reading is inflated by the session's own unusually
+> high fix-commit volume and the lack of file-overlap checking, not a steady-state signal.
 
 | Week | Rework Rate | Status | Notes                                        |
 | ---- | ----------- | ------ | -------------------------------------------- |
-| TBD  | TBD %       | TBD    | Awaiting first DevLake data collection cycle |
+| 2026-09-16 | 98.0 % | RED | Auto-updated by weekly-metrics.sh (50/51 AI-assisted PRs) |
 
-_This table is updated automatically by `scripts/weekly-metrics.sh` during the weekly
-metrics review run._
+*This table is updated automatically by `scripts/weekly-metrics.sh` during the weekly
+metrics review run.*
 
 ---
 
@@ -67,7 +93,7 @@ Every **Monday at 09:00 UTC** (or the first working day of the week).
 ### Steps
 
 ```bash
-# 1. Run the metrics script — it queries DevLake and updates this file
+# 1. Run the metrics script — it queries GitHub via `gh` and updates this file
 ./scripts/weekly-metrics.sh
 
 # 2. Check the terminal output for the traffic-light status
@@ -92,24 +118,25 @@ Every **Monday at 09:00 UTC** (or the first working day of the week).
 ## 5. Related Metrics
 
 The following DORA metrics are tracked alongside rework rate.
-See the DevLake DORA dashboard for full details.
+The other 4 are computed natively in Prometheus; see `platform/apps/prometheus/rules/dora.yml`.
 
-| Metric                | Target (Elite) | Source                     |
-| --------------------- | -------------- | -------------------------- |
-| Deployment Frequency  | ≥ 1/day        | DevLake / ArgoCD events    |
-| Lead Time for Changes | < 1 hour       | DevLake / GitHub PRs       |
-| Change Failure Rate   | < 5 %          | DevLake / incident records |
-| MTTR                  | < 1 hour       | DevLake / PagerDuty        |
-| **Rework Rate**       | **< 10 %**     | **DevLake / GitHub PRs**   |
+| Metric                | Target (Elite) | Source                                                      |
+| --------------------- | -------------- | ------------------------------------------------------------ |
+| Deployment Frequency  | ≥ 1/day        | Prometheus `dora:deployment_frequency:rate30d`               |
+| Lead Time for Changes | < 1 hour       | Prometheus `dora:lead_time_hours:p50_30d`                    |
+| Change Failure Rate   | < 5 %          | Prometheus `dora:change_failure_rate:ratio30d`                |
+| MTTR                  | < 1 hour       | Prometheus `dora:fdrt_hours:p50_30d` (Alertmanager-backed)    |
+| **Rework Rate**       | **< 10 %**     | **GitHub PRs via `scripts/weekly-metrics.sh`**                |
 
 ---
 
 ## 6. See Also
 
 - `scripts/weekly-metrics.sh` — automated weekly data collection
+- `platform/apps/prometheus/rules/dora.yml` — the other 4 DORA keys (native PromQL)
 - `docs/runbooks/` — incident runbooks
 - `docs/AGENTS.md` Section 9 — platform principles
-- DevLake documentation: <https://devlake.apache.org/docs>
+- `docs/research/dora/README.md` — DORA research reference table
 
 ## AI-Readiness Metrics
 
