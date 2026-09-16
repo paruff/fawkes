@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.142](https://github.com/paruff/fawkes/compare/v0.3.141...v0.3.142) (2026-09-16)
+
+
+### Fixed
+
+* **observability:** deploy DORA recording rules, correct P0/P1 status drift ([#2118](https://github.com/paruff/fawkes/issues/2118)) ([d086bf5](https://github.com/paruff/fawkes/commit/d086bf5889fe4fcbddefe3a2add5c26c2bd8170c))
+
 ## [0.3.141](https://github.com/paruff/fawkes/compare/v0.3.140...v0.3.141) (2026-09-16)
 
 
