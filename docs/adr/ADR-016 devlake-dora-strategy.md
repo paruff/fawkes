@@ -2,7 +2,17 @@
 
 ## Status
 
-Accepted
+**Superseded by
+[ADR-038: Native PromQL DORA Metrics](ADR-038%20native-promql-dora-metrics.md)**
+- 2026-09-16. DevLake was decommissioned this date (removed from
+`platform/bootstrap/platform-applicationset.yaml`'s generator, live-pruned
+from the cluster) in favor of Prometheus recording rules
+(`platform/apps/prometheus/rules/dora.yml`) computed directly against
+ArgoCD, Tekton, and Alertmanager metrics already present in-cluster — no
+separate ETL stack. This ADR's "Jenkins Rework Metrics" section
+(line ~139) is additionally dead twice over: Jenkins was replaced by
+Tekton (ADR-036), and DevLake itself is gone. See ADR-038 and
+`docs/METRICS.md` for the current Rework Rate definition and pipeline.
 
 ## Context
 
