@@ -5751,7 +5751,17 @@
 
 <h1 id="adr-016-devlake-for-dora-metrics-visualization">ADR-016: DevLake for DORA Metrics Visualization</h1>
 <h2 id="status">Status</h2>
-<p>Accepted</p>
+<p><strong>Superseded by
+<a href="../ADR-038%20native-promql-dora-metrics/">ADR-038: Native PromQL DORA Metrics</a></strong>
+- 2026-09-16. DevLake was decommissioned this date (removed from
+<code>platform/bootstrap/platform-applicationset.yaml</code>'s generator, live-pruned
+from the cluster) in favor of Prometheus recording rules
+(<code>platform/apps/prometheus/rules/dora.yml</code>) computed directly against
+ArgoCD, Tekton, and Alertmanager metrics already present in-cluster — no
+separate ETL stack. This ADR's "Jenkins Rework Metrics" section
+(line ~139) is additionally dead twice over: Jenkins was replaced by
+Tekton (ADR-036), and DevLake itself is gone. See ADR-038 and
+<code>docs/METRICS.md</code> for the current Rework Rate definition and pipeline.</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform requires a unified way to collect, calculate, and display the
 five core DORA metrics to enable teams to assess their service performance,
