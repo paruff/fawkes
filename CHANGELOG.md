@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.144](https://github.com/paruff/fawkes/compare/v0.3.143...v0.3.144) (2026-09-16)
+
+
+### Fixed
+
+* **azure:** write kubeconfig so ignite.sh can't silently target the wrong cluster ([#2123](https://github.com/paruff/fawkes/issues/2123)) ([056e56f](https://github.com/paruff/fawkes/commit/056e56f07280101e6c543700f309f3a0d05b8919))
+
 ## [0.3.143](https://github.com/paruff/fawkes/compare/v0.3.142...v0.3.143) (2026-09-16)
 
 
