@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.150](https://github.com/paruff/fawkes/compare/v0.3.149...v0.3.150) (2026-09-17)
+
+
+### Fixed
+
+* **postgresql:** break the CNPG-operator/sealed-secrets atomic-sync bundle ([#2138](https://github.com/paruff/fawkes/issues/2138)) ([e1a5994](https://github.com/paruff/fawkes/commit/e1a5994e06830957ab54565dc6b511f32531d35d))
+
 ## [0.3.149](https://github.com/paruff/fawkes/compare/v0.3.148...v0.3.149) (2026-09-17)
 
 
