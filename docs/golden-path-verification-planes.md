@@ -77,7 +77,7 @@ for a quick follow-up).
 
 | Addition | Existing platform component? |
 | -------- | ------------------------------ |
-| CDE (cloud development environment) | Yes — `platform/apps/eclipse-che` fills this role today |
+| CDE (cloud development environment) | **Corrected 2026-09-17**: No — `platform/apps/eclipse-che` doesn't exist; the manifest lives in `platform/apps-deferred/eclipse-che/`, deliberately not deployed (per its own ADR-021, a 4-week effort: operator, SSO, Devfile registry, GPU node pools). Deferred, not in scope for the current dev-cluster DevEx work. |
 | Team chat | Yes — `platform/apps/mattermost` |
 | Kanban / project board | Yes — `platform/apps/focalboard` |
 
