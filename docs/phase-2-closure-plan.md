@@ -3,6 +3,18 @@
 > Saved 2026-09-12. Produced via `/plan` after a live investigation session that
 > found Phase 2's code/GitOps work largely merged but not yet live-verified —
 > see `docs/BACKLOG.md`'s Phase 2 table for current status.
+>
+> **Update 2026-09-17: Phases 4-6 below are superseded, not applicable.** They were
+> built entirely on DevLake (webhook wiring, an Alertmanager→DevLake adapter, a
+> DevLake-fed dashboard panel) — DevLake was decommissioned 2026-09-16 in favor of
+> native Prometheus recording rules (`platform/apps/prometheus/rules/dora.yml`,
+> `docs/adr/ADR-038 native-promql-dora-metrics.md`). Change Failure Rate — the actual
+> goal Phases 4-6 existed to reach — is already live (`dora:change_failure_rate:ratio30d`,
+> computed from ArgoCD sync failures, no DevLake needed). What's left for #1946 is just
+> a Grafana panel against that already-live series, not the 3-phase DevLake pipeline
+> below. **Phases 0-3 (quality gate, canary+rollback, chaos-in-canary) are unaffected**
+> and remain the real, current path to closing Phase 2 — see `EXECUTION_QUEUE.md`'s P0
+> table for which one is next.
 
 ## Requirements Restatement
 
@@ -140,9 +152,9 @@ Before any of the 6 items, confirm the ground truth hasn't drifted further:
 
 ## Acceptance
 
-- [x] Phase 0: root cause found (`argocd-repo-server` liveness-probe timeout) and fixed in `infra/terraform/argocd/values.yaml` — pending merge + `terraform apply` before infrastructure sync can be re-confirmed live
-- [ ] Phase 1: quality gate live-verified to block a bad deploy
-- [ ] Phase 2: canary rollout + automated rollback observed live
+- [x] Phase 0: root cause found (`argocd-repo-server` liveness-probe timeout) and fixed in `infra/terraform/argocd/values.yaml` — re-confirmed live 2026-09-17 on the rebuilt `fawkes-dev-aks` (no crash-loop this run)
+- [x] Phase 1: quality gate live-verified to block a bad deploy — **done 2026-09-17** on `fawkes-dev-aks`. Found and fixed a real blocker first: the `sonar-scan` step failed on *every* run (good or bad commit) with `AccessDeniedException: /workspace/source/.scannerwork` — `sonar-scanner-cli`'s image defaults to a non-root user, but the shared PVC workspace was written as root by the preceding `python`/`git`-based steps (no `securityContext` set anywhere in the pipeline). Fixed with `securityContext.runAsUser: 0` on just the `sonar-scan` step (`platform/apps/tekton/golden-path-pipeline.yaml`), matching the pipeline's existing implicit-root posture on every other step. With that fixed: a `PipelineRun` against a deliberately bad commit (hardcoded credential + MD5 password hash, pushed to `paruff/python-fawkes-path`'s `test/quality-gate-verification-bad-commit` branch) had `sonar-scan` genuinely analyze that exact commit SHA and get `QUALITY GATE STATUS: FAILED` from SonarCloud, failing the step and stopping the pipeline before `build-and-push`/`gitops-promote` ever ran. A second `PipelineRun` against clean `main` had `sonar-scan` pass and proceed into `build-and-push` (which then failed only on an already-documented, unrelated gap — no `dockerconfig` workspace/registry credentials supplied for this test) — confirming the gate discriminates correctly rather than just always failing.
+- [x] Phase 2: canary rollout + automated rollback observed live — **done 2026-09-17** on `fawkes-dev-aks`. Two forced Rollout revisions both paused at `setWeight: 50`, ran a Background `AnalysisRun`, and were auto-`RolloutAborted` back to the stable revision with zero manual intervention (see `docs/DEPLOYMENT_STRATEGY.md`'s Canary deployments row for the full event trail). Caveat: both rollbacks were triggered by the AnalysisTemplate's Prometheus query returning no data (a newly-found `ServiceMonitor` discovery gap, also documented there), not by a deliberately-bad commit as this phase's steps 2-3 originally intended — the gate-and-rollback *mechanism* is proven, but the canary's success path (real passing metrics promoting cleanly) is not yet demonstrated.
 - [ ] Phase 3: #1942 chaos-in-canary wiring implemented and verified
 - [ ] Phase 4: #1919 DevLake webhook wiring live-verified
 - [ ] Phase 5: Alertmanager→DevLake adapter built and verified (design decision resolved first)
