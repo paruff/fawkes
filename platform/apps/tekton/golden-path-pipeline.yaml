@@ -245,6 +245,17 @@ spec:
           - name: sonar-scan
             image: docker.io/sonarsource/sonar-scanner-cli:11.2
             workingDir: $(workspaces.source.path)
+            # Live-verified 2026-09-17 (fawkes EXECUTION_QUEUE.md P0): without
+            # this, the step fails with "AccessDeniedException:
+            # /workspace/source/.scannerwork" - sonar-scanner-cli's image
+            # defaults to a non-root user, but fetch-source/lint-and-test
+            # above (python/git base images, no securityContext set) write
+            # the shared PVC workspace as root, leaving it unwritable to a
+            # non-root UID. Every other step in this pipeline already runs
+            # as root implicitly (no securityContext anywhere) - matching
+            # that here is the minimal fix, not a new permissions pattern.
+            securityContext:
+              runAsUser: 0
             env:
               - name: SONAR_TOKEN
                 valueFrom:

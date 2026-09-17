@@ -151,6 +151,24 @@ provision_azure_cluster() {
   }
   tf_apply_dir "$dir"
   try_set_kubeconfig_from_tf_outputs "$dir"
+
+  # The kubeconfig Terraform just wrote is raw (kube_config_raw) - on an
+  # Azure-RBAC-enabled cluster that's not directly usable, it needs
+  # `kubelogin convert-kubeconfig` first (confirmed live 2026-09-16/17:
+  # every apply during the westeurope migration required this by hand,
+  # since this call was previously missing here even though
+  # refresh_aks_credentials() already implements it correctly).
+  if [[ ${DRY_RUN:-0} -eq 0 ]]; then
+    local out_json resource_group cluster_name
+    if out_json=$(cd "$dir" && terraform output -json 2> /dev/null); then
+      resource_group=$(echo "$out_json" | jq -r 'try .resource_group_name.value // empty')
+      cluster_name=$(echo "$out_json" | jq -r 'try .cluster_name.value // empty')
+      if [[ -n "$resource_group" && -n "$cluster_name" ]]; then
+        refresh_aks_credentials "$resource_group" "$cluster_name"
+      fi
+    fi
+  fi
+
   if [[ ${DRY_RUN:-0} -eq 0 ]] && ! kubectl cluster-info &> /dev/null; then
     error_exit "Cluster not reachable after Azure Terraform apply. Ensure your Azure creds and outputs provide kubeconfig."
   fi

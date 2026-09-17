@@ -20,17 +20,21 @@
 
 # ============================================================================
 # FILE: platform/apps/python-fawkes-path/python-fawkes-path-beta-applicationset.yaml
-# PURPOSE: #1805 - Phase 2 (Beta) promotion target scaffolding. #1805's
-#          scope (canary/blue-green via Argo Rollouts, chaos testing,
-#          Backstage portal) is not built yet - none of that exists in
-#          python-fawkes-path-gitops today, which only has a plain Deployment.
+# PURPOSE: #1805 - Phase 2 (Beta) promotion target scaffolding.
+#          Update (2026-09-17): python-fawkes-path-gitops#6 (merged
+#          2026-09-12) converted deployment.yaml to a real Argo Rollouts
+#          `Rollout` (canary: 50% -> pause 60s -> 100%, referencing the
+#          python-fawkes-path-canary-success AnalysisTemplate) - the
+#          earlier "only has a plain Deployment" note here is stale and
+#          was propagating into EXECUTION_QUEUE.md's #1942 status. Chaos
+#          testing and Backstage portal wiring are still not built.
 #
 # `automated` is deliberately OMITTED (manual sync only, via `argocd app
 # sync` or the UI) rather than wired to auto-promote: there is no quality
-# gate, canary rollout, or chaos-test gate to protect a beta environment
-# yet (that's #1805's actual scope), so auto-syncing here would silently
-# promote straight past every safeguard #1805 exists to add. Flip to
-# automated only once at least one of those gates is real.
+# gate or chaos-test gate to protect a beta environment yet (that's
+# #1805's remaining scope), so auto-syncing here would silently promote
+# straight past those safeguards. Flip to automated only once at least
+# one of those gates is real.
 #
 # Per AGENTS.md section 6, ArgoCD Application/ApplicationSet manifests
 # require maintainer review before merge - flagging explicitly.

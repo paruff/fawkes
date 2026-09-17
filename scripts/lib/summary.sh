@@ -176,7 +176,7 @@ print_access_summary() {
     echo ""
     echo "View AKS cluster:           az aks show -g ${TF_VAR_resource_group_name:-fawkes-rg} -n ${TF_VAR_cluster_name:-fawkes-dev}"
     echo "Get credentials:            az aks get-credentials -g ${TF_VAR_resource_group_name:-fawkes-rg} -n ${TF_VAR_cluster_name:-fawkes-dev}"
-    echo "Open Azure Portal:          https://portal.azure.com/#resource/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${TF_VAR_resource_group_name:-fawkes-rg}/providers/Microsoft.ContainerService/managedClusters/${TF_VAR_cluster_name:-fawkes-dev}"
+    echo "Open Azure Portal:          https://portal.azure.com/#resource/subscriptions/${ARM_SUBSCRIPTION_ID:-}/resourceGroups/${TF_VAR_resource_group_name:-fawkes-rg}/providers/Microsoft.ContainerService/managedClusters/${TF_VAR_cluster_name:-fawkes-dev}"
     echo ""
   fi
 
