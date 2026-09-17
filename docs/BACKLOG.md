@@ -111,25 +111,24 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 
 **Goal:** Failing quality gates block promotion. At least one service deploys via canary/blue-green with automated rollback. Chaos experiments on staging. Change Failure Rate visible.
 
-**Status as of 2026-09-12:** code and GitOps wiring for every row below has landed and merged; what's marked 🟡 is real, running infrastructure that hasn't yet had its specific end-to-end behavior (a blocked bad deploy, an exercised rollback, a real incident-correlated CFR number) live-observed. This table was previously stale (showed 🔴 across the board despite #1930-1933 having merged earlier) — see the linked PRs for the actual work.
+**Status as of 2026-09-17:** DORA is now done (exceeded — all 5 keys live, not just 3), reached via a completely different path than this table originally scoped (native Prometheus recording rules replacing DevLake, decommissioned 2026-09-16 — see `docs/adr/ADR-038 native-promql-dora-metrics.md`). What's marked 🟡 below is real, running infrastructure that hasn't yet had its specific end-to-end behavior (a blocked bad deploy, an exercised rollback) live-observed — unchanged since 2026-09-12, now on `fawkes-dev-aks` (Azure) rather than `mac-mini-k3s`.
 
 | IDP Feature | Deliverable | Status |
 |-------------|-------------|--------|
-| CI/CD Orchestration | Quality gates block bad deploys | 🟡 `sonar.qualitygate.wait=true` merged (#2033); Tekton itself only just got wired onto the cluster (#2051 + `platform/bootstrap` re-apply) — no live pipeline run has yet proven a bad quality gate actually blocks promotion |
+| CI/CD Orchestration | Quality gates block bad deploys | 🟡 `sonar.qualitygate.wait=true` merged (#2033); Tekton is deployed and healthy on `fawkes-dev-aks` (ADR-036) — still no live pipeline run has proven a bad quality gate actually blocks promotion. **Recommended as the next single-day goal**, see `docs/phase-2-closure-plan.md` Phase 1 and `EXECUTION_QUEUE.md`'s P0 table. |
 | Deployment Management | Argo Rollouts canary/blue-green | 🟡 Controller (#1930), `AnalysisTemplate` (#1931, query bug fixed in #2045), and tracer-bullet's `Rollout` conversion (tracer-bullet-gitops#6) are all merged; ApplicationSet wiring (#2049) applied live — `argo-rollouts`/`chaos-mesh` Applications now exist on-cluster. No live canary rollout has been triggered yet, so automated rollback is unverified |
-| Observability | Alertmanager + crash-loop notifications | 🟢 Live since Phase 1 (`KubernetesPodCrashLooping` → `platform-team` Slack receiver). A second receiver routing the same alert to DevLake for Change Failure Rate correlation is merged (#2042) but not yet functional — no SealedSecret exists yet, and Alertmanager's own webhook payload shape doesn't match DevLake's `/issues` API without an adapter (tracked as its own issue, #2079, per Phase 4's epic-splitting rule) |
+| Observability | Alertmanager + crash-loop notifications | 🟢 Live since Phase 1 (`KubernetesPodCrashLooping` → `platform-team` Slack receiver). **Corrected 2026-09-17:** the DevLake-CFR-correlation receiver this row previously described (#2042) is moot — DevLake is decommissioned. Alertmanager now feeds MTTR directly via a real `ArgoCDAppDegraded` alert reaching Prometheus's `ALERTS_FOR_STATE` (`dora:fdrt_hours:p50_30d`), confirmed live against a genuine incident. CFR comes from ArgoCD sync-failure ratio instead, not Alertmanager — see the DORA row below. |
 | Security | Shift-left SAST/DAST in pipeline | 🟡 SAST (SonarCloud gate) live via the row above. DAST (`dast-baseline-scan` OWASP ZAP task, #2048) is merged but standalone — not yet wired into a pipeline trigger path or run against a live target |
-| DORA (3-key) | Add Change Failure Rate | 🔴 Schema design (#1944), Alertmanager receiver (#2042), and a deterministic BDD test for the formula (#1947) are merged, but no real CFR number is computing yet — #1919 (DevLake webhook wiring for the deployment side) hasn't been started, and the dashboard panel (#1946) is explicitly blocked pending real data |
+| DORA (5-key) | All 5 DORA metrics | 🟢 **Corrected 2026-09-17** (was 🔴, blocked on dead DevLake dependency — #1919/#2079's DevLake-webhook framing never happened and never will). All 5 keys live via native PromQL on `fawkes-dev-aks`: Deployment Frequency, Lead Time, Change Failure Rate (`dora:change_failure_rate:ratio30d`, from ArgoCD sync failures — no dashboard panel wired to it yet, see #1946), real Alertmanager-backed MTTR, and Rework Rate (resolved definition + GitHub-derived implementation, `scripts/weekly-metrics.sh`). This exceeds the epic's original "3-key" scope. |
 
-**Key issues:** #1925 (verified, no fix needed), #1934 (#2033), #1937 (#2035), #1938 (python-fawkes-path#3), #1939 (#2037), #1940/#1941 (#2038), #1942 (blocked on live canary), #1944 (#2040), #1945 (#2042), #1946 (blocked, see above), #1947 (#2044)
+**Key issues:** #1925 (verified, no fix needed), #1934 (#2033), #1937 (#2035), #1938 (python-fawkes-path#3), #1939 (#2037), #1940/#1941 (#2038), #1942 (blocked on live canary), #1944 (#2040), #1945 (#2042), #1946 (CFR data exists now, just needs a panel — no longer blocked on DevLake), #1947 (#2044)
 
 **Remaining to fully close Phase 2:**
-- Live-verify the quality gate actually blocks a bad deploy (needs a real pipeline run once Tekton is confirmed `Synced`/`Healthy`)
+- Live-verify the quality gate actually blocks a bad deploy (unblocked, Tekton confirmed `Synced`/`Healthy` on `fawkes-dev-aks` — the next single-day goal)
 - Trigger a real canary rollout on tracer-bullet/python-fawkes-path and observe an automated rollback
 - #1942 — wire chaos experiments into the canary traffic-shift step (depends on the above)
-- #1919 — DevLake webhook plugin wiring for deployment signal (real prerequisite for CFR)
-- #2079 — Build the Alertmanager→DevLake incident-payload adapter
-- #1946 — add the real CFR dashboard panel once #1919 + the adapter produce real data
+- #1946 — add a Grafana panel for the already-live `dora:change_failure_rate:ratio30d` series (small, unblocked)
+- DevEx (basic): Backstage deployed, golden-path components registered in its live catalog — 🔴 not started, required for Beta per `MILESTONES.md` H2's 2026-09-16 addendum
 
 ### Phase 3 — Production: Human-in-the-Loop (#1806)
 

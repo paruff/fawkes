@@ -32,20 +32,18 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 
 ### H2 — Phase 2 (Beta)
 
-**Status:** code/GitOps wiring for every row is merged; what's open is *live end-to-end verification*, not new construction — see `docs/phase-2-closure-plan.md`.
+**Status:** DORA is done (exceeded — all 5 keys live via native PromQL, not the 3-key target below). What's open: quality-gate/canary live-verification (unblocked, not new construction) and DevEx (not started) — see `docs/phase-2-closure-plan.md`.
 
 | Deliverable | Status | Evidence / Issue |
 |---|---|---|
-| Quality gate blocks a bad deploy | 🟡 Merged, unverified live | needs a real bad-commit pipeline run |
+| Quality gate blocks a bad deploy | 🟡 Merged, unverified live | needs a real bad-commit pipeline run — recommended next goal, see `EXECUTION_QUEUE.md` P0 |
 | Canary/blue-green with automated rollback | 🟡 Merged, unverified live | needs a real triggered rollback |
 | Chaos wired into canary traffic-shift | 🔴 Open, highest-complexity item in this phase | #1942 |
-| DevLake deployment-side webhook | 🔴 Open, blocked on `KL-15` | #1919 |
-| Alertmanager→DevLake incident-payload adapter | 🔴 Open, blocked on `KL-15` | #2079 |
-| CFR panel on DORA dashboard | 🔴 Open, blocked on the two rows above | #1946 |
+| Deployment Frequency, Lead Time, CFR, MTTR (native PromQL) | 🟢 **Done 2026-09-17**, superseding the DevLake-based rows this table previously listed here | `platform/apps/prometheus/rules/dora.yml`, ADR-038 |
+| Rework Rate (5th key, beyond this phase's original 3-key scope) | 🟢 **Done 2026-09-17** — definition resolved, GitHub-derived implementation live | `scripts/weekly-metrics.sh`, `docs/METRICS.md`, ADR-038 |
+| CFR panel on DORA dashboard | 🟡 Data is live, panel not yet wired — small, unblocked | #1946 |
 
-**Planes required this phase**: Security (core — quality gates actually block a bad deploy), Progressive Delivery (canary/blue-green with rollback, chaos wired into the traffic-shift step), DORA (+CFR = 3-key). **DevEx (basic: `catalog-info.yaml` exists, Backstage deployed, component registered in its live catalog) — added 2026-09-16, not previously listed here.** Rationale: Beta is when the platform needs to be genuinely usable by other developers, not just a pipeline proof-of-concept, so basic discoverability belongs here rather than waiting for Production's deeper DevEx (self-service portal, RBAC-gated approval).
-
-*(Note 2026-09-16: the #1919/#2079 rows above still cite the old `KL-15`/DevLake blocker — corrected elsewhere to depend on #2117 (native PromQL) instead; not re-litigated here, see `EXECUTION_QUEUE.md`.)*
+**Planes required this phase**: Security (core — quality gates actually block a bad deploy), Progressive Delivery (canary/blue-green with rollback, chaos wired into the traffic-shift step), DORA (+CFR = 3-key, **exceeded 2026-09-17 — all 5 keys live**). DevEx (basic: `catalog-info.yaml` exists, Backstage deployed, component registered in its live catalog) — added 2026-09-16. Rationale: Beta is when the platform needs to be genuinely usable by other developers, not just a pipeline proof-of-concept, so basic discoverability belongs here rather than waiting for Production's deeper DevEx (self-service portal, RBAC-gated approval). **DevEx is 🔴 not started** — `fawkes.io/golden-path` annotations were added to the 3 golden-path templates 2026-09-16 as prep, but Backstage itself isn't deployed and no component is registered in a live catalog yet.
 
 ### H3 — Phase 3 (Production)
 
