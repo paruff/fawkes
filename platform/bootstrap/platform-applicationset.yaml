@@ -112,6 +112,11 @@ spec:
           - path: "platform/apps/cert-manager/cert-manager-application.yaml"
           - path: "platform/apps/argo-rollouts/argo-rollouts-application.yaml"
           - path: "platform/apps/chaos-mesh/chaos-mesh-application.yaml"
+          # DevEx plane (Beta scope, #1805): Postgres must land before
+          # Backstage/space-metrics, both of which depend on db-shared-dev.
+          - path: "platform/apps/postgresql-application.yaml"
+          - path: "platform/apps/backstage/backstage-application.yaml"
+          - path: "platform/apps/space-metrics/space-metrics-application.yaml"
   template:
     metadata:
       name: '{{ .metadata.name }}'
