@@ -108,6 +108,8 @@ spec:
         - CREATE DATABASE discovery_metrics OWNER discovery_user;
         - CREATE ROLE experiment_user WITH LOGIN;
         - CREATE DATABASE experiment OWNER experiment_user;
+        - CREATE ROLE space_metrics_user WITH LOGIN;
+        - CREATE DATABASE space_metrics OWNER space_metrics_user;
 
   storage:
     size: 20Gi
@@ -198,6 +200,11 @@ spec:
         login: true
         passwordSecret:
           name: db-experiment-credentials
+      - name: space_metrics_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-space-metrics-credentials
 
   failoverDelay: 30
   switchoverDelay: 60

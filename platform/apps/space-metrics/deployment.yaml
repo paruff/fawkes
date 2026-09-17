@@ -18,16 +18,11 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: fawkes-local
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: space-metrics
-  namespace: fawkes-local
+  namespace: fawkes
   labels:
     app: space-metrics
     app.kubernetes.io/name: space-metrics
@@ -54,6 +49,14 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: space-metrics
+      # ghcr-pull-secret: created live on the cluster (kubectl create
+      # secret docker-registry), not committed - same pattern as
+      # tekton-gitops-github-token (#1797). The fawkes-space-metrics GHCR
+      # package is private by default; making it public requires human
+      # approval (environment's own safety classifier), so this pulls via
+      # credential instead.
+      imagePullSecrets:
+        - name: ghcr-pull-secret
 
       securityContext:
         runAsNonRoot: true
@@ -63,7 +66,7 @@ spec:
 
       containers:
         - name: space-metrics
-          image: fawkes-space-metrics:0.1.0
+          image: ghcr.io/paruff/fawkes-space-metrics:cbd0cb9a
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -73,8 +76,8 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: space-metrics-db-credentials
-                  key: connection-string
+                  name: db-space-metrics-credentials
+                  key: uri
             - name: AGGREGATION_THRESHOLD
               value: "5"
             - name: COLLECTION_INTERVAL
