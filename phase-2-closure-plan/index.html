@@ -5565,6 +5565,17 @@
 <p>Saved 2026-09-12. Produced via <code>/plan</code> after a live investigation session that
 found Phase 2's code/GitOps work largely merged but not yet live-verified —
 see <code>docs/BACKLOG.md</code>'s Phase 2 table for current status.</p>
+<p><strong>Update 2026-09-17: Phases 4-6 below are superseded, not applicable.</strong> They were
+built entirely on DevLake (webhook wiring, an Alertmanager→DevLake adapter, a
+DevLake-fed dashboard panel) — DevLake was decommissioned 2026-09-16 in favor of
+native Prometheus recording rules (<code>platform/apps/prometheus/rules/dora.yml</code>,
+<code>docs/adr/ADR-038 native-promql-dora-metrics.md</code>). Change Failure Rate — the actual
+goal Phases 4-6 existed to reach — is already live (<code>dora:change_failure_rate:ratio30d</code>,
+computed from ArgoCD sync failures, no DevLake needed). What's left for #1946 is just
+a Grafana panel against that already-live series, not the 3-phase DevLake pipeline
+below. <strong>Phases 0-3 (quality gate, canary+rollback, chaos-in-canary) are unaffected</strong>
+and remain the real, current path to closing Phase 2 — see <code>EXECUTION_QUEUE.md</code>'s P0
+table for which one is next.</p>
 </blockquote>
 <h2 id="requirements-restatement">Requirements Restatement</h2>
 <p>Six remaining items, with real dependencies between them:</p>
@@ -5769,9 +5780,9 @@ see <code>docs/BACKLOG.md</code>'s Phase 2 table for current status.</p>
 <p><strong>Overall: this is not a single session's work.</strong> Phases 0-2 and 4 are reasonably scoped for focused sessions each. Phases 3 and 5 are the two genuinely hard, novel pieces and each deserves its own dedicated design pass before implementation — treat them as separate GitHub issues with their own acceptance criteria rather than sub-tasks of a single push.</p>
 <h2 id="acceptance">Acceptance</h2>
 <ul>
-<li>[x] Phase 0: root cause found (<code>argocd-repo-server</code> liveness-probe timeout) and fixed in <code>infra/terraform/argocd/values.yaml</code> — pending merge + <code>terraform apply</code> before infrastructure sync can be re-confirmed live</li>
-<li>[ ] Phase 1: quality gate live-verified to block a bad deploy</li>
-<li>[ ] Phase 2: canary rollout + automated rollback observed live</li>
+<li>[x] Phase 0: root cause found (<code>argocd-repo-server</code> liveness-probe timeout) and fixed in <code>infra/terraform/argocd/values.yaml</code> — re-confirmed live 2026-09-17 on the rebuilt <code>fawkes-dev-aks</code> (no crash-loop this run)</li>
+<li>[x] Phase 1: quality gate live-verified to block a bad deploy — <strong>done 2026-09-17</strong> on <code>fawkes-dev-aks</code>. Found and fixed a real blocker first: the <code>sonar-scan</code> step failed on <em>every</em> run (good or bad commit) with <code>AccessDeniedException: /workspace/source/.scannerwork</code> — <code>sonar-scanner-cli</code>'s image defaults to a non-root user, but the shared PVC workspace was written as root by the preceding <code>python</code>/<code>git</code>-based steps (no <code>securityContext</code> set anywhere in the pipeline). Fixed with <code>securityContext.runAsUser: 0</code> on just the <code>sonar-scan</code> step (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>), matching the pipeline's existing implicit-root posture on every other step. With that fixed: a <code>PipelineRun</code> against a deliberately bad commit (hardcoded credential + MD5 password hash, pushed to <code>paruff/python-fawkes-path</code>'s <code>test/quality-gate-verification-bad-commit</code> branch) had <code>sonar-scan</code> genuinely analyze that exact commit SHA and get <code>QUALITY GATE STATUS: FAILED</code> from SonarCloud, failing the step and stopping the pipeline before <code>build-and-push</code>/<code>gitops-promote</code> ever ran. A second <code>PipelineRun</code> against clean <code>main</code> had <code>sonar-scan</code> pass and proceed into <code>build-and-push</code> (which then failed only on an already-documented, unrelated gap — no <code>dockerconfig</code> workspace/registry credentials supplied for this test) — confirming the gate discriminates correctly rather than just always failing.</li>
+<li>[x] Phase 2: canary rollout + automated rollback observed live — <strong>done 2026-09-17</strong> on <code>fawkes-dev-aks</code>. Two forced Rollout revisions both paused at <code>setWeight: 50</code>, ran a Background <code>AnalysisRun</code>, and were auto-<code>RolloutAborted</code> back to the stable revision with zero manual intervention (see <code>docs/DEPLOYMENT_STRATEGY.md</code>'s Canary deployments row for the full event trail). Caveat: both rollbacks were triggered by the AnalysisTemplate's Prometheus query returning no data (a newly-found <code>ServiceMonitor</code> discovery gap, also documented there), not by a deliberately-bad commit as this phase's steps 2-3 originally intended — the gate-and-rollback <em>mechanism</em> is proven, but the canary's success path (real passing metrics promoting cleanly) is not yet demonstrated.</li>
 <li>[ ] Phase 3: #1942 chaos-in-canary wiring implemented and verified</li>
 <li>[ ] Phase 4: #1919 DevLake webhook wiring live-verified</li>
 <li>[ ] Phase 5: Alertmanager→DevLake adapter built and verified (design decision resolved first)</li>
