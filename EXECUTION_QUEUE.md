@@ -1,6 +1,7 @@
 # Fawkes — Execution Queue
 
 > **Horizon:** Weeks | **Owner:** @paruff | **Review cadence:** Weekly, or whenever `plan-for-the-day.md`'s retrospective surfaces a backlog delta
+> **Source:** Promoted from `docs/BACKLOG.md`'s triaged, value/effort-scored pool. This file is the single source of truth for *current* status (P0-P3, live-synced against GitHub) — `docs/BACKLOG.md`'s own status columns describe the same items at a coarser, less-frequently-updated grain and can lag behind this file. When the two disagree, trust this one and correct `docs/BACKLOG.md` to match, not the other way around.
 
 ## Priority Tiers
 
@@ -68,4 +69,5 @@ Before adding anything to this queue, check it against `VISION.md`'s Non-Goals f
 | Tier | File | What it answers |
 |---|---|---|
 | ↑ Months | [MILESTONES.md](MILESTONES.md) | Which phase is this work in service of, and what's the release gate? |
+| ↑ Source pool | [docs/BACKLOG.md](docs/BACKLOG.md) | Where did this item come from, and what's its value/effort score? This file is downstream of it for status — see the note at the top. |
 | ↓ Today | [plan-for-the-day.md](plan-for-the-day.md) | What's the one thing being worked on right now? |
