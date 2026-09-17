@@ -3,6 +3,18 @@
 > Saved 2026-09-12. Produced via `/plan` after a live investigation session that
 > found Phase 2's code/GitOps work largely merged but not yet live-verified —
 > see `docs/BACKLOG.md`'s Phase 2 table for current status.
+>
+> **Update 2026-09-17: Phases 4-6 below are superseded, not applicable.** They were
+> built entirely on DevLake (webhook wiring, an Alertmanager→DevLake adapter, a
+> DevLake-fed dashboard panel) — DevLake was decommissioned 2026-09-16 in favor of
+> native Prometheus recording rules (`platform/apps/prometheus/rules/dora.yml`,
+> `docs/adr/ADR-038 native-promql-dora-metrics.md`). Change Failure Rate — the actual
+> goal Phases 4-6 existed to reach — is already live (`dora:change_failure_rate:ratio30d`,
+> computed from ArgoCD sync failures, no DevLake needed). What's left for #1946 is just
+> a Grafana panel against that already-live series, not the 3-phase DevLake pipeline
+> below. **Phases 0-3 (quality gate, canary+rollback, chaos-in-canary) are unaffected**
+> and remain the real, current path to closing Phase 2 — see `EXECUTION_QUEUE.md`'s P0
+> table for which one is next.
 
 ## Requirements Restatement
 
