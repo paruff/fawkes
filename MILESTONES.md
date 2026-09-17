@@ -32,12 +32,12 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 
 ### H2 — Phase 2 (Beta)
 
-**Status:** DORA is done (exceeded — all 5 keys live via native PromQL, not the 3-key target below). What's open: quality-gate/canary live-verification (unblocked, not new construction) and DevEx (not started) — see `docs/phase-2-closure-plan.md`.
+**Status:** DORA is done (exceeded — all 5 keys live via native PromQL, not the 3-key target below). Quality-gate and canary live-verification both **done 2026-09-17**. What's open: chaos-in-canary wiring (#1942) and DevEx (not started) — see `docs/phase-2-closure-plan.md`.
 
 | Deliverable | Status | Evidence / Issue |
 |---|---|---|
-| Quality gate blocks a bad deploy | 🟡 Merged, unverified live | needs a real bad-commit pipeline run — recommended next goal, see `EXECUTION_QUEUE.md` P0 |
-| Canary/blue-green with automated rollback | 🟡 Merged, unverified live | needs a real triggered rollback |
+| Quality gate blocks a bad deploy | 🟢 **Done 2026-09-17** — a real bad commit (hardcoded credential) analyzed by SonarCloud failed the quality gate and stopped the pipeline before `gitops-promote`; a clean commit passed and proceeded. Also fixed a real bug found in the process: `sonar-scan` failed on *every* run due to a PVC-permission/UID mismatch, not just bad ones. | `docs/phase-2-closure-plan.md` Phase 1, `platform/apps/tekton/golden-path-pipeline.yaml` |
+| Canary/blue-green with automated rollback | 🟢 **Done 2026-09-17** — two forced Rollout revisions on `fawkes-dev-aks` both paused at 50% canary weight and were automatically aborted/rolled back by the `AnalysisTemplate` gate with zero manual intervention. | `docs/DEPLOYMENT_STRATEGY.md` Canary deployments row |
 | Chaos wired into canary traffic-shift | 🔴 Open, highest-complexity item in this phase | #1942 |
 | Deployment Frequency, Lead Time, CFR, MTTR (native PromQL) | 🟢 **Done 2026-09-17**, superseding the DevLake-based rows this table previously listed here | `platform/apps/prometheus/rules/dora.yml`, ADR-038 |
 | Rework Rate (5th key, beyond this phase's original 3-key scope) | 🟢 **Done 2026-09-17** — definition resolved, GitHub-derived implementation live | `scripts/weekly-metrics.sh`, `docs/METRICS.md`, ADR-038 |

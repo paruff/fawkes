@@ -122,18 +122,18 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 
 | IDP Feature | Deliverable | Status |
 |-------------|-------------|--------|
-| CI/CD Orchestration | Quality gates block bad deploys | 🟡 `sonar.qualitygate.wait=true` merged (#2033); Tekton is deployed and healthy on `fawkes-dev-aks` (ADR-036) — still no live pipeline run has proven a bad quality gate actually blocks promotion. **Recommended as the next single-day goal**, see `docs/phase-2-closure-plan.md` Phase 1 and `EXECUTION_QUEUE.md`'s P0 table. |
-| Deployment Management | Argo Rollouts canary/blue-green | 🟡 Controller (#1930), `AnalysisTemplate` (#1931, query bug fixed in #2045), and tracer-bullet's `Rollout` conversion (tracer-bullet-gitops#6) are all merged; ApplicationSet wiring (#2049) applied live — `argo-rollouts`/`chaos-mesh` Applications now exist on-cluster. No live canary rollout has been triggered yet, so automated rollback is unverified |
+| CI/CD Orchestration | Quality gates block bad deploys | 🟢 **Done 2026-09-17**: live-verified on `fawkes-dev-aks`. A real bad commit failed SonarCloud's gate and stopped the pipeline before `gitops-promote`; a clean commit passed and proceeded. Also found and fixed a real bug: `sonar-scan` failed on every run (not just bad ones) due to a PVC-permission/UID mismatch. See `docs/phase-2-closure-plan.md` Phase 1. |
+| Deployment Management | Argo Rollouts canary/blue-green | 🟢 **Done 2026-09-17**: live-verified on `fawkes-dev-aks`. Two forced Rollout revisions both paused at 50% canary weight and were automatically aborted/rolled back by the `AnalysisTemplate` with zero manual intervention. See `docs/DEPLOYMENT_STRATEGY.md` Canary deployments row. |
 | Observability | Alertmanager + crash-loop notifications | 🟢 Live since Phase 1 (`KubernetesPodCrashLooping` → `platform-team` Slack receiver). **Corrected 2026-09-17:** the DevLake-CFR-correlation receiver this row previously described (#2042) is moot — DevLake is decommissioned. Alertmanager now feeds MTTR directly via a real `ArgoCDAppDegraded` alert reaching Prometheus's `ALERTS_FOR_STATE` (`dora:fdrt_hours:p50_30d`), confirmed live against a genuine incident. CFR comes from ArgoCD sync-failure ratio instead, not Alertmanager — see the DORA row below. |
-| Security | Shift-left SAST/DAST in pipeline | 🟡 SAST (SonarCloud gate) live via the row above. DAST (`dast-baseline-scan` OWASP ZAP task, #2048) is merged but standalone — not yet wired into a pipeline trigger path or run against a live target |
+| Security | Shift-left SAST/DAST in pipeline | 🟡 SAST (SonarCloud gate) **live-verified 2026-09-17** via the row above. DAST (`dast-baseline-scan` OWASP ZAP task, #2048) is merged but standalone — not yet wired into a pipeline trigger path or run against a live target |
 | DORA (5-key) | All 5 DORA metrics | 🟢 **Corrected 2026-09-17** (was 🔴, blocked on dead DevLake dependency — #1919/#2079's DevLake-webhook framing never happened and never will). All 5 keys live via native PromQL on `fawkes-dev-aks`: Deployment Frequency, Lead Time, Change Failure Rate (`dora:change_failure_rate:ratio30d`, from ArgoCD sync failures — no dashboard panel wired to it yet, see #1946), real Alertmanager-backed MTTR, and Rework Rate (resolved definition + GitHub-derived implementation, `scripts/weekly-metrics.sh`). This exceeds the epic's original "3-key" scope. |
 
 **Key issues:** #1925 (verified, no fix needed), #1934 (#2033), #1937 (#2035), #1938 (python-fawkes-path#3), #1939 (#2037), #1940/#1941 (#2038), #1942 (blocked on live canary), #1944 (#2040), #1945 (#2042), #1946 (CFR data exists now, just needs a panel — no longer blocked on DevLake), #1947 (#2044)
 
 **Remaining to fully close Phase 2:**
-- Live-verify the quality gate actually blocks a bad deploy (unblocked, Tekton confirmed `Synced`/`Healthy` on `fawkes-dev-aks` — the next single-day goal)
-- Trigger a real canary rollout on tracer-bullet/python-fawkes-path and observe an automated rollback
-- #1942 — wire chaos experiments into the canary traffic-shift step (depends on the above)
+- ~~Live-verify the quality gate actually blocks a bad deploy~~ ✅ Done 2026-09-17
+- ~~Trigger a real canary rollout on python-fawkes-path and observe an automated rollback~~ ✅ Done 2026-09-17
+- #1942 — wire chaos experiments into the canary traffic-shift step (both dependencies above now done — see `docs/DEPLOYMENT_STRATEGY.md`'s newly-found `ServiceMonitor` gap first, since the canary's success path with real passing metrics isn't demonstrated yet)
 - #1946 — add a Grafana panel for the already-live `dora:change_failure_rate:ratio30d` series (small, unblocked)
 - DevEx (basic): Backstage deployed, golden-path components registered in its live catalog — 🔴 not started, required for Beta per `MILESTONES.md` H2's 2026-09-16 addendum
 
