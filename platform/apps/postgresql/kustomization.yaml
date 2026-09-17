@@ -26,21 +26,36 @@ labels:
     app.kubernetes.io/part-of: fawkes-platform
 namespace: fawkes
 resources:
-- cloudnativepg-operator-application.yaml
 - db-shared-dev-cluster.yaml
 - db-shared-dev-credentials.yaml
 - db-space-metrics-credentials.yaml
-- secrets/db-focalboard-credentials-sealed.yaml
-- secrets/db-focalboard-readonly-credentials-sealed.yaml
-- secrets/db-backstage-credentials-sealed.yaml
-- secrets/db-backstage-readonly-credentials-sealed.yaml
-- secrets/db-harbor-credentials-sealed.yaml
-- secrets/db-datahub-credentials-sealed.yaml
-- secrets/db-plausible-credentials-sealed.yaml
-- secrets/penpot-db-credentials-sealed.yaml
-- secrets/db-sonarqube-credentials-sealed.yaml
-- secrets/db-sonarqube-readonly-credentials-sealed.yaml
-- secrets/db-vsm-credentials-sealed.yaml
-- secrets/db-unleash-credentials-sealed.yaml
-- secrets/db-experiment-credentials-sealed.yaml
-- secrets/db-discovery-credentials-sealed.yaml
+# cloudnativepg-operator-application.yaml and the secrets/*-sealed.yaml
+# resources below were removed from this bundle 2026-09-17 - see
+# EXECUTION_QUEUE.md for the live-verified bootstrap-ordering bug this
+# fixes:
+#
+# 1. cloudnativepg-operator-application.yaml is an ArgoCD Application CR
+#    (metadata.namespace: argocd). Bundling it here meant this
+#    kustomization's own `namespace: fawkes` transformer silently
+#    rewrote it to the wrong namespace, AND ArgoCD validates/applies an
+#    entire kustomize bundle atomically - so the moment any resource's
+#    CRD (postgresql.cnpg.io/v1 for the Cluster CR below, bitnami.com/v1alpha1
+#    for the sealed secrets) is undiscoverable, the WHOLE sync fails,
+#    including this nested Application, which is the only thing that
+#    would ever install the missing CRD in the first place. It now lives
+#    at its correct level as its own entry in
+#    platform/bootstrap/platform-applicationset.yaml (a real Helm chart,
+#    so it belongs in that ApplicationSet, not path-based-applications.yaml),
+#    with its existing sync-wave -5 (before this Application's -4)
+#    actually able to take effect.
+# 2. The 10 secrets/*-sealed.yaml resources require a sealed-secrets
+#    controller (bitnami.com/v1alpha1 SealedSecret CRD) that isn't
+#    deployed on this cluster (#1797, blocked - not agent-executable).
+#    They can never apply here regardless of ordering, and their mere
+#    presence in this bundle was enough to fail the same atomic-sync
+#    validation described above. Removed until #1797 lands; the 10
+#    corresponding roles in db-shared-dev-cluster.yaml's managed.roles
+#    will show pending/error role reconciliation in the Cluster's status
+#    until then - harmless today since none of those services (backstage
+#    excepted, which runs fine without this DB - see EXECUTION_QUEUE.md)
+#    are actually deployed on this cluster yet.
