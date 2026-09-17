@@ -102,7 +102,7 @@ spec:
     # moving to beta scope.
     - git:
         repoURL: https://github.com/paruff/fawkes.git
-        revision: feat/devex-plane-space-metrics-backstage
+        revision: HEAD
         files:
           - path: "platform/apps/prometheus/prometheus-application.yaml"
           - path: "platform/apps/loki/loki-application.yaml"
@@ -112,11 +112,15 @@ spec:
           - path: "platform/apps/cert-manager/cert-manager-application.yaml"
           - path: "platform/apps/argo-rollouts/argo-rollouts-application.yaml"
           - path: "platform/apps/chaos-mesh/chaos-mesh-application.yaml"
-          # DevEx plane (Beta scope, #1805): Postgres must land before
-          # Backstage/space-metrics, both of which depend on db-shared-dev.
-          - path: "platform/apps/postgresql-application.yaml"
+          # DevEx plane (Beta scope, #1805): Backstage is a real Helm chart
+          # (see its own targetRevision: "1.10.0"), so it belongs in this
+          # ApplicationSet. postgresql and space-metrics are plain
+          # Kustomize/path sources - this template forces a helm: block
+          # onto every generated Application, which breaks path sources
+          # with "open <path>/Chart.yaml: no such file or directory" (the
+          # same failure path-based-applications.yaml's own header
+          # documents) - they live in that sibling ApplicationSet instead.
           - path: "platform/apps/backstage/backstage-application.yaml"
-          - path: "platform/apps/space-metrics/space-metrics-application.yaml"
   template:
     metadata:
       name: '{{ .metadata.name }}'
