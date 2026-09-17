@@ -121,6 +121,16 @@ spec:
           # same failure path-based-applications.yaml's own header
           # documents) - they live in that sibling ApplicationSet instead.
           - path: "platform/apps/backstage/backstage-application.yaml"
+          # Split out of platform/apps/postgresql/kustomization.yaml
+          # 2026-09-17: it's a real Helm chart (chart: cloudnative-pg),
+          # so it belongs here too. Bundling an Application CR inside
+          # another Application's kustomize output meant ArgoCD's atomic
+          # sync validation could fail the whole postgresql bundle
+          # (undiscoverable CRD in a sibling resource) before this, the
+          # only thing that installs that CRD, ever got a chance to
+          # apply. Its own sync-wave -5 (vs postgresql's -4) now takes
+          # effect for real.
+          - path: "platform/apps/postgresql/cloudnativepg-operator-application.yaml"
   template:
     metadata:
       name: '{{ .metadata.name }}'
