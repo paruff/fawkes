@@ -1,11 +1,18 @@
 # Fawkes IDP — Roadmap, Backlog & DORA Strategy
 
-> **Purpose:** Single source of truth for the Fawkes Internal Developer Platform roadmap,
-> prioritized backlog, and DORA metrics strategy. Integrates IDP core features,
-> phased delivery, and the belt-level learning curriculum.
+> **Purpose:** Triaged, value/effort-scored backlog and DORA metrics strategy for the
+> Fawkes Internal Developer Platform. Integrates IDP core features, phased delivery, and
+> the belt-level learning curriculum.
 >
-> **Last Updated:** 2026-09-11
-> **Current State:** Phase 1 (Alpha) — live-verified on mac-mini-k3s cluster
+> **For current status, see [`EXECUTION_QUEUE.md`](../EXECUTION_QUEUE.md), not this file.**
+> This file is the larger, coarser-grained triage pool `EXECUTION_QUEUE.md` promotes
+> "this week's work" from; its own status columns update less frequently and can lag —
+> the two disagreeing is this file's problem to fix, not `EXECUTION_QUEUE.md`'s.
+>
+> **Last Updated:** 2026-09-17
+> **Current State:** Phase 2 (Beta) — DORA metrics done (exceeded, 5/5 keys), live-verified
+> on `fawkes-dev-aks` (Azure). `mac-mini-k3s` deprioritized 2026-09-16 (root-caused to one
+> unreliable node, not k3s itself) — see `EXECUTION_QUEUE.md`'s header note.
 > **Source of Truth for Live Status:** [#1751](https://github.com/paruff/fawkes/issues/1751)
 
 ---
