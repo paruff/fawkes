@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.149](https://github.com/paruff/fawkes/compare/v0.3.148...v0.3.149) (2026-09-17)
+
+
+### Added
+
+* **devex:** wire Backstage and SPACE metrics into the platform, live-verified on Azure ([#2136](https://github.com/paruff/fawkes/issues/2136)) ([b06abd2](https://github.com/paruff/fawkes/commit/b06abd26c169bfe0309d4c4f50da5b95109250e2))
+
 ## [0.3.148](https://github.com/paruff/fawkes/compare/v0.3.147...v0.3.148) (2026-09-17)
 
 
