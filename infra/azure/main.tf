@@ -60,16 +60,6 @@ resource "azurerm_subnet" "aks_subnet" {
   }
 }
 
-# Log Analytics workspace for monitoring
-resource "azurerm_log_analytics_workspace" "aks_logs" {
-  name                = "${var.cluster_name}-logs"
-  location            = azurerm_resource_group.aks_rg.location
-  resource_group_name = azurerm_resource_group.aks_rg.name
-  sku                 = var.log_analytics_sku
-  retention_in_days   = var.log_retention_days
-  tags                = var.tags
-}
-
 # AKS cluster with system and user node pools
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.cluster_name
@@ -112,9 +102,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
     load_balancer_sku = "standard"
   }
 
-  # Enable Azure Monitor for containers
-  oms_agent {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.aks_logs.id
+  # Azure Monitor Container Insights (oms_agent) intentionally NOT enabled:
+  # Fawkes runs its own native Prometheus/Grafana/Loki/Tempo observability
+  # stack (ADR-038) - Container Insights was duplicating that ingestion
+  # into a billed-per-GB Log Analytics workspace for no additional
+  # visibility. Removed 2026-09-17 per an Azure Advisor cost review.
+
+  # Vertical Pod Autoscaler addon (recommendation mode): installs the VPA
+  # CRDs/controller cluster-wide. This alone doesn't rightsize anything -
+  # it enables per-workload VerticalPodAutoscaler objects to be created
+  # with updatePolicy.updateMode: "Off" (recommend only, never
+  # auto-mutate pods) - see docs/KNOWN_LIMITATIONS.md for which workloads
+  # still need one created.
+  workload_autoscaler_profile {
+    vertical_pod_autoscaler_enabled = true
   }
 
   # Enable Azure RBAC

@@ -189,19 +189,6 @@ variable "storage_replication_type" {
   default     = "LRS"
 }
 
-# Log Analytics
-variable "log_analytics_sku" {
-  description = "SKU for Log Analytics workspace"
-  type        = string
-  default     = "PerGB2018"
-}
-
-variable "log_retention_days" {
-  description = "Number of days to retain logs"
-  type        = number
-  default     = 30
-}
-
 variable "oidc_issuer_enabled" {
   description = "Enable OIDC issuer for AKS (workload identity)"
   type        = bool
