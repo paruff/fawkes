@@ -69,6 +69,11 @@ class GitHubCollector(RepoSourceCollector):
                     sha=c.get("oid", ""),
                     message_headline=c.get("messageHeadline", "") or "",
                     message_body=c.get("messageBody", "") or "",
+                    committed_at=(
+                        datetime.fromisoformat(c["committedDate"].replace("Z", "+00:00"))
+                        if c.get("committedDate")
+                        else None
+                    ),
                 )
                 for c in commits_json
             ]

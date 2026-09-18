@@ -26,6 +26,8 @@ class CommitInfo:
     sha: str
     message_headline: str
     message_body: str
+    committed_at: datetime | None = None
+    """None for source collectors that don't populate it yet."""
 
 
 @dataclass(frozen=True)
