@@ -5603,6 +5603,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kl-21-vpa-addon-enabled-no-per-workload-recommendations-yet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-21 — VPA Addon Enabled, No Per-Workload Recommendations Yet
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5942,6 +5953,13 @@ re-collecting data may be required. To proceed, please send a request to
 - Accepted risk: Lighthouse CI runs locally or in isolated CI environments where symlink archive exploitation is not a practical attack vector</p>
 <p><strong>Mitigation:</strong> Documented as accepted risk. Monitor upstream (<code>@lhci/cli</code>, <code>puppeteer-core</code>) for migration away from <code>extract-zip</code>. Revisit when a patched version or alternative is available.</p>
 <p><strong>Tracking:</strong> Issue #2004.</p>
+<hr />
+<h2 id="kl-21-vpa-addon-enabled-no-per-workload-recommendations-yet">KL-21 — VPA Addon Enabled, No Per-Workload Recommendations Yet</h2>
+<p><strong>Description:</strong> <code>infra/azure/main.tf</code>'s <code>workload_autoscaler_profile.vertical_pod_autoscaler_enabled = true</code> (added 2026-09-17, Azure Advisor cost review) installs the Vertical Pod Autoscaler CRDs/controller cluster-wide, but installing the addon alone produces no recommendations — each workload needs its own <code>VerticalPodAutoscaler</code> object with <code>updatePolicy.updateMode: "Off"</code> (recommend-only, never auto-mutates running pods) pointing at it.</p>
+<p><strong>Impact:</strong>
+- No resource-rightsizing data being collected yet despite the addon being enabled
+- Safe to leave as-is indefinitely (no risk), but provides no value until workloads are opted in</p>
+<p><strong>Tracking:</strong> Create <code>VerticalPodAutoscaler</code> objects (<code>updateMode: "Off"</code>) for the platform's actual resource-constrained workloads (starting with <code>python-fawkes-path</code>, <code>space-metrics</code>, and the observability stack) as a follow-up.</p>
 
 
 
