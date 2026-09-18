@@ -116,6 +116,19 @@ groups:
         or vector(0)
       ) / 3600
 
+  # fawkes-on-fawkes self-measurement (docs/elite-engineering-bridge-plan.md
+  # Phase 5): Deployment Frequency and Lead Time for paruff/fawkes itself,
+  # computed from real GitHub PR data by the dora-metrics service (no
+  # DevLake - decommissioned, see EXECUTION_QUEUE.md). Both source metrics
+  # are already rates/averages (not raw counters), so these rules are a
+  # naming pass-through for dashboard consistency with the dora: prefix
+  # used by every other metric in this file.
+  - record: dora:fawkes_repo_deployment_frequency:rate30d
+    expr: fawkes_repo_deployment_frequency_per_day{repo="paruff/fawkes"}
+
+  - record: dora:fawkes_repo_lead_time_hours:avg30d
+    expr: fawkes_repo_lead_time_hours{repo="paruff/fawkes"}
+
   # Rework Rate: PROXY - average number of extra syncs per app beyond the
   # first, over the full counter history (not yet windowed to 30d since
   # argocd_app_sync_total has no per-sync timestamp to bucket by age
