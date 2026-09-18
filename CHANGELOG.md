@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.151](https://github.com/paruff/fawkes/compare/v0.3.150...v0.3.151) (2026-09-18)
+
+
+### Chores
+
+* **deps:** bump go.opentelemetry.io/otel/sdk ([#2140](https://github.com/paruff/fawkes/issues/2140)) ([cfdc78c](https://github.com/paruff/fawkes/commit/cfdc78cd9ab77700f694b0dd9a3a83546d8174cd))
+
 ## [0.3.150](https://github.com/paruff/fawkes/compare/v0.3.149...v0.3.150) (2026-09-17)
 
 
