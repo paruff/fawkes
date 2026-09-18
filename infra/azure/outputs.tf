@@ -79,16 +79,6 @@ output "storage_account_primary_access_key" {
   sensitive   = true
 }
 
-output "log_analytics_workspace_id" {
-  description = "ID of the Log Analytics workspace"
-  value       = azurerm_log_analytics_workspace.aks_logs.id
-}
-
-output "log_analytics_workspace_name" {
-  description = "Name of the Log Analytics workspace"
-  value       = azurerm_log_analytics_workspace.aks_logs.name
-}
-
 output "vnet_id" {
   description = "ID of the virtual network"
   value       = azurerm_virtual_network.aks_vnet.id

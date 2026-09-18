@@ -412,3 +412,15 @@ Pattern analysis first ruled out a node-wide network problem: only `argocd-repo-
 **Mitigation:** Documented as accepted risk. Monitor upstream (`@lhci/cli`, `puppeteer-core`) for migration away from `extract-zip`. Revisit when a patched version or alternative is available.
 
 **Tracking:** Issue #2004.
+
+---
+
+## KL-21 — VPA Addon Enabled, No Per-Workload Recommendations Yet
+
+**Description:** `infra/azure/main.tf`'s `workload_autoscaler_profile.vertical_pod_autoscaler_enabled = true` (added 2026-09-17, Azure Advisor cost review) installs the Vertical Pod Autoscaler CRDs/controller cluster-wide, but installing the addon alone produces no recommendations — each workload needs its own `VerticalPodAutoscaler` object with `updatePolicy.updateMode: "Off"` (recommend-only, never auto-mutates running pods) pointing at it.
+
+**Impact:**
+- No resource-rightsizing data being collected yet despite the addon being enabled
+- Safe to leave as-is indefinitely (no risk), but provides no value until workloads are opted in
+
+**Tracking:** Create `VerticalPodAutoscaler` objects (`updateMode: "Off"`) for the platform's actual resource-constrained workloads (starting with `python-fawkes-path`, `space-metrics`, and the observability stack) as a follow-up.
