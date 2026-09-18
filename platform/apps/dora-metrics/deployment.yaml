@@ -45,6 +45,14 @@ spec:
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
+      # ghcr.io/paruff/fawkes-dora-metrics is amd64-only (no multi-arch
+      # build exists) - required on mixed-arch clusters (e.g. the LAN
+      # homelab's arm64 Lima VM + amd64 mini-gamer node) to avoid
+      # scheduling onto an incompatible node and crashing with "exec
+      # format error" - live-verified gap, same pattern documented in
+      # python-fawkes-path-gitops's own Rollout manifest.
+      nodeSelector:
+        kubernetes.io/arch: amd64
       serviceAccountName: dora-metrics
       # dora-metrics-github-token: created live on the cluster (kubectl
       # create secret generic), not committed - same pattern as
