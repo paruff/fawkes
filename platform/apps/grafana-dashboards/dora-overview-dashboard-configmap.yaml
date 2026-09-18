@@ -1150,6 +1150,98 @@ data:
               }
             }
           ]
+        },
+        {
+          "id": 16,
+          "title": "fawkes-on-fawkes: Deployment Frequency",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Deployment Frequency for paruff/fawkes itself (docs/elite-engineering-bridge-plan.md Phase 5) - merged release-please PRs per day over a 30-day window, computed live from GitHub PR data by the dora-metrics service. No DevLake - decommissioned.",
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 27
+          },
+          "targets": [
+            {
+              "expr": "dora:fawkes_repo_deployment_frequency:rate30d",
+              "legendFormat": "paruff/fawkes",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 2,
+              "displayName": "Releases / day"
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          }
+        },
+        {
+          "id": 17,
+          "title": "fawkes-on-fawkes: Lead Time for Changes",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Lead Time for Changes for paruff/fawkes itself (docs/elite-engineering-bridge-plan.md Phase 5) - average hours from a release PR's first commit to merge, over a 30-day window, computed live from GitHub PR data by the dora-metrics service. No DevLake - decommissioned.",
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 27
+          },
+          "targets": [
+            {
+              "expr": "dora:fawkes_repo_lead_time_hours:avg30d",
+              "legendFormat": "paruff/fawkes",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h",
+              "decimals": 2,
+              "displayName": "Avg hours"
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          }
         }
       ],
       "annotations": {

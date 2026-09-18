@@ -425,7 +425,7 @@ Community is forming. Join the conversation in [GitHub Discussions](https://gith
 - ✅ User research infrastructure — personas, interview guides, insights database
 - ✅ Product discovery and adoption support
 - ✅ Security plane — SBOM, image signing, policy enforcement
-- 🚧 DORA metrics collection partial — dashboards pending ([KL-12](docs/KNOWN_LIMITATIONS.md))
+- ✅ DORA metrics — all 5 keys live via native Prometheus recording rules (no DevLake), including [fawkes-on-fawkes self-measurement](docs/elite-engineering-bridge-plan.md#phase-5) — the platform tracking its own Deployment Frequency and Lead Time on the same DORA Grafana dashboard it builds for tenant services
 - 🚧 Multi-cloud support (AWS, Azure, GCP) — evaluation only, no remote state ([KL-01](docs/KNOWN_LIMITATIONS.md))
 - ✅ GitOps workflows with ArgoCD
 - ✅ Observability stack (Prometheus, Grafana, OpenTelemetry)
