@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.152](https://github.com/paruff/fawkes/compare/v0.3.151...v0.3.152) (2026-09-18)
+
+
+### Added
+
+* **dora:** fawkes-on-fawkes DORA self-measurement — closes bridge-plan Phase 5 ([#2144](https://github.com/paruff/fawkes/issues/2144)) ([301a17a](https://github.com/paruff/fawkes/commit/301a17adecfc45b3396a1eee17116d0dea9190a3))
+
+
+### Chores
+
+* **azure:** disable Container Insights, enable VPA addon ([#2142](https://github.com/paruff/fawkes/issues/2142)) ([7c9a52b](https://github.com/paruff/fawkes/commit/7c9a52b4764d6768c0656712d8e0cc2b6635d87c))
+
 ## [0.3.151](https://github.com/paruff/fawkes/compare/v0.3.150...v0.3.151) (2026-09-18)
 
 
