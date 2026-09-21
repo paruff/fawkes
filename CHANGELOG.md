@@ -5,6 +5,22 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.153](https://github.com/paruff/fawkes/compare/v0.3.152...v0.3.153) (2026-09-21)
+
+
+### Chores
+
+* **deps-dev:** bump boto3 from 1.43.92 to 1.43.97 ([#2148](https://github.com/paruff/fawkes/issues/2148)) ([f92fea6](https://github.com/paruff/fawkes/commit/f92fea69b3e7a38947d6248246e6308e7d3891d5))
+* **deps-dev:** bump gitpython from 3.1.61 to 3.1.62 ([#2150](https://github.com/paruff/fawkes/issues/2150)) ([db9100d](https://github.com/paruff/fawkes/commit/db9100da36e0db19e9350f02d50a8efba7db6e7d))
+* **deps-dev:** bump ruff from 0.16.7 to 0.16.8 ([#2151](https://github.com/paruff/fawkes/issues/2151)) ([09223f9](https://github.com/paruff/fawkes/commit/09223f924516e37bf0b69d0f7fb1d1e7bc250787))
+* **deps:** bump docker/build-push-action from 7.3.0 to 7.4.0 ([#2153](https://github.com/paruff/fawkes/issues/2153)) ([3b96430](https://github.com/paruff/fawkes/commit/3b96430c6f942e11b74bd1bacbf282e596dbb1c1))
+* **deps:** bump docker/setup-qemu-action from 4.3.0 to 4.4.0 ([#2154](https://github.com/paruff/fawkes/issues/2154)) ([9231efd](https://github.com/paruff/fawkes/commit/9231efd627395e58dcae6aba268f35069cb16c62))
+* **deps:** bump hashicorp/aws from 6.64.0 to 6.65.0 in /infra/aws ([#2147](https://github.com/paruff/fawkes/issues/2147)) ([c61fd97](https://github.com/paruff/fawkes/commit/c61fd97460caea6fc067fe3f2edb6aaf85eb2fe1))
+* **deps:** bump hashicorp/azurerm from 5.5.0 to 5.6.0 in /infra/azure ([#2145](https://github.com/paruff/fawkes/issues/2145)) ([085450b](https://github.com/paruff/fawkes/commit/085450bb38763f9d38fab29ed67699da948be1ef))
+* **deps:** bump hashicorp/random from 3.9.0 to 3.9.1 in /infra/aws ([#2149](https://github.com/paruff/fawkes/issues/2149)) ([c882489](https://github.com/paruff/fawkes/commit/c8824899efa8c09fe932ff08ccb728900955f5c1))
+* **deps:** bump pymdown-extensions from 11.0.2 to 12.0.1 ([#2146](https://github.com/paruff/fawkes/issues/2146)) ([4f5a378](https://github.com/paruff/fawkes/commit/4f5a378442200666dc6c5e4ae31d46a8cebda814))
+* **deps:** bump the github-actions-patch group with 5 updates ([#2152](https://github.com/paruff/fawkes/issues/2152)) ([cc2e707](https://github.com/paruff/fawkes/commit/cc2e7077d8bbef96ca621fd471046dab1b900420))
+
 ## [0.3.152](https://github.com/paruff/fawkes/compare/v0.3.151...v0.3.152) (2026-09-18)
 
 
