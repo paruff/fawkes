@@ -2,13 +2,16 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp"]
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.83"
+      ]
     },
     "serena": {
       "command": "uvx",
       "args": [
         "--from",
-        "serena-agent",
+        "serena-agent==1.7.0",
         "serena",
         "start-mcp-server",
         "--project-from-cwd",
@@ -27,7 +30,10 @@
     },
     "github": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github@2025.4.8"
+      ],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       }

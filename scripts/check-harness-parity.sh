@@ -98,6 +98,22 @@ if [ -f .opencode/opencode.json ] && [ -f .mcp.json ]; then
   else
     say_fail "MCP server sets differ — opencode.json: [$oc_servers] vs .mcp.json: [$cc_servers]"
   fi
+  # 2b. Same names is not enough: each server must launch the same pinned
+  #     package (stdio) or hit the same URL (remote) in both files, and no
+  #     stdio package may float on @latest.
+  cc_specs=$(jq -r '.mcpServers | to_entries[] | "\(.key)=\(if .value.url then .value.url else (.value.args | join(" ")) end)"' .mcp.json | sort)
+  oc_specs=$(jq -r '.mcp | to_entries[] | "\(.key)=\(if .value.url then .value.url else (.value.command[1:] | join(" ")) end)"' .opencode/opencode.json | sort)
+  if [ "$cc_specs" = "$oc_specs" ]; then
+    say_ok "MCP server launch specs match between harnesses"
+  else
+    say_fail "MCP server launch specs differ between .mcp.json and .opencode/opencode.json:"
+    diff <(echo "$cc_specs") <(echo "$oc_specs") | sed 's/^/         /' || true
+  fi
+  if grep -q '@latest' .mcp.json .opencode/opencode.json; then
+    say_fail "MCP config uses @latest — pin an exact version"
+  else
+    say_ok "no @latest in MCP config"
+  fi
 else
   say_fail "opencode.json or .mcp.json missing"
 fi
