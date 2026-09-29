@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'file=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get(\"tool_input\",{}).get(\"file_path\",\"\"))\" 2>/dev/null); case \"$file\" in .env|.env.*|*.pem|*.key|credentials*|*.key|*.pem) echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"Protected path: $file\\\"}}\";; esac' || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'cmd=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get(\\\"tool_input\\\",{}).get(\\\"command\\\",\\\"\\\"))\" 2>/dev/null); case \"$cmd\" in *git*commit*) bash scripts/hooks/pre-commit-secret-scan.sh 2>/dev/null || echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"Secret scan failed\\\"}}\";; esac' || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'file=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get(\\\"tool_input\\\",{}).get(\\\"file_path\\\",\\\"\\\"))\" 2>/dev/null); ext=\"${file##*.}\"; case \"$ext\" in ts|js) prettier --write \"$file\" 2>/dev/null || true;; py) ruff format \"$file\" 2>/dev/null || true;; go) gofmt -w \"$file\" 2>/dev/null || true;; rs) rustfmt \"$file\" 2>/dev/null || true;; esac' || true"
+          }
+        ]
+      }
+    ]
+  }
+}
