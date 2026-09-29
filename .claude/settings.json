@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'file=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get(\"tool_input\",{}).get(\"file_path\",\"\"))\" 2>/dev/null); case \"$file\" in .env|.env.*|*.pem|*.key|credentials*|*.key|*.pem) echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"Protected path: $file\\\"}}\";; esac' || true"
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/scripts/hooks/claude-protected-path.sh\""
           }
         ]
       },
