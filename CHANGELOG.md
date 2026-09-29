@@ -5,6 +5,21 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.154](https://github.com/paruff/fawkes/compare/v0.3.153...v0.3.154) (2026-09-28)
+
+
+### Chores
+
+* **deps-dev:** bump boto3 from 1.43.97 to 1.43.102 ([#2160](https://github.com/paruff/fawkes/issues/2160)) ([f74bee9](https://github.com/paruff/fawkes/commit/f74bee940738111a4f60d01b88b72fb30d0906de))
+* **deps-dev:** bump hypothesis from 6.168.0 to 6.168.1 ([#2159](https://github.com/paruff/fawkes/issues/2159)) ([81d5bd8](https://github.com/paruff/fawkes/commit/81d5bd884d9f629d0df7494e3e1275c6c5e84e3a))
+* **deps-dev:** bump pylint from 4.0.8 to 4.0.9 ([#2162](https://github.com/paruff/fawkes/issues/2162)) ([da9ba2d](https://github.com/paruff/fawkes/commit/da9ba2da2f94ed504aa3b776838c306b98386a96))
+* **deps-dev:** bump ruff from 0.16.8 to 0.16.9 ([#2164](https://github.com/paruff/fawkes/issues/2164)) ([cec4c69](https://github.com/paruff/fawkes/commit/cec4c695caf7329cc4b66791220d44c25d8b7b8c))
+* **deps:** bump hashicorp/aws from 6.65.0 to 6.66.0 in /infra/aws ([#2161](https://github.com/paruff/fawkes/issues/2161)) ([7dc0dae](https://github.com/paruff/fawkes/commit/7dc0daeb8bda2d68053d3bfc598532698075ca9d))
+* **deps:** bump hashicorp/azurerm from 5.6.0 to 5.7.0 in /infra/azure ([#2158](https://github.com/paruff/fawkes/issues/2158)) ([6b2f50f](https://github.com/paruff/fawkes/commit/6b2f50f1957200bb49a3fee8f83583f6872d1742))
+* **deps:** bump py-cov-action/python-coverage-comment-action ([#2166](https://github.com/paruff/fawkes/issues/2166)) ([b7ff711](https://github.com/paruff/fawkes/commit/b7ff711cf66a292f7d46574513546ce5fc33593b))
+* **deps:** bump pymdown-extensions from 12.0.1 to 12.1 ([#2163](https://github.com/paruff/fawkes/issues/2163)) ([c0171fc](https://github.com/paruff/fawkes/commit/c0171fc37fd347e94fad2a1e6c09d96a8fcb587a))
+* **deps:** bump the github-actions-patch group with 5 updates ([#2165](https://github.com/paruff/fawkes/issues/2165)) ([b688958](https://github.com/paruff/fawkes/commit/b68895892a56200c9ea758cac607d1f25c00aeb6))
+
 ## [0.3.153](https://github.com/paruff/fawkes/compare/v0.3.152...v0.3.153) (2026-09-21)
 
 
