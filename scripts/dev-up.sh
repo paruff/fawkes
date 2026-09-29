@@ -28,6 +28,8 @@ ARGOCD_CHART_VERSION="7.7.14"
 VAULT_CHART_VERSION="0.29.1"
 BACKSTAGE_CHART_VERSION="2.3.0"
 PROMETHEUS_CHART_VERSION="67.9.0"
+# Dev-only Grafana admin password; override with GRAFANA_ADMIN_PASSWORD. Never reuse in production.
+GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-fawkes-grafana}" # pragma: allowlist secret
 
 log() { echo "$(date -u +%H:%M:%S) $*"; }
 step() {
@@ -123,7 +125,7 @@ kubectl create namespace "${MONITORING_NS}" --dry-run=client -o yaml | kubectl a
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --version "${PROMETHEUS_CHART_VERSION}" \
   --namespace "${MONITORING_NS}" \
-  --set grafana.adminPassword="fawkes-grafana" \
+  --set grafana.adminPassword="${GRAFANA_ADMIN_PASSWORD}" \
   --set grafana.service.type=ClusterIP \
   --set prometheus.service.type=ClusterIP \
   --set alertmanager.enabled=false \

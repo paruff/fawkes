@@ -16,7 +16,6 @@ help: ## Show this help message
 
 clean: terraform-clean ## Remove agent tooling caches, generated output, and build artifacts
 	rm -rf .opencode/node_modules/
-	rm -rf graphify-out/
 	rm -rf .agents/logs/
 	rm -rf __pycache__/ .pytest_cache/ .mypy_cache/ .ruff_cache/
 	find . -name '*.pyc' -delete
