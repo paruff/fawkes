@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.ufawkes.dev/dora/deployment-event.schema.json",
+  "title": "Deployment Event",
+  "description": "Canonical schema for deployment lifecycle events used to compute Deployment Frequency, Lead Time, Change Failure Rate, and Time to Restore.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Semantic version of the schema. Minor bumps for backward-compatible additions; major bumps for breaking changes.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "event_type": {
+      "description": "Discriminant for event routing. Must be 'deployment'.",
+      "type": "string",
+      "const": "deployment"
+    },
+    "repo": {
+      "description": "Repository identifier (e.g., 'org/repo-name').",
+      "type": "string",
+      "minLength": 1
+    },
+    "service": {
+      "description": "Service or component name within the repository.",
+      "type": "string",
+      "minLength": 1
+    },
+    "environment": {
+      "description": "Deployment target environment (e.g., 'production', 'staging', 'dev').",
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "description": "Full SHA of the deployed commit.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "deployed_at": {
+      "description": "ISO 8601 timestamp of when the deployment completed.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "description": "Outcome of the deployment.",
+      "type": "string",
+      "enum": ["success", "failed", "rollback"]
+    },
+    "pipeline_url": {
+      "description": "Link to the CI/CD pipeline run that performed the deployment.",
+      "type": "string",
+      "format": "uri"
+    },
+    "deploy_duration_seconds": {
+      "description": "Total wall-clock time the deployment took, in seconds.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "ai_assisted": {
+      "description": "Whether AI tooling was involved in the deployment process.",
+      "type": "boolean"
+    },
+    "first_commit_at": {
+      "description": "ISO 8601 timestamp of the first commit in the deployed change set. Used for exact Lead Time for Changes; preferred over pr_merged_at when both are present.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "pr_merged_at": {
+      "description": "ISO 8601 timestamp the pull request was merged. Used as a proxy for Lead Time for Changes when first_commit_at is unavailable.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_type",
+    "repo",
+    "service",
+    "environment",
+    "commit_sha",
+    "deployed_at",
+    "status",
+    "pipeline_url"
+  ],
+  "additionalProperties": false
+}
