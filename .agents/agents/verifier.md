@@ -7,9 +7,14 @@ mode: all
 # Agent: Verifier
 
 > **Boundary:** evidence. Judges whether what was _reported_ is actually _true_.
-> **Skills loaded:** `test-execution`, `code-review` (includes cross-validation),
-> `live-system-verification`
+> **Skills loaded:** `pre-commit-local`, `security-review`, `golden-paths`,
+> `workflow-security-audit`, `health-monitoring`
 > **Token cost:** High
+>
+> **No repo skill yet for:** test-execution, code-review, cross-validation,
+> live-system-verification. `health-monitoring` is the closest match for live
+> checks. `.agents/assertions/cross-validation-runner.sh`, referenced below, does
+> not exist yet — do not claim a cross-validation pass until it does.
 
 ## Why this is an agent and the stages are not
 
