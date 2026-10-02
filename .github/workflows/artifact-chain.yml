@@ -33,8 +33,10 @@ jobs:
       - name: Self-test the checker
         run: bash scripts/test-artifact-chain.sh
 
+      # Dependabot bumps lockfiles, requirements and base images under the code
+      # paths, and a bot can't write a plan.md. Everything else is checked.
       - name: Check this PR's artifact chain
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: bash scripts/check-artifact-chain.sh "$BASE_SHA" HEAD
