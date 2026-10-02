@@ -1,0 +1,44 @@
+name: Artifact Chain
+
+# Enforces the committed AI-SDLC artifact chain on pull requests:
+#   intent.md → spec.md → plan.md → code diff   (docs/ai-sdlc/README.md)
+# Fails when a PR changes a path listed in .artifact-chain-paths without a
+# docs/ai-sdlc/**/plan.md that has a
+# "Verification Strategy" section in the same diff, or when a spec.md has no
+# intent.md in the branch history. Logic: scripts/check-artifact-chain.sh.
+#
+# Runs on every pull request. Code paths: .artifact-chain-paths.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  artifact-chain:
+    name: "🔗 Artifact Chain"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: job-start
+        run: echo "job-start $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0 # merge-base and branch history
+          persist-credentials: false
+
+      - name: Self-test the checker
+        run: bash scripts/test-artifact-chain.sh
+
+      - name: Check this PR's artifact chain
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: bash scripts/check-artifact-chain.sh "$BASE_SHA" HEAD
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish $(date -u +'%Y-%m-%dT%H:%M:%SZ')"

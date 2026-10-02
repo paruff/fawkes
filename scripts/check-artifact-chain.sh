@@ -4,11 +4,18 @@
 # (docs/ai-sdlc/README.md). Run by .github/workflows/artifact-chain.yml.
 #
 # Rules:
-#   1. A PR that changes anything under src/ must also add or modify a
+#   1. A PR that changes anything under the repo's code paths (src/ by
+#      default; see .artifact-chain-paths below) must also add or modify a
 #      docs/ai-sdlc/**/plan.md containing a "Verification Strategy" heading,
 #      so the plan is reviewed in the same PR diff as the code.
 #   2. Every docs/ai-sdlc/**/spec.md at the PR head must have a sibling
 #      intent.md somewhere in the branch history.
+#
+# Code paths: .artifact-chain-paths at the repo root lists one git pathspec
+# per line (blank lines and # comments ignored). Without the file the code
+# path is src/. A repo whose code lives elsewhere (Jekyll layouts, Compose
+# stacks, manifests) lists its own. It is a per-repo file, not a workflow
+# input, so syncing the workflow from the template never overwrites it.
 #
 # Report-only (no repository changes). Exit 0 = chain intact, 1 = violated.
 #
@@ -20,6 +27,15 @@ cd "$(dirname "$0")/.."
 BASE="${1:?usage: $0 <base-ref> [head-ref]}"
 HEAD_REF="${2:-HEAD}"
 ROOT="docs/ai-sdlc"
+PATHS_FILE=".artifact-chain-paths"
+code_paths=(src/)
+if [ -f "$PATHS_FILE" ]; then
+  mapfile -t code_paths < <(grep -vE '^[[:space:]]*(#|$)' "$PATHS_FILE" || true)
+  if [ "${#code_paths[@]}" -eq 0 ]; then
+    echo "${PATHS_FILE} lists no paths — delete it to use src/, or list your code paths" >&2
+    exit 2
+  fi
+fi
 PLAN_GLOB=":(glob)${ROOT}/**/plan.md"
 VERIFICATION_HEADING='^#{1,6}[[:space:]]+Verification Strategy([[:space:]]|$)'
 
@@ -38,12 +54,12 @@ merge_base="$(git merge-base "$BASE" "$HEAD_REF")" || {
   exit 2
 }
 
-echo "== Rule 1: src/ changes ship with a plan.md that has a Verification Strategy =="
-mapfile -t src_changes < <(git diff --name-only "$merge_base" "$HEAD_REF" -- src/)
+echo "== Rule 1: code changes (${code_paths[*]}) ship with a plan.md that has a Verification Strategy =="
+mapfile -t src_changes < <(git diff --name-only "$merge_base" "$HEAD_REF" -- "${code_paths[@]}")
 if [ "${#src_changes[@]}" -eq 0 ]; then
-  echo "  no src/ changes — rule not triggered"
+  echo "  no changes under ${code_paths[*]} — rule not triggered"
 else
-  echo "  ${#src_changes[@]} src/ file(s) changed"
+  echo "  ${#src_changes[@]} file(s) changed under ${code_paths[*]}"
   mapfile -t plans < <(git diff --name-only --diff-filter=ACMR "$merge_base" "$HEAD_REF" -- "$PLAN_GLOB")
   valid=0
   for plan in "${plans[@]}"; do
@@ -58,7 +74,7 @@ else
   done
   # A plan without the section was already reported above.
   if [ "${#plans[@]}" -eq 0 ]; then
-    err "${src_changes[0]}" "PR changes src/ but its diff includes no ${ROOT}/<feature>/plan.md — commit the plan (with a '## Verification Strategy' section) in this PR"
+    err "${src_changes[0]}" "PR changes ${code_paths[*]} but its diff includes no ${ROOT}/<feature>/plan.md — commit the plan (with a '## Verification Strategy' section) in this PR"
   fi
 fi
 
