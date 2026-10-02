@@ -5,6 +5,27 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.156](https://github.com/paruff/fawkes/compare/v0.3.155...v0.3.156) (2026-10-02)
+
+
+### Fixed
+
+* **ci:** pin mcp-k8s-server back to python 3.13.14 (3.15rc has no wheels) ([#2183](https://github.com/paruff/fawkes/issues/2183)) ([34889d9](https://github.com/paruff/fawkes/commit/34889d91c821a512958623c5860d595acb342b81))
+
+
+### Docs
+
+* stop naming retired planes and Jenkins as current in the README ([#2185](https://github.com/paruff/fawkes/issues/2185)) ([318f903](https://github.com/paruff/fawkes/commit/318f903198a8792c352cc20db710af8502268450))
+
+
+### Chores
+
+* **deps-dev:** bump flake8 from 7.3.0 to 7.4.1 ([#2177](https://github.com/paruff/fawkes/issues/2177)) ([f71dbad](https://github.com/paruff/fawkes/commit/f71dbad305aa3e3d894975382a66399ea720207f))
+* **deps-dev:** bump the python-patch group with 2 updates ([#2176](https://github.com/paruff/fawkes/issues/2176)) ([83119a6](https://github.com/paruff/fawkes/commit/83119a62eded52260fc5585121a984e71c135dba))
+* **deps:** bump python in /services/mcp-k8s-server ([#2179](https://github.com/paruff/fawkes/issues/2179)) ([f9e5d6a](https://github.com/paruff/fawkes/commit/f9e5d6a7b2f7ec4e115291198d2099c6a0708aa7))
+* **deps:** bump python in /services/mcp-k8s-server ([#2184](https://github.com/paruff/fawkes/issues/2184)) ([040b03d](https://github.com/paruff/fawkes/commit/040b03d4148e4835bfde25e39c3d3cee7bb0608c))
+* **deps:** bump the github-actions-patch group with 4 updates ([#2180](https://github.com/paruff/fawkes/issues/2180)) ([ff661b1](https://github.com/paruff/fawkes/commit/ff661b1bd35cfcb28225690a5a44cf5af2d8f53a))
+
 ## [0.3.155](https://github.com/paruff/fawkes/compare/v0.3.154...v0.3.155) (2026-10-02)
 
 
