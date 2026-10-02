@@ -9,6 +9,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Git exports GIT_INDEX_FILE (and friends) to hooks. Run from a hook (the
+# unit-tests pre-commit hook, or pre-push-validation's `pre-commit run
+# --all-files`), they made every `git -C "$repo" ...` below act on the REAL
+# repo: `git add -A` rewrote the real index and `git switch -qc pr` moved the
+# real worktree onto a stray branch. Scenarios must see only their own repo.
+unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE GIT_PREFIX GIT_COMMON_DIR
+
 CHECK="$PWD/scripts/check-artifact-chain.sh"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT

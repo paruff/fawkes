@@ -47,8 +47,7 @@ updates:
     groups:
       python-patch:
         patterns:
-          - "*.txt"
-        dependency-type: "direct"
+          - "*"
         update-types:
           - "patch"
 
@@ -117,3 +116,14 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
+    groups:
+      pre-commit-hooks:
+        patterns: ["*"]
+    cooldown:
+      default-days: 7
