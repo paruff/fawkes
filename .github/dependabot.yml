@@ -116,6 +116,14 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    # Hold the base image at Python 3.13 (patch updates still flow). Newer Pythons
+    # have no wheels for this image's pinned fastapi/pydantic-core, so pip tries to
+    # compile Rust in a slim image with no compiler and the build fails. This was
+    # pinned by hand in 5565eff1, then bumped past twice (the last time to the
+    # 3.15.0rc2 release candidate, #2179). Revisit when requirements.txt is upgraded.
+    ignore:
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
