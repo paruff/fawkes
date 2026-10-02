@@ -7,7 +7,7 @@
 > **Scope**: Fawkes is the core IDP (platform orchestration). It is **not** the Dojo curriculum (now at [uFawkesDojo](https://github.com/paruff/uFawkesDojo)) and **not** a CI SaaS — composable stacks ([uFawkesObs / Pipe / DevX](#ufawkes-stack-ecosystem)) cover observability, delivery, and developer experience.
 
 <p align="center">
-  <img src="docs/images/fawkes-logo.png" alt="Fawkes Logo" width="200"/>
+  <img src="docs/assets/images/fawkes-idp.png" alt="Fawkes: Internal Developer Platform, a phoenix" width="200"/>
 </p>
 
 <p align="center">
@@ -535,6 +535,12 @@ All contributors are recognized in:
 - Speaking opportunities at community events
 
 ---
+
+## Design and brand
+
+This repo follows the shared Fawkes and uFawkes design reference:
+[DESIGN.md](https://github.com/paruff/uFawkes.dev/blob/main/DESIGN.md), with tokens at <https://ufawkes.dev/design/tokens.json>. It is owned by
+[uFawkes.dev](https://github.com/paruff/uFawkes.dev).
 
 ## 📜 License
 
