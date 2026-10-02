@@ -96,6 +96,19 @@ for agent in "${EXPECTED[@]}"; do
   else
     ok "$agent: no unknown frontmatter keys"
   fi
+
+  # Every skill named on the "Skills loaded" line(s) must exist as a
+  # SKILL.md under .agents/skills/ (top level or nested). A dangling name
+  # means the harness loads nothing and the agent silently runs without it.
+  # shellcheck disable=SC2016  # backticks are literal, matching markdown code spans
+  skills=$(awk '/Skills loaded:/{f=1} f&&/Token cost:/{exit} f{print}' "$file" | grep -o '`[a-z0-9-]*`' | tr -d '`' || true)
+  for skill in $skills; do
+    if find .agents/skills -type f -path "*/${skill}/SKILL.md" 2> /dev/null | grep -q .; then
+      ok "$agent: skill '$skill' exists"
+    else
+      bad "$agent: skill '$skill' not found under .agents/skills/"
+    fi
+  done
 done
 
 # -- retired-agent guard --

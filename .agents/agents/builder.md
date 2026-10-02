@@ -1,14 +1,18 @@
 ---
 name: builder
-description: "Implements a planned feature: writes code, manifests, and tests against a committed plan.md. Use when plan.md exists and the work is scoped. Loads the build, test, and refactoring skills."
+description: "Implements a planned feature: writes code, manifests, and tests against a committed plan.md. Use when plan.md exists and the work is scoped. Loads the test-generation, language, and manifest skills."
 mode: all
 ---
 
 # Agent: Builder
 
 > **Boundary:** implementation only — code, tests, manifests, pipelines.
-> **Skills loaded:** `build`, `test`, `refactoring`
+> **Skills loaded:** `test-generation`, `lang-python`, `lang-go`, `service-blueprint`,
+> `kubernetes-manifests`, `terraform-modules`, `github-actions`, `pre-commit-local`
 > **Token cost:** High
+>
+> **No repo skill yet for:** build (generic), refactoring. Load the language or
+> manifest skill that matches the files being changed.
 
 ## Why this is an agent and the stages are not
 

@@ -1,6 +1,6 @@
 ---
 name: planner
-description: "Turns an intent into committed intent.md, spec.md, and plan.md. Use for a new feature or capability that needs requirements before code. Loads the discover, spec, and design skills. Writes no implementation code."
+description: "Turns an intent into committed intent.md, spec.md, and plan.md. Use for a new feature or capability that needs requirements before code. Loads the adr-writer, dora-metrics, and golden-paths skills. Writes no implementation code."
 mode: all
 ---
 
@@ -8,8 +8,12 @@ mode: all
 
 > **Boundary:** planning only. This is an execution boundary — it owns the
 > artifact chain up to `plan.md` and stops there.
-> **Skills loaded:** `discover`, `spec`, `design`, `plan`
+> **Skills loaded:** `adr-writer`, `dora-metrics`, `golden-paths`
 > **Token cost:** Medium–High
+>
+> **No repo skill yet for:** discover, spec, design, plan. Run those stages
+> inline from the Scope section below; `adr-writer` covers recorded design
+> decisions, `dora-metrics` the measurable outcome, `golden-paths` the constraints.
 
 ## Why this is an agent and the stages are not
 

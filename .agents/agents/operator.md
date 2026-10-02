@@ -9,8 +9,12 @@ mode: all
 > **Boundary:** repository and release state. The only agent permitted to
 > commit, push, tag, publish, or open a PR.
 > **Commands:** `/release`, `/measure`
-> **Skills loaded:** `release` (via the command), `dora-measurement`
+> **Skills loaded:** `delivery`, `dora-metrics`, `pre-commit-local`
 > **Token cost:** Low–Medium
+>
+> **No repo skill yet for:** release. `/release` and `/measure` are not defined
+> under `.agents/commands/` yet, so run those checklists by hand from the Scope
+> section below.
 
 ## Why this is an agent and the stages are not
 
