@@ -9,11 +9,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# Git exports GIT_INDEX_FILE (and friends) to hooks. Run from a hook (the
-# unit-tests pre-commit hook, or pre-push-validation's `pre-commit run
-# --all-files`), they made every `git -C "$repo" ...` below act on the REAL
-# repo: `git add -A` rewrote the real index and `git switch -qc pr` moved the
-# real worktree onto a stray branch. Scenarios must see only their own repo.
+# Git exports GIT_INDEX_FILE (and friends) to hooks. Run from the pre-commit
+# unit-tests hook, they made every `git -C "$repo" add -A` below write into the
+# REAL index instead of the throwaway repo's: the commit failed and the index
+# was left with ~250 staged deletions. Scenarios must see only their own repo.
 unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE GIT_PREFIX GIT_COMMON_DIR
 
 CHECK="$PWD/scripts/check-artifact-chain.sh"
@@ -50,7 +49,7 @@ commit() {
 expect() {
   local want="$1" label="$2" repo="$3" out rc
   out="$(cd "$repo" && scripts/check-artifact-chain.sh main pr 2>&1)" && rc=0 || rc=$?
-  if { [ "$want" = pass ] && [ "$rc" -eq 0 ]; } || { [ "$want" = block ] && [ "$rc" -eq 1 ]; }; then
+  if { [ "$want" = pass ] && [ "$rc" -eq 0 ]; } || { [ "$want" = block ] && [ "$rc" -eq 1 ]; } || { [ "$want" = error ] && [ "$rc" -eq 2 ]; }; then
     pass=$((pass + 1))
     echo "  ✅ ${want}: ${label}"
   else
@@ -113,6 +112,32 @@ expect pass "large plan.md (~500 KB, heading near the top) is not misread via SI
 r="$(new_repo docs-only)"
 commit "$r" docs/guide.md "hello"
 expect pass "no src/ change and no artifacts" "$r"
+
+echo "== Configurable code paths (.artifact-chain-paths) =="
+r="$(new_repo paths-custom-blocks)"
+printf '%s\n' "# this repo keeps code outside src/" "" "_layouts/" "assets/" > "$r/.artifact-chain-paths"
+git -C "$r" add -A && git -C "$r" commit -qm "config"
+commit "$r" _layouts/page.html "<html></html>"
+expect block "change under a configured path with no plan.md" "$r"
+
+r="$(new_repo paths-custom-ignores-src)"
+printf '%s\n' "site/" > "$r/.artifact-chain-paths"
+git -C "$r" add -A && git -C "$r" commit -qm "config"
+commit "$r" src/app.ts "export const x = 1"
+expect pass "src/ is not a code path once the repo configures its own" "$r"
+
+r="$(new_repo paths-custom-compliant)"
+printf '%s\n' "site/" > "$r/.artifact-chain-paths"
+git -C "$r" add -A && git -C "$r" commit -qm "config"
+commit "$r" docs/ai-sdlc/login/plan.md "$PLAN_OK"
+commit "$r" site/index.html "<html></html>"
+expect pass "configured-path change with a plan.md that has a Verification Strategy" "$r"
+
+r="$(new_repo paths-empty)"
+printf '%s\n' "# only a comment" "" > "$r/.artifact-chain-paths"
+git -C "$r" add -A && git -C "$r" commit -qm "config"
+commit "$r" src/app.ts "export const x = 1"
+expect error "a config file with no paths fails loudly instead of checking nothing" "$r"
 
 echo "== Rule 2: spec.md needs an intent.md in branch history =="
 r="$(new_repo spec-without-intent)"
