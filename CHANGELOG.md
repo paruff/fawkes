@@ -5,6 +5,24 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.155](https://github.com/paruff/fawkes/compare/v0.3.154...v0.3.155) (2026-10-02)
+
+
+### Fixed
+
+* **agents:** repoint agents at existing skills, check skills resolve ([#2171](https://github.com/paruff/fawkes/issues/2171)) ([6dd3c5e](https://github.com/paruff/fawkes/commit/6dd3c5e466fdfccd4fd79e807451f0de3d444ce4))
+* **suite:** sync 4 agents, hooks, routing; unified devcontainer ([#2169](https://github.com/paruff/fawkes/issues/2169)) ([ac334ac](https://github.com/paruff/fawkes/commit/ac334ac6b4258ec773a5fec3a1e014ef12bc0546))
+
+
+### Docs
+
+* add a root INTENT.md (pre-alpha scope, Alpha gate, graduation role) ([#2173](https://github.com/paruff/fawkes/issues/2173)) ([f3728de](https://github.com/paruff/fawkes/commit/f3728de61255d35a0333241f6834fbb6a98e15ca))
+
+
+### Chores
+
+* **deps-dev:** bump the npm_and_yarn group across 1 directory with 3 updates ([#2172](https://github.com/paruff/fawkes/issues/2172)) ([0fbb70a](https://github.com/paruff/fawkes/commit/0fbb70a35057234f005bf4580ebd68dd3788580c))
+
 ## [0.3.154](https://github.com/paruff/fawkes/compare/v0.3.153...v0.3.154) (2026-09-28)
 
 
