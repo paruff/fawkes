@@ -55,7 +55,7 @@ Everything teams need: infrastructure, CI/CD, collaboration, project management,
 
 ### 📊 DORA-Driven by Design
 
-Four key metrics automated from day one. Measure what matters, improve continuously, achieve elite performance.
+DORA metrics are a design goal. The Alpha release targets two of them, deployment frequency and lead time, queryable in Grafana with native PromQL.
 
 ### 🤝 Unified Experience
 
@@ -242,7 +242,7 @@ Fawkes is built on a modern, cloud-native architecture:
 - **Backstage** - Developer portal and dojo learning hub
 - **Mattermost** - Team collaboration and ChatOps
 - **Focalboard** - Project management (bundled with Mattermost)
-- **Jenkins** - CI/CD pipelines with golden paths
+- **Tekton** - In-cluster CI/CD pipelines with golden paths (see ADR-036)
 - **ArgoCD** - GitOps-driven continuous delivery
 - **Prometheus & Grafana** - Metrics and dashboards
 - **Loki** - Log aggregation and search
@@ -649,8 +649,8 @@ Fawkes is the core platform. The uFawkes stacks are composable components that e
 | --------------- | ---------------------------------------------------- | ----------------------------------------------- |
 | **uFawkesObs**  | Observability — Prometheus, Grafana, AI dashboards   | [GitHub](https://github.com/paruff/ufawkesobs)  |
 | **uFawkesPipe** | CI/CD — Tekton golden path, Woodpecker, DevSecOps    | [GitHub](https://github.com/paruff/ufawkespipe) |
-| **uFawkesDORA** | DORA metrics — dashboards, VSM, delivery performance | [GitHub](https://github.com/paruff/ufawkesdora) |
-| **uFawkesSec**  | Security — policy-as-code, supply chain, guardrails  | [GitHub](https://github.com/paruff/ufawkessec)  |
+| **uFawkesDORA** | DORA metrics — merged into uFawkesObs | _merged_ |
+| **uFawkesSec**  | Security — merged into uFawkesPipe (DefectDojo, Infisical, Trivy, Falco) | _merged_ |
 | **uFawkesDevX** | Developer experience — golden paths, IDP templates   | [GitHub](https://github.com/paruff/ufawkesdevx) |
 | **uFawkesAI**   | AI agent templates — golden path scaffolding         | [GitHub](https://github.com/paruff/ufawkesai)   |
 
