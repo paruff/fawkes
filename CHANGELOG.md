@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.157](https://github.com/paruff/fawkes/compare/v0.3.156...v0.3.157) (2026-10-03)
+
+
+### Added
+
+* **docs:** apply suite design tokens to the docs site ([#2193](https://github.com/paruff/fawkes/issues/2193)) ([704fcc2](https://github.com/paruff/fawkes/commit/704fcc26537dad31fbb71ab0934c38d5986c3ca0))
+
+
+### Docs
+
+* **design:** point to the suite design reference ([#2192](https://github.com/paruff/fawkes/issues/2192)) ([99cd932](https://github.com/paruff/fawkes/commit/99cd932d85258e7359b8d338e267d08422008d88))
+
 ## [0.3.156](https://github.com/paruff/fawkes/compare/v0.3.155...v0.3.156) (2026-10-02)
 
 
