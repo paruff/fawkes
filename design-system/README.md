@@ -49,6 +49,14 @@ const styles = {
 };
 ```
 
+### Alignment with the suite design reference
+
+The suite's canonical design reference and tokens are owned by uFawkes.dev:
+[DESIGN.md](https://github.com/paruff/uFawkes.dev/blob/main/DESIGN.md) and <https://ufawkes.dev/design/tokens.json>. These tokens are being aligned with it, and
+the neutral and status scales already match. One known gap: white text on
+`primary-500` (`#6366f1`) is 4.47:1, just under the 4.5:1 AA floor. Use
+`primary-600` (`#4f46e5`, 6.29:1) for filled buttons and for text.
+
 ## Development
 
 ```bash

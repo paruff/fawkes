@@ -287,3 +287,17 @@ responsibility, contextual error messages, and BDD coverage. Note gaps as TODO i
 - `docs/BACKLOG.md` — triaged backlog with value/effort scores, agent assignments, MVP wave plan
 - `docs/GOLDEN_PATH.md` — standard feature development workflow (also in docs site)
 - `docs/PROMPT_LIBRARY.md` — tested prompt templates for every repeating task
+
+## Design and brand
+
+Fawkes and the uFawkes suite share one design reference, owned by
+uFawkes.dev: [DESIGN.md](https://github.com/paruff/uFawkes.dev/blob/main/DESIGN.md) and the machine-readable tokens at
+<https://ufawkes.dev/design/tokens.json>. Read it before changing colours, logos, fonts or UI copy in this
+repo. Link to it; don't copy it here.
+
+- The action colour (buttons, links, focus rings) is Indigo `#4f46e5`.
+- Orange (Flame `#f06300`) is for marks and large graphics only. Green means
+  pass or live, never decoration.
+- Text must meet 4.5:1 contrast. `#16a34a` on white is 3.30:1 and fails.
+- If this repo needs a value the reference does not have, propose it in
+  uFawkes.dev rather than adding a local one.
