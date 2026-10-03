@@ -172,3 +172,12 @@ MIT License - see [LICENSE](../LICENSE) for details.
 - [Storybook](http://design-system.fawkes.local) - Interactive component documentation
 - [GitHub Repository](https://github.com/paruff/fawkes)
 - [Issue Tracker](https://github.com/paruff/fawkes/issues)
+
+## Keeping tokens in sync with uFawkes.dev
+
+The suite tokens live at <https://ufawkes.dev/design/tokens.json>. The MkDocs site applies them in `docs/stylesheets/ufawkes-brand.css`. To check that the shared indigo and gray scales in `src/tokens/colors.ts` still match:
+
+```bash
+python3 scripts/check-design-token-sync.py            # fetches the published tokens
+python3 scripts/check-design-token-sync.py ./tokens.json   # or a local copy
+```
