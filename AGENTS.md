@@ -295,9 +295,10 @@ uFawkes.dev: [DESIGN.md](https://github.com/paruff/uFawkes.dev/blob/main/DESIGN.
 <https://ufawkes.dev/design/tokens.json>. Read it before changing colours, logos, fonts or UI copy in this
 repo. Link to it; don't copy it here.
 
-- The action colour (buttons, links, focus rings) is Indigo `#4f46e5`.
-- Orange (Flame `#f06300`) is for marks and large graphics only. Green means
-  pass or live, never decoration.
+- Links, focus rings and secondary buttons are Indigo `#4f46e5`. The primary
+  button is Flame `#f06300` with a Night `#061723` label (5.62:1).
+- Orange (Flame) is for marks, large graphics and the primary button fill,
+  never for text. Green means pass or live, never decoration.
 - Text must meet 4.5:1 contrast. `#16a34a` on white is 3.30:1 and fails.
 - If this repo needs a value the reference does not have, propose it in
   uFawkes.dev rather than adding a local one.
