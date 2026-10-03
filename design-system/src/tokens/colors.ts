@@ -13,8 +13,8 @@ export const colors = {
     200: '#c7d2fe',
     300: '#a5b4fc',
     400: '#818cf8',
-    500: '#6366f1', // Main primary color
-    600: '#4f46e5',
+    500: '#6366f1',
+    600: '#4f46e5', // Main primary color (6.29:1 on white)
     700: '#4338ca',
     800: '#3730a3',
     900: '#312e81',
