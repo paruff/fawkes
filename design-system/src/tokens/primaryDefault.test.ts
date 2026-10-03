@@ -18,7 +18,7 @@ const resolveVar = (name: string): string => {
 };
 
 const ruleColor = (selector: string, prop: string): string => {
-  const escaped = selector.replace(/[.:()]/g, '\\$&');
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\:]/g, '\\$&');
   const rule = buttonCss.match(new RegExp(`${escaped}\\s*\\{([^}]*)\\}`));
   if (!rule) throw new Error(`rule ${selector} not found in Button.css`);
   const decl = rule[1].match(new RegExp(`${prop}:\\s*([^;]+);`));
