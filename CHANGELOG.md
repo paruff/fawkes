@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.160](https://github.com/paruff/fawkes/compare/v0.3.159...v0.3.160) (2026-10-03)
+
+
+### Chores
+
+* **devcontainer:** declare hostRequirements (2 CPUs, 4 GB) ([#2201](https://github.com/paruff/fawkes/issues/2201)) ([adc9411](https://github.com/paruff/fawkes/commit/adc94115cd112a83f8a798c80efb6e631d970578))
+
 ## [0.3.159](https://github.com/paruff/fawkes/compare/v0.3.158...v0.3.159) (2026-10-03)
 
 
