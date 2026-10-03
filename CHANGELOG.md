@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.158](https://github.com/paruff/fawkes/compare/v0.3.157...v0.3.158) (2026-10-03)
+
+
+### Fixed
+
+* **design-system:** default primary to Indigo 600 for AA contrast ([#2195](https://github.com/paruff/fawkes/issues/2195)) ([746cfa5](https://github.com/paruff/fawkes/commit/746cfa5f11dc2be273523284eba9b0f928e7ffba))
+
 ## [0.3.157](https://github.com/paruff/fawkes/compare/v0.3.156...v0.3.157) (2026-10-03)
 
 
