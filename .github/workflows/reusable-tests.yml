@@ -87,18 +87,24 @@ jobs:
 
       - name: Run setup command
         if: inputs.setup-command != ''
-        run: ${{ inputs.setup-command }}
+        env:
+          SETUP_COMMAND: ${{ inputs.setup-command }}
+        run: eval "$SETUP_COMMAND"
 
       - name: Run unit tests
-        run: ${{ inputs.unit-test-command }}
+        env:
+          UNIT_TEST_COMMAND: ${{ inputs.unit-test-command }}
+        run: eval "$UNIT_TEST_COMMAND"
 
       - name: Enforce coverage threshold
         if: hashFiles('coverage.xml') != ''
+        env:
+          COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
         run: |
           python -c "
-          import sys, xml.etree.ElementTree as ET
+          import os, sys, xml.etree.ElementTree as ET
           rate = float(ET.parse('coverage.xml').getroot().get('line-rate')) * 100
-          threshold = ${{ inputs.coverage-threshold }}
+          threshold = float(os.environ['COVERAGE_THRESHOLD'])
           print(f'Coverage: {rate:.1f}% (threshold: {threshold}%)')
           sys.exit(0 if rate >= threshold else 1)
           "
@@ -142,14 +148,18 @@ jobs:
           chmod -R 777 data/
 
       - name: Build and start stack
-        run: docker compose --profile ${{ inputs.compose-profile }} up -d --build
+        env:
+          COMPOSE_PROFILE: ${{ inputs.compose-profile }}
+        run: docker compose --profile "$COMPOSE_PROFILE" up -d --build
 
       - name: Wait for services
         run: sleep 90
 
       - name: Verify health endpoints
+        env:
+          HEALTH_ENDPOINTS: ${{ inputs.health-endpoints }}
         run: |
-          ENDPOINTS="${{ inputs.health-endpoints }}"
+          ENDPOINTS="${HEALTH_ENDPOINTS}"
           if [ -z "$ENDPOINTS" ] || [ "$ENDPOINTS" == "" ]; then
             echo "No health endpoints configured, skipping verification"
             exit 0
@@ -171,7 +181,9 @@ jobs:
 
       - name: Shutdown
         if: always()
-        run: docker compose --profile ${{ inputs.compose-profile }} down -v
+        env:
+          COMPOSE_PROFILE: ${{ inputs.compose-profile }}
+        run: docker compose --profile "$COMPOSE_PROFILE" down -v
 
       - name: DORA job finish
         if: always()
@@ -216,13 +228,17 @@ jobs:
           chmod -R 777 data/
 
       - name: Start observability stack
-        run: docker compose --profile ${{ inputs.compose-profile }} up -d --build
+        env:
+          COMPOSE_PROFILE: ${{ inputs.compose-profile }}
+        run: docker compose --profile "$COMPOSE_PROFILE" up -d --build
 
       - name: Wait for services
         run: sleep 90
 
       - name: Run integration tests
-        run: ${{ inputs.integration-test-command }}
+        env:
+          INTEGRATION_TEST_COMMAND: ${{ inputs.integration-test-command }}
+        run: eval "$INTEGRATION_TEST_COMMAND"
 
       - name: Show logs on failure
         if: failure()
@@ -232,7 +248,9 @@ jobs:
 
       - name: Shutdown
         if: always()
-        run: docker compose --profile ${{ inputs.compose-profile }} down -v
+        env:
+          COMPOSE_PROFILE: ${{ inputs.compose-profile }}
+        run: docker compose --profile "$COMPOSE_PROFILE" down -v
 
       - name: Upload test results
         if: always()

@@ -125,13 +125,14 @@ jobs:
       - name: Run Lighthouse CI
         working-directory: ${{ inputs.working-directory }}
         run: |
-          if [ -n "${{ inputs.target-url }}" ]; then
-            npx lhci autorun --collect.url="${{ inputs.target-url }}"
+          if [ -n "${TARGET_URL}" ]; then
+            npx lhci autorun --collect.url="${TARGET_URL}"
           else
             npm run lighthouse:ci
           fi
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          TARGET_URL: ${{ inputs.target-url }}
 
       - name: Upload Lighthouse reports
         if: always()
@@ -144,12 +145,15 @@ jobs:
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
+        env:
+          WORKING_DIRECTORY: ${{ inputs.working-directory }}
+          WCAG_LEVEL: ${{ inputs.wcag-level }}
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
 
-            const lhciDir = '${{ inputs.working-directory }}/.lighthouseci';
+            const lhciDir = `${process.env.WORKING_DIRECTORY}/.lighthouseci`;
             let comment = '## Lighthouse Accessibility Results\n\n';
 
             try {
@@ -164,9 +168,9 @@ jobs:
                   const icon = score >= 90 ? '✅' : score >= 70 ? '⚠️' : '❌';
 
                   comment += `${icon} **Accessibility Score**: ${score}/100\n\n`;
-                  comment += `**WCAG Level**: ${{ inputs.wcag-level }}\n\n`;
+                  comment += `**WCAG Level**: ${process.env.WCAG_LEVEL}\n\n`;
                   comment += `**Status**: ${score >= 90 ? 'PASSED' : 'NEEDS IMPROVEMENT'}\n\n`;
-                  comment += `Target: ≥90 for WCAG 2.1 ${{ inputs.wcag-level }} compliance\n\n`;
+                  comment += `Target: ≥90 for WCAG 2.1 ${process.env.WCAG_LEVEL} compliance\n\n`;
                   comment += `[View detailed reports](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
                 }
               } else {
@@ -281,15 +285,19 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Generate summary
+        env:
+          AXE_CORE_TESTS_RESULT_LABEL: ${{ needs.axe-core-tests.result == 'success' && '✅ Passed' || needs.axe-core-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }}
+          LIGHTHOUSE_CI_RESULT_LABEL: ${{ needs.lighthouse-ci.result == 'success' && '✅ Passed' || needs.lighthouse-ci.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }}
+          WCAG_LEVEL: ${{ inputs.wcag-level }}
         run: |
           echo "# Accessibility Testing Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Axe-Core | ${{ needs.axe-core-tests.result == 'success' && '✅ Passed' || needs.axe-core-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Lighthouse CI | ${{ needs.lighthouse-ci.result == 'success' && '✅ Passed' || needs.lighthouse-ci.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Axe-Core | ${AXE_CORE_TESTS_RESULT_LABEL} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lighthouse CI | ${LIGHTHOUSE_CI_RESULT_LABEL} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**WCAG Level**: ${{ inputs.wcag-level }}" >> $GITHUB_STEP_SUMMARY
+          echo "**WCAG Level**: ${WCAG_LEVEL}" >> $GITHUB_STEP_SUMMARY
 
       - name: DORA job finish
         if: always()

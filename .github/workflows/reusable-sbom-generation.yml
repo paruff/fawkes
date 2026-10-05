@@ -55,6 +55,10 @@ jobs:
 
       - name: Generate SBOM for source
         id: generate
+        env:
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+          SBOM_FORMAT: ${{ inputs.sbom-format }}
         run: |
           # image-name may be owner-prefixed (e.g. "paruff/some-service") -
           # sanitize before using it in a filename/artifact name, or the "/"
@@ -62,24 +66,29 @@ jobs:
           # via fawkes#2032's java-fawkes-path: SBOM_FILE resolved to
           # "sbom-paruff/java-fawkes-path-<sha>.json", i.e. a nonexistent
           # "paruff/" subdirectory).
-          SAFE_NAME="$(echo '${{ inputs.image-name }}' | tr '/' '-')"
-          SBOM_FILE="sbom-${SAFE_NAME}-${{ inputs.image-tag }}.json"
-          syft packages dir:. -o ${{ inputs.sbom-format }} > "$SBOM_FILE"
+          SAFE_NAME="$(echo "$IMAGE_NAME" | tr '/' '-')"
+          SBOM_FILE="sbom-${SAFE_NAME}-${IMAGE_TAG}.json"
+          syft packages dir:. -o "$SBOM_FORMAT" > "$SBOM_FILE"
           echo "sbom-path=$SBOM_FILE" >> $GITHUB_OUTPUT
           echo "safe-name=$SAFE_NAME" >> $GITHUB_OUTPUT
           echo "✅ SBOM generated: $SBOM_FILE"
 
       - name: Display SBOM summary
+        env:
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+          SBOM_FORMAT: ${{ inputs.sbom-format }}
+          GENERATE_SBOM_PATH: ${{ steps.generate.outputs.sbom-path }}
         run: |
           echo "### SBOM Generation Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image**: ${{ inputs.image-name }}:${{ inputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Format**: ${{ inputs.sbom-format }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **File**: ${{ steps.generate.outputs.sbom-path }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${IMAGE_NAME}:${IMAGE_TAG}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Format**: ${SBOM_FORMAT}" >> $GITHUB_STEP_SUMMARY
+          echo "- **File**: ${GENERATE_SBOM_PATH}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Count packages
-          PACKAGE_COUNT=$(cat ${{ steps.generate.outputs.sbom-path }} | grep -o '"name"' | wc -l)
+          PACKAGE_COUNT=$(cat "$GENERATE_SBOM_PATH" | grep -o '"name"' | wc -l)
           echo "- **Packages Found**: $PACKAGE_COUNT" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload SBOM artifact

@@ -67,9 +67,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Generate SBOM
+        env:
+          IMAGE_NAME: ${{ github.event.inputs.image-name || github.repository }}
+          SHA: ${{ github.sha }}
         run: |
-          IMAGE_NAME="${{ github.event.inputs.image-name || github.repository }}"
-          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_NAME="${IMAGE_NAME}"
+          IMAGE_TAG="${SHA}"
           echo "Generating SBOM for $IMAGE_NAME:$IMAGE_TAG"
           # Add SBOM generation logic here (e.g., Syft/CycloneDX)
 
@@ -85,11 +88,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Sign Container Image
         env:
+          IMAGE_NAME: ${{ github.event.inputs.image-name || github.repository }}
+          SHA: ${{ github.sha }}
           REGISTRY_USERNAME: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          IMAGE_NAME="${{ github.event.inputs.image-name || github.repository }}"
-          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_NAME="${IMAGE_NAME}"
+          IMAGE_TAG="${SHA}"
           echo "Signing image $IMAGE_NAME:$IMAGE_TAG"
           # Add Cosign signing logic here
 
