@@ -69,23 +69,29 @@ jobs:
 
       - name: Verify policies exist
         id: verify
+        env:
+          POLICY_PATH: ${{ inputs.policy-path }}
         run: |
-          if [ -d "${{ inputs.policy-path }}" ]; then
-            POLICY_COUNT=$(find "${{ inputs.policy-path }}" -name "*.rego" | wc -l)
+          if [ -d "${POLICY_PATH}" ]; then
+            POLICY_COUNT=$(find "${POLICY_PATH}" -name "*.rego" | wc -l)
             echo "policy-count=$POLICY_COUNT" >> $GITHUB_OUTPUT
             echo "Found $POLICY_COUNT policy files"
           else
-            echo "Policy directory not found: ${{ inputs.policy-path }}"
+            echo "Policy directory not found: ${POLICY_PATH}"
             echo "policy-count=0" >> $GITHUB_OUTPUT
           fi
 
       - name: Run policy checks on Kubernetes manifests
         if: steps.verify.outputs.policy-count > 0 && inputs.scan-k8s-manifests
         continue-on-error: ${{ !inputs.fail-on-violation }}
+        env:
+          TARGET_PATH: ${{ inputs.target-path }}
+          POLICY_PATH: ${{ inputs.policy-path }}
+          FAIL_ON_VIOLATION: ${{ inputs.fail-on-violation }}
         run: |
           echo "Checking Kubernetes manifests against policies..."
 
-          K8S_FILES=$(find ${{ inputs.target-path }} -type f \( -name "*.yaml" -o -name "*.yml" \) \
+          K8S_FILES=$(find "$TARGET_PATH" -type f \( -name "*.yaml" -o -name "*.yml" \) \
             -not -path "*/node_modules/*" \
             -not -path "*/.github/*" \
             -not -path "*/vendor/*" \
@@ -99,14 +105,14 @@ jobs:
           VIOLATIONS=0
           for file in $K8S_FILES; do
             echo "Checking: $file"
-            if ! conftest test "$file" -p "${{ inputs.policy-path }}" --all-namespaces; then
+            if ! conftest test "$file" -p "${POLICY_PATH}" --all-namespaces; then
               VIOLATIONS=$((VIOLATIONS + 1))
             fi
           done
 
           if [ $VIOLATIONS -gt 0 ]; then
             echo "Found $VIOLATIONS file(s) with policy violations"
-            if [ "${{ inputs.fail-on-violation }}" == "true" ]; then
+            if [ "${FAIL_ON_VIOLATION}" == "true" ]; then
               exit 1
             fi
           else
@@ -116,10 +122,14 @@ jobs:
       - name: Run policy checks on Dockerfiles
         if: steps.verify.outputs.policy-count > 0 && inputs.scan-dockerfiles
         continue-on-error: ${{ !inputs.fail-on-violation }}
+        env:
+          TARGET_PATH: ${{ inputs.target-path }}
+          POLICY_PATH: ${{ inputs.policy-path }}
+          FAIL_ON_VIOLATION: ${{ inputs.fail-on-violation }}
         run: |
           echo "Checking Dockerfiles against policies..."
 
-          DOCKERFILES=$(find ${{ inputs.target-path }} -type f -name "Dockerfile*" \
+          DOCKERFILES=$(find "$TARGET_PATH" -type f -name "Dockerfile*" \
             -not -path "*/node_modules/*" \
             -not -path "*/vendor/*" | head -20)
 
@@ -131,14 +141,14 @@ jobs:
           VIOLATIONS=0
           for file in $DOCKERFILES; do
             echo "Checking: $file"
-            if ! conftest test "$file" -p "${{ inputs.policy-path }}" --all-namespaces; then
+            if ! conftest test "$file" -p "${POLICY_PATH}" --all-namespaces; then
               VIOLATIONS=$((VIOLATIONS + 1))
             fi
           done
 
           if [ $VIOLATIONS -gt 0 ]; then
             echo "Found $VIOLATIONS Dockerfile(s) with policy violations"
-            if [ "${{ inputs.fail-on-violation }}" == "true" ]; then
+            if [ "${FAIL_ON_VIOLATION}" == "true" ]; then
               exit 1
             fi
           else
@@ -148,10 +158,14 @@ jobs:
       - name: Run policy checks on Docker Compose files
         if: steps.verify.outputs.policy-count > 0 && inputs.scan-compose
         continue-on-error: ${{ !inputs.fail-on-violation }}
+        env:
+          TARGET_PATH: ${{ inputs.target-path }}
+          POLICY_PATH: ${{ inputs.policy-path }}
+          FAIL_ON_VIOLATION: ${{ inputs.fail-on-violation }}
         run: |
           echo "Checking Docker Compose files against policies..."
 
-          COMPOSE_FILES=$(find ${{ inputs.target-path }} -type f \( -name "compose*.yml" -o -name "compose*.yaml" -o -name "docker-compose*.yml" -o -name "docker-compose*.yaml" \) \
+          COMPOSE_FILES=$(find "$TARGET_PATH" -type f \( -name "compose*.yml" -o -name "compose*.yaml" -o -name "docker-compose*.yml" -o -name "docker-compose*.yaml" \) \
             -not -path "*/node_modules/*" \
             -not -path "*/vendor/*" | head -10)
 
@@ -163,14 +177,14 @@ jobs:
           VIOLATIONS=0
           for file in $COMPOSE_FILES; do
             echo "Checking: $file"
-            if ! conftest test "$file" -p "${{ inputs.policy-path }}" --all-namespaces; then
+            if ! conftest test "$file" -p "${POLICY_PATH}" --all-namespaces; then
               VIOLATIONS=$((VIOLATIONS + 1))
             fi
           done
 
           if [ $VIOLATIONS -gt 0 ]; then
             echo "Found $VIOLATIONS Compose file(s) with policy violations"
-            if [ "${{ inputs.fail-on-violation }}" == "true" ]; then
+            if [ "${FAIL_ON_VIOLATION}" == "true" ]; then
               exit 1
             fi
           else
@@ -179,17 +193,24 @@ jobs:
 
       - name: Generate policy report
         if: always()
+        env:
+          POLICY_PATH: ${{ inputs.policy-path }}
+          VERIFY_POLICY_COUNT: ${{ steps.verify.outputs.policy-count }}
+          SCAN_DOCKERFILES: ${{ inputs.scan-dockerfiles }}
+          SCAN_K8S_MANIFESTS: ${{ inputs.scan-k8s-manifests }}
+          SCAN_COMPOSE: ${{ inputs.scan-compose }}
+          FAIL_ON_VIOLATION_LABEL: ${{ inputs.fail-on-violation && 'Strict (blocking)' || 'Advisory (non-blocking)' }}
         run: |
           echo "### Policy Enforcement Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Policy Path | ${{ inputs.policy-path }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Policy Files | ${{ steps.verify.outputs.policy-count }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Dockerfiles | ${{ inputs.scan-dockerfiles }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| K8s Manifests | ${{ inputs.scan-k8s-manifests }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Docker Compose | ${{ inputs.scan-compose }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Enforcement | ${{ inputs.fail-on-violation && 'Strict (blocking)' || 'Advisory (non-blocking)' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Policy Path | ${POLICY_PATH} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Policy Files | ${VERIFY_POLICY_COUNT} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dockerfiles | ${SCAN_DOCKERFILES} |" >> $GITHUB_STEP_SUMMARY
+          echo "| K8s Manifests | ${SCAN_K8S_MANIFESTS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker Compose | ${SCAN_COMPOSE} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Enforcement | ${FAIL_ON_VIOLATION_LABEL} |" >> $GITHUB_STEP_SUMMARY
 
       - name: DORA job finish
         if: always()

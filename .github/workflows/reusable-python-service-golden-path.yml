@@ -81,9 +81,11 @@ jobs:
 
       - name: Test
         working-directory: services/${{ inputs.service-name }}
+        env:
+          COVERAGE_FAIL_UNDER: ${{ inputs.coverage-fail-under }}
         run: |
-          if [ -n "${{ inputs.coverage-fail-under }}" ]; then
-            pytest --cov=app --cov-report=term-missing --cov-fail-under=${{ inputs.coverage-fail-under }} tests/
+          if [ -n "${COVERAGE_FAIL_UNDER}" ]; then
+            pytest --cov=app --cov-report=term-missing --cov-fail-under="$COVERAGE_FAIL_UNDER" tests/
           else
             pytest --cov=app --cov-report=term-missing tests/
           fi

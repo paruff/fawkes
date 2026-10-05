@@ -106,6 +106,8 @@ jobs:
           inputs.pr-size-limit > 0 &&
           github.event_name == 'pull_request'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
+        env:
+          PR_SIZE_LIMIT: ${{ inputs.pr-size-limit }}
         with:
           script: |
             const { data: pr } = await github.rest.pulls.get({
@@ -115,7 +117,7 @@ jobs:
             });
 
             const changed = pr.additions + pr.deletions;
-            const limit = ${{ inputs.pr-size-limit }};
+            const limit = Number(process.env.PR_SIZE_LIMIT);
             const hasOverrideLabel = pr.labels.some(l => l.name === 'large-pr-approved');
             const hasBypassLabel = pr.labels.some(l => l.name === 'emergency-bypass');
 
@@ -245,12 +247,17 @@ jobs:
       # ── Summary ─────────────────────────────────────────────────────────────
       - name: Generate summary
         if: always()
+        env:
+          PRE_COMMIT_STATUS: ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || (job.status == 'success' && '✅ Pass' || '❌ Fail') }}
+          PR_SIZE_STATUS: ${{ inputs.pr-size-limit > 0 && '✅ Checked' || '⏭️ Skipped' }}
+          COMMIT_FORMAT_STATUS: ${{ inputs.commit-format == 'conventional' && '✅ Checked' || '⏭️ Skipped' }}
+          SECRETS_STATUS: ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || '✅ Checked' }}
         run: |
           echo "## Pre-flight Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Pre-commit | ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || (job.status == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| PR Size | ${{ inputs.pr-size-limit > 0 && '✅ Checked' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commit Format | ${{ inputs.commit-format == 'conventional' && '✅ Checked' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Secret Detection | ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || '✅ Checked' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-commit | ${PRE_COMMIT_STATUS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PR Size | ${PR_SIZE_STATUS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit Format | ${COMMIT_FORMAT_STATUS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Detection | ${SECRETS_STATUS} |" >> $GITHUB_STEP_SUMMARY

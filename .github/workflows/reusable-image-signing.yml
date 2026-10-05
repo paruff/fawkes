@@ -58,9 +58,13 @@ jobs:
           cosign-release: "v2.2.3"
 
       - name: Log in to registry
+        env:
+          REGISTRY_PASSWORD: ${{ secrets.registry-password }}
+          REGISTRY: ${{ inputs.registry }}
+          REGISTRY_USERNAME: ${{ secrets.registry-username || github.actor }}
         run: |
-          if [ -n "${{ secrets.registry-password }}" ]; then
-            echo "${{ secrets.registry-password }}" | docker login ${{ inputs.registry }} -u "${{ secrets.registry-username || github.actor }}" --password-stdin
+          if [ -n "${REGISTRY_PASSWORD}" ]; then
+            echo "${REGISTRY_PASSWORD}" | docker login "$REGISTRY" -u "${REGISTRY_USERNAME}" --password-stdin
           else
             echo "No registry password provided, skipping login."
           fi
@@ -70,8 +74,12 @@ jobs:
         uses: anchore/sbom-action/download-syft@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
 
       - name: Sign image with keyless signing
+        env:
+          REGISTRY: ${{ inputs.registry }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
-          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          IMAGE_REF="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
           echo "🔐 Signing image: $IMAGE_REF"
 
           # Sign with keyless (OIDC) signing
@@ -81,8 +89,12 @@ jobs:
 
       - name: Generate and sign SBOM attestation
         if: inputs.sign-sbom
+        env:
+          REGISTRY: ${{ inputs.registry }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
-          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          IMAGE_REF="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 
           # Generate SBOM
           echo "📦 Generating SBOM for attestation..."
@@ -95,8 +107,12 @@ jobs:
           echo "✅ SBOM attestation signed and attached"
 
       - name: Verify signature
+        env:
+          REGISTRY: ${{ inputs.registry }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
         run: |
-          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          IMAGE_REF="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 
           echo "🔍 Verifying signature..."
           cosign verify "$IMAGE_REF" \
@@ -106,16 +122,21 @@ jobs:
           echo "✅ Signature verification complete"
 
       - name: Display signing summary
+        env:
+          REGISTRY: ${{ inputs.registry }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+          SIGN_SBOM_LABEL: ${{ inputs.sign-sbom && '✅ Signed' || '❌ Skipped' }}
         run: |
           echo "### Image Signing Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image**: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}" >> $GITHUB_STEP_SUMMARY
           echo "- **Signing Method**: Keyless (OIDC)" >> $GITHUB_STEP_SUMMARY
-          echo "- **SBOM Attestation**: ${{ inputs.sign-sbom && '✅ Signed' || '❌ Skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **SBOM Attestation**: ${SIGN_SBOM_LABEL}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "To verify this signature:" >> $GITHUB_STEP_SUMMARY
           echo '```bash' >> $GITHUB_STEP_SUMMARY
-          echo "cosign verify ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }} \\" >> $GITHUB_STEP_SUMMARY
+          echo "cosign verify ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} \\" >> $GITHUB_STEP_SUMMARY
           echo '  --certificate-identity-regexp=".*" \' >> $GITHUB_STEP_SUMMARY
           echo '  --certificate-oidc-issuer-regexp=".*"' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY

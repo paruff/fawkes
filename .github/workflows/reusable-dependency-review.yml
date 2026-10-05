@@ -83,10 +83,13 @@ jobs:
         id: refs
         if: steps.dependency-graph.outputs.enabled == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
+        env:
+          BASE_REF: ${{ inputs.base-ref }}
+          HEAD_REF: ${{ inputs.head-ref }}
         with:
           script: |
-            let baseRef = '${{ inputs.base-ref }}';
-            let headRef = '${{ inputs.head-ref }}';
+            let baseRef = process.env.BASE_REF;
+            let headRef = process.env.HEAD_REF;
 
             // Auto-detect for PRs
             if (!baseRef || !headRef) {
@@ -124,9 +127,11 @@ jobs:
       - name: Deny specific licenses
         if: inputs.deny-licenses != '' && steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
+        env:
+          DENY_LICENSES: ${{ inputs.deny-licenses }}
         with:
           script: |
-            const denyLicenses = '${{ inputs.deny-licenses }}'.split(',').map(l => l.trim()).filter(Boolean);
+            const denyLicenses = process.env.DENY_LICENSES.split(',').map(l => l.trim()).filter(Boolean);
             if (denyLicenses.length === 0) return;
 
             console.log(`Checking for denied licenses: ${denyLicenses.join(', ')}`);
@@ -158,14 +163,18 @@ jobs:
 
       - name: Generate summary
         if: always()
+        env:
+          FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
+          DENY_LICENSES: ${{ inputs.deny-licenses || 'none' }}
+          DEPENDENCY_GRAPH_ENABLED: ${{ steps.dependency-graph.outputs.enabled }}
         run: |
           echo "### Dependency Review Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Fail on Severity | ${{ inputs.fail-on-severity }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Deny Licenses | ${{ inputs.deny-licenses || 'none' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Dependency Graph | ${{ steps.dependency-graph.outputs.enabled }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fail on Severity | ${FAIL_ON_SEVERITY} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Deny Licenses | ${DENY_LICENSES} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Graph | ${DEPENDENCY_GRAPH_ENABLED} |" >> $GITHUB_STEP_SUMMARY
 
       - name: DORA job finish
         if: always()

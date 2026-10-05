@@ -117,23 +117,29 @@ jobs:
 
       - name: Run Trivy for dependency scanning
         if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
+        env:
+          SEVERITY_THRESHOLD: ${{ inputs.severity-threshold }}
+          SCAN_PATH: ${{ inputs.scan-path }}
         run: |
           echo "🔍 Scanning dependencies..."
           docker run --rm \
-            -v "${{ github.workspace }}:/workspace" \
+            -v "${GITHUB_WORKSPACE}:/workspace" \
             aquasec/trivy:0.73.0 fs \
             --scanners vuln \
-            --severity ${{ inputs.severity-threshold }} \
+            --severity "$SEVERITY_THRESHOLD" \
             --format table \
-            /workspace/${{ inputs.scan-path }}
+            /workspace/"$SCAN_PATH"
 
       - name: Run container image scanning
         if: inputs.scan-type == 'container'
+        env:
+          SCAN_PATH: ${{ inputs.scan-path }}
+          SEVERITY_THRESHOLD: ${{ inputs.severity-threshold }}
         run: |
           echo "🔍 Scanning for container images..."
 
           # Find Dockerfiles
-          DOCKERFILES=$(find ${{ inputs.scan-path }} -type f -name "Dockerfile*" \
+          DOCKERFILES=$(find "$SCAN_PATH" -type f -name "Dockerfile*" \
             -not -path "*/node_modules/*" \
             -not -path "*/vendor/*" | head -5)
 
@@ -145,9 +151,9 @@ jobs:
           for dockerfile in $DOCKERFILES; do
             echo "📋 Scanning Dockerfile: $dockerfile"
             docker run --rm \
-              -v "${{ github.workspace }}:/workspace" \
+              -v "${GITHUB_WORKSPACE}:/workspace" \
               aquasec/trivy:0.73.0 config \
-              --severity ${{ inputs.severity-threshold }} \
+              --severity "$SEVERITY_THRESHOLD" \
               "/workspace/$dockerfile"
           done
 
@@ -173,26 +179,30 @@ jobs:
 
       - name: Generate scan summary
         if: always()
+        env:
+          SCAN_TYPE: ${{ inputs.scan-type }}
+          SEVERITY_THRESHOLD: ${{ inputs.severity-threshold }}
+          FAIL_ON_CRITICAL: ${{ inputs.fail-on-critical }}
         run: |
           echo "### Security Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Scan Type**: ${{ inputs.scan-type }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Severity Threshold**: ${{ inputs.severity-threshold }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Fail on Critical**: ${{ inputs.fail-on-critical }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Scan Type**: ${SCAN_TYPE}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Severity Threshold**: ${SEVERITY_THRESHOLD}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fail on Critical**: ${FAIL_ON_CRITICAL}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "#### Scans Performed" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ inputs.scan-type }}" == "all" ]; then
+          if [ "${SCAN_TYPE}" == "all" ]; then
             echo "- ✅ Secret scanning (Gitleaks)" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Vulnerability scanning (Trivy)" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Dependency scanning" >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ inputs.scan-type }}" == "secrets" ]; then
+          elif [ "${SCAN_TYPE}" == "secrets" ]; then
             echo "- ✅ Secret scanning (Gitleaks)" >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ inputs.scan-type }}" == "vulnerabilities" ]; then
+          elif [ "${SCAN_TYPE}" == "vulnerabilities" ]; then
             echo "- ✅ Vulnerability scanning (Trivy)" >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ inputs.scan-type }}" == "dependencies" ]; then
+          elif [ "${SCAN_TYPE}" == "dependencies" ]; then
             echo "- ✅ Dependency scanning" >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ inputs.scan-type }}" == "container" ]; then
+          elif [ "${SCAN_TYPE}" == "container" ]; then
             echo "- ✅ Container image scanning" >> $GITHUB_STEP_SUMMARY
           fi
 

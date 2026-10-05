@@ -71,8 +71,11 @@ jobs:
 
       - name: Check severity threshold
         if: inputs.fail-on-severity != ''
+        env:
+          LANGUAGE: ${{ matrix.language }}
+          FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
         run: |
-          SARIF_FILE="sarif-results/${{ matrix.language }}.sarif"
+          SARIF_FILE="sarif-results/${LANGUAGE}.sarif"
           if [ ! -f "$SARIF_FILE" ]; then
             echo "No SARIF file found, skipping severity check"
             exit 0
@@ -101,7 +104,7 @@ jobs:
           echo "Critical findings: $CRITICAL"
           echo "High findings: $HIGH"
 
-          case "${{ inputs.fail-on-severity }}" in
+          case "${FAIL_ON_SEVERITY}" in
             critical)
               if [ "$CRITICAL" -gt 0 ]; then
                 echo "❌ Found $CRITICAL critical finding(s)"
@@ -120,15 +123,20 @@ jobs:
 
       - name: Generate summary
         if: always()
+        env:
+          LANGUAGE: ${{ matrix.language }}
+          QUERY_SUITE: ${{ inputs.query-suite }}
+          UPLOAD_SARIF: ${{ inputs.upload-sarif }}
+          FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
         run: |
           echo "### CodeQL SAST Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Language | ${{ matrix.language }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Query Suite | ${{ inputs.query-suite }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Upload SARIF | ${{ inputs.upload-sarif }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Fail on Severity | ${{ inputs.fail-on-severity }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | ${LANGUAGE} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Query Suite | ${QUERY_SUITE} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Upload SARIF | ${UPLOAD_SARIF} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fail on Severity | ${FAIL_ON_SEVERITY} |" >> $GITHUB_STEP_SUMMARY
 
       - name: DORA job finish
         if: always()
