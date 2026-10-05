@@ -6,6 +6,8 @@ version: 2
 updates:
   # GitHub Actions - Keep action versions up-to-date
   - package-ecosystem: "github-actions"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "weekly"
@@ -32,6 +34,8 @@ updates:
 
   # Python dependencies - Root requirements.txt
   - package-ecosystem: "pip"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "weekly"
@@ -53,6 +57,8 @@ updates:
 
   # Terraform - Main infrastructure
   - package-ecosystem: "terraform"
+    cooldown:
+      default-days: 7
     directory: "/infra/terraform"
     schedule:
       interval: "weekly"
@@ -69,6 +75,8 @@ updates:
 
   # Terraform - AWS infrastructure
   - package-ecosystem: "terraform"
+    cooldown:
+      default-days: 7
     directory: "/infra/aws"
     schedule:
       interval: "weekly"
@@ -86,6 +94,8 @@ updates:
 
   # Terraform - Azure infrastructure
   - package-ecosystem: "terraform"
+    cooldown:
+      default-days: 7
     directory: "/infra/azure"
     schedule:
       interval: "weekly"
@@ -103,6 +113,8 @@ updates:
 
   # Docker - MCP K8s Server
   - package-ecosystem: "docker"
+    cooldown:
+      default-days: 7
     directory: "/services/mcp-k8s-server"
     schedule:
       interval: "weekly"
