@@ -206,4 +206,5 @@ if __name__ == "__main__":
     logger.info(f"Environment: {DEPLOYMENT_ENVIRONMENT}")
 
     # Run the Flask app
+    # nosemgrep -- runs in a container, where it must listen on all interfaces
     app.run(host="0.0.0.0", port=8080, debug=False)
