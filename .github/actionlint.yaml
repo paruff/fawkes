@@ -1,0 +1,7 @@
+# actionlint config. The shellcheck it runs on `run:` blocks is held to the
+# same floor as the repo's shellcheck hook (--severity=warning): info and
+# style findings are ignored, warnings and errors fail.
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      - 'shellcheck reported issue in this script: SC\d+:(info|style):'
