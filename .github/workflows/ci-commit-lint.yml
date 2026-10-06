@@ -1,9 +1,7 @@
 name: Commit Lint
 
-# .github/workflows/reusable-preflight.yml already contains a commit-format
-# check, but nothing in this repo calls that reusable workflow — it's dead
-# code. This is a small standalone check instead, matching ci-pr-size.yml's
-# pattern rather than wiring up the unused multi-purpose reusable workflow.
+# A small standalone commit-format check, matching ci-pr-size.yml's pattern.
+# The commit-msg hook (conventional-commit-msg) uses the same regex locally.
 
 on:
   pull_request:

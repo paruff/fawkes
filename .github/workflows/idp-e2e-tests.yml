@@ -173,8 +173,8 @@ jobs:
           else
             # Run only smoke-marked tests; on collection error still produce XML
             pytest -q tests/bdd/test_smoke.py -m smoke --junit-xml=reports/smoke-tests.xml || {
-              echo "Smoke tests failed; preserving exit code after report upload"
               EXIT=$?
+              echo "Smoke tests failed; preserving exit code after report upload"
               # Ensure report exists
               [ -f reports/smoke-tests.xml ] || echo '<testsuite name="smoke" tests="0" failures="1" errors="0" skipped="0" />' > reports/smoke-tests.xml
               exit $EXIT
