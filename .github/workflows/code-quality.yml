@@ -69,7 +69,7 @@ jobs:
           fi
 
           # Check for TypeScript/JavaScript changes in design-system
-          if git diff --name-only "$BASE" HEAD -- design-system/ 2>/dev/null \
+          if git diff --name-only "$BASE" "$HEAD" -- design-system/ 2>/dev/null \
             | grep -qE '\.(ts|tsx|js|jsx)$'; then
             echo "typescript=true" >> $GITHUB_OUTPUT
             echo "✅ TypeScript/JavaScript files changed in design-system"
@@ -79,7 +79,7 @@ jobs:
           fi
 
           # Check for Go file changes
-          if git diff --name-only "$BASE" HEAD -- '*.go' 2>/dev/null | grep -q .; then
+          if git diff --name-only "$BASE" "$HEAD" -- '*.go' 2>/dev/null | grep -q .; then
             echo "go=true" >> $GITHUB_OUTPUT
             echo "✅ Go files changed"
           else
@@ -88,7 +88,7 @@ jobs:
           fi
 
           # Check for Python file changes
-          if git diff --name-only "$BASE" HEAD -- '*.py' 'services/**' 'tests/**' 2>/dev/null | grep -q .; then
+          if git diff --name-only "$BASE" "$HEAD" -- '*.py' 'services/**' 'tests/**' 2>/dev/null | grep -q .; then
             echo "python=true" >> $GITHUB_OUTPUT
             echo "✅ Python files changed"
           else
@@ -97,7 +97,7 @@ jobs:
           fi
 
           # Check for Shell file changes
-          if git diff --name-only "$BASE" HEAD -- '*.sh' 'scripts/**' 'tests/bats/**' 2>/dev/null | grep -q .; then
+          if git diff --name-only "$BASE" "$HEAD" -- '*.sh' 'scripts/**' 'tests/bats/**' 2>/dev/null | grep -q .; then
             echo "shell=true" >> $GITHUB_OUTPUT
             echo "✅ Shell files changed"
           else
@@ -106,7 +106,7 @@ jobs:
           fi
 
           # Check for YAML changes
-          if git diff --name-only "$BASE" HEAD -- '*.yaml' '*.yml' '.github/workflows/**' 2>/dev/null | grep -q .; then
+          if git diff --name-only "$BASE" "$HEAD" -- '*.yaml' '*.yml' '.github/workflows/**' 2>/dev/null | grep -q .; then
             echo "yaml=true" >> $GITHUB_OUTPUT
             echo "✅ YAML files changed"
           else
@@ -115,7 +115,7 @@ jobs:
           fi
 
           # Check for security-sensitive changes
-          if git diff --name-only "$BASE" HEAD -- 'services/**' 'infra/**' '.github/workflows/**' '.gitleaks.toml' '.pre-commit-config.yaml' 2>/dev/null | grep -q .; then
+          if git diff --name-only "$BASE" "$HEAD" -- 'services/**' 'infra/**' '.github/workflows/**' '.gitleaks.toml' '.pre-commit-config.yaml' 2>/dev/null | grep -q .; then
             echo "security=true" >> $GITHUB_OUTPUT
             echo "✅ Security-relevant files changed"
           else

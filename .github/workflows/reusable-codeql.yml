@@ -29,14 +29,29 @@ permissions:
   security-events: write
 
 jobs:
+  # Expressions can't split a string (join() on one returns it unchanged), so
+  # the comma-separated input becomes the matrix's JSON list here.
+  languages:
+    name: Languages
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      list: ${{ steps.split.outputs.list }}
+    steps:
+      - id: split
+        env:
+          LANGUAGES: ${{ inputs.languages }}
+        run: echo "list=$(jq -cn --arg l "$LANGUAGES" '$l | split(",") | map(gsub("^ +| +$"; "")) | map(select(. != ""))')" >> "$GITHUB_OUTPUT"
+
   codeql-analysis:
     name: CodeQL SAST
+    needs: languages
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        language: ${{ fromJson(format('["{0}"]', join(inputs.languages, '","'))) }}
+        language: ${{ fromJson(needs.languages.outputs.list) }}
 
     steps:
       - name: DORA job start
