@@ -5,6 +5,26 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.161](https://github.com/paruff/fawkes/compare/v0.3.160...v0.3.161) (2026-10-06)
+
+
+### Fixed
+
+* **ci:** pass workflow inputs and secrets through env, never into scripts ([#2203](https://github.com/paruff/fawkes/issues/2203)) ([f028132](https://github.com/paruff/fawkes/commit/f0281320761784f301fb99ee57e539b74ace6bb2))
+
+
+### Chores
+
+* **deps-dev:** bump gitpython from 3.1.62 to 3.2.0 ([#2212](https://github.com/paruff/fawkes/issues/2212)) ([d0a2aae](https://github.com/paruff/fawkes/commit/d0a2aaed89545ee4451857120eefca7abc3582bc))
+* **deps-dev:** bump mypy from 2.3.1 to 2.4.0 ([#2215](https://github.com/paruff/fawkes/issues/2215)) ([8c7b55b](https://github.com/paruff/fawkes/commit/8c7b55b6f1b525ba5708baf28a0e8f7bdd5578e7))
+* **deps-dev:** bump pylint from 4.0.9 to 4.1.1 ([#2213](https://github.com/paruff/fawkes/issues/2213)) ([d19f378](https://github.com/paruff/fawkes/commit/d19f37833b98c82943fe7bbdc239c34b463fafa4))
+* **deps-dev:** bump pytest-bdd from 8.1.0 to 9.0.0 ([#2214](https://github.com/paruff/fawkes/issues/2214)) ([3d77c99](https://github.com/paruff/fawkes/commit/3d77c99edc92f323e84375a2a22c724afb8585e6))
+* **deps-dev:** bump the python-patch group with 2 updates ([#2211](https://github.com/paruff/fawkes/issues/2211)) ([3fc30a1](https://github.com/paruff/fawkes/commit/3fc30a1911ada202b2a65243201bf6d99de0817b))
+* **deps:** bump hashicorp/aws from 6.66.0 to 6.67.0 in /infra/aws ([#2210](https://github.com/paruff/fawkes/issues/2210)) ([0dd6b87](https://github.com/paruff/fawkes/commit/0dd6b8739edaa80e0943e7f37b5d301b93780b27))
+* **deps:** bump hashicorp/azurerm from 5.7.0 to 5.8.0 in /infra/azure ([#2209](https://github.com/paruff/fawkes/issues/2209)) ([b62e92c](https://github.com/paruff/fawkes/commit/b62e92cd361063a55a2bfbafa2561d64c51621e2))
+* **deps:** bump hashicorp/kubernetes from 3.2.1 to 3.3.0 in /infra/aws ([#2208](https://github.com/paruff/fawkes/issues/2208)) ([835164c](https://github.com/paruff/fawkes/commit/835164c65f3ab5c9d0c313dac9072a876bd4e6c1))
+* **deps:** bump the github-actions-patch group with 2 updates ([#2216](https://github.com/paruff/fawkes/issues/2216)) ([caccdfe](https://github.com/paruff/fawkes/commit/caccdfe587796b98ec000565d508b7faae18e772))
+
 ## [0.3.160](https://github.com/paruff/fawkes/compare/v0.3.159...v0.3.160) (2026-10-03)
 
 
