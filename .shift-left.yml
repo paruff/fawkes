@@ -14,6 +14,8 @@ local-only:
     reason: code-quality.yml's TypeScript job runs the same npm run typecheck in design-system on every change there (it needs npm ci, which Pre-flight doesn't do)
   - id: trivy
     reason: security-and-terraform.yml runs trivy fs (vuln, misconfig) over the whole repo on every PR
+  - id: shift-left-reinstall
+    reason: repairs this clone's installed git hooks after a checkout or merge; CI has no clone to repair
   - id: shift-left-stamp
     reason: records that hooks ran in this clone, for the doctor; CI's own run is the record there
   - id: shift-left-stamp-pre-push

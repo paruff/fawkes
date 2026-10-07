@@ -13,7 +13,7 @@
 # which fails when the tool is missing instead of passing silently
 # (SHIFT_LEFT_ALLOW_MISSING=<tool> skips it knowingly). Every hook here runs in
 # CI (.github/workflows/pre-commit.yml) or .shift-left.yml says why not.
-default_install_hook_types: [pre-commit, commit-msg, pre-push]
+default_install_hook_types: [pre-commit, commit-msg, pre-push, post-checkout, post-merge]
 
 repos:
   # ============================================================================
@@ -403,10 +403,11 @@ repos:
   # every hook above ran). Tools that aren't hooks run through scripts/shift-left.sh.
   # ============================================================================
   - repo: https://github.com/paruff/uFawkesPipe
-    rev: v1.11.1-beta.1
+    rev: v1.12.0-beta.1
     hooks:
       - id: shift-left-parity
       - id: semgrep
       - id: trivy
+      - id: shift-left-reinstall
       - id: shift-left-stamp
       - id: shift-left-stamp-pre-push
