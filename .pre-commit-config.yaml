@@ -350,33 +350,24 @@ repos:
         name: Validate dependabot.yml schema
 
   # ============================================================================
-  # Type-check the services' Python (shift-left spec R2, decided 2026-10-06):
-  # mypy, non-strict, over services/ and extensions/. Several services each have
-  # their own `app` package, which one mypy run would treat as a single module,
-  # so mypy runs once per service directory. Directories with errors that predate
-  # the hook are listed in .mypy-baseline and skipped until fixed. It runs without
-  # the services' dependencies, so missing imports are ignored.
+  # Type-check design-system (shift-left spec R2, decided 2026-10-06): the
+  # project's own `npm run typecheck` (tsc --noEmit, strict), which needs its
+  # dependencies, so it fails loudly when they aren't installed rather than
+  # passing. CI runs the same command in code-quality.yml's TypeScript job.
   # ============================================================================
   - repo: local
     hooks:
-      - id: mypy
-        name: Type-check Python (mypy)
+      - id: tsc
+        name: Type-check design-system (tsc)
         entry: |
-          bash -c '
-            rc=0
-            for d in $(printf "%s\n" "$@" | cut -d/ -f1-2 | sort -u); do
-              if grep -v "^#" .mypy-baseline | cut -d" " -f1 | grep -qx "$d"; then
-                echo "mypy: $d is in .mypy-baseline (existing errors), skipped"
-                continue
-              fi
-              mypy --ignore-missing-imports --explicit-package-bases $(printf "%s\n" "$@" | grep "^$d/") || rc=1
-            done
-            exit $rc
-          ' --
-        language: python
-        additional_dependencies: ["mypy==2.4.0"]
-        files: ^(services|extensions)/.*\.py$
-        exclude: (^|/)(tests?|conftest)(/|\.py$)|test_
+          scripts/shift-left.sh require-tool npm -- bash -c '
+            cd design-system
+            [ -d node_modules ] || { echo "design-system/node_modules is missing: run npm ci in design-system"; exit 1; }
+            npm run typecheck
+          '
+        language: script
+        pass_filenames: false
+        files: ^design-system/.*\.(ts|tsx|json)$
 
   # ============================================================================
   # Shared shift-left hooks from uFawkesPipe (keep last: the stamps record that
