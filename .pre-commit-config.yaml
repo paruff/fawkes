@@ -350,6 +350,26 @@ repos:
         name: Validate dependabot.yml schema
 
   # ============================================================================
+  # Type-check design-system (shift-left spec R2, decided 2026-10-06): the
+  # project's own `npm run typecheck` (tsc --noEmit, strict), which needs its
+  # dependencies, so it fails loudly when they aren't installed rather than
+  # passing. CI runs the same command in code-quality.yml's TypeScript job.
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: tsc
+        name: Type-check design-system (tsc)
+        entry: |
+          scripts/shift-left.sh require-tool npm -- bash -c '
+            cd design-system
+            [ -d node_modules ] || { echo "design-system/node_modules is missing: run npm ci in design-system"; exit 1; }
+            npm run typecheck
+          '
+        language: script
+        pass_filenames: false
+        files: ^design-system/.*\.(ts|tsx|json)$
+
+  # ============================================================================
   # Shared shift-left hooks from uFawkesPipe (keep last: the stamps record that
   # every hook above ran). Tools that aren't hooks run through scripts/shift-left.sh.
   # ============================================================================
