@@ -1,0 +1,19 @@
+# Hooks that don't run in CI's pre-commit layers, and why (uFawkes.dev
+# shift-left spec R3). uFawkesPipe's parity check (shift-left-parity) fails
+# when a hook is neither run by .github/workflows/pre-commit.yml nor listed here.
+local-only:
+  - id: conventional-commit-msg
+    reason: ci-commit-lint.yml checks every PR commit against the same regex
+  - id: terraform_validate
+    reason: security-and-terraform.yml runs terraform init + validate in every infra/ Terraform directory
+  - id: terraform_docs
+    reason: generates README tables; CI doesn't install terraform-docs, so doc drift is caught only locally
+  - id: shfmt
+    reason: code-quality.yml runs shfmt -d with the same flags over every *.sh (pinned v3.8.0 there)
+  - id: trivy
+    reason: security-and-terraform.yml runs trivy fs (vuln, misconfig) over the whole repo on every PR
+  - id: shift-left-stamp
+    reason: records that hooks ran in this clone, for the doctor; CI's own run is the record there
+  - id: shift-left-stamp-pre-push
+    reason: as shift-left-stamp, for the pre-push stage
+ci-only: []
