@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.163](https://github.com/paruff/fawkes/compare/v0.3.162...v0.3.163) (2026-10-07)
+
+
+### Added
+
+* **ci:** adopt uFawkesPipe's shared shift-left hooks ([#2223](https://github.com/paruff/fawkes/issues/2223)) ([b9c3ca7](https://github.com/paruff/fawkes/commit/b9c3ca783cadb2158d4adbbb348cb42ae97c3095))
+
+
+### Chores
+
+* **infra:** keep one CODEOWNERS, at .github/CODEOWNERS ([#2225](https://github.com/paruff/fawkes/issues/2225)) ([34e7324](https://github.com/paruff/fawkes/commit/34e73241b7b8e4aeb65c8506d58e1697263fc5a5))
+
 ## [0.3.162](https://github.com/paruff/fawkes/compare/v0.3.161...v0.3.162) (2026-10-06)
 
 
