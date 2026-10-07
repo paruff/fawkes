@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.162](https://github.com/paruff/fawkes/compare/v0.3.161...v0.3.162) (2026-10-06)
+
+
+### Fixed
+
+* **ci:** pin actions, drop secrets inherit, fix workflow lint findings ([#2219](https://github.com/paruff/fawkes/issues/2219)) ([fc56798](https://github.com/paruff/fawkes/commit/fc5679831f6e0409ffe6cf183710714a8fef33f5))
+
+
+### Chores
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 3 updates ([#2217](https://github.com/paruff/fawkes/issues/2217)) ([e311f60](https://github.com/paruff/fawkes/commit/e311f6070d31a939463c35704bd0ef1b776c0d01))
+
 ## [0.3.161](https://github.com/paruff/fawkes/compare/v0.3.160...v0.3.161) (2026-10-06)
 
 
