@@ -185,6 +185,7 @@ jobs:
           pre-commit run ruff --from-ref "$BASE" --to-ref HEAD
           pre-commit run ruff-format --from-ref "$BASE" --to-ref HEAD
           pre-commit run shellcheck --from-ref "$BASE" --to-ref HEAD
+          pre-commit run mypy --from-ref "$BASE" --to-ref HEAD
           if git diff --name-only "$BASE" HEAD -- '*.go' | grep -q .; then
             pre-commit run golangci-lint --from-ref "$BASE" --to-ref HEAD
           else
