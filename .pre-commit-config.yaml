@@ -3,11 +3,17 @@
 # Install: make pre-commit-setup
 # Run manually: pre-commit run --all-files
 
-# `pre-commit install` (called by make pre-commit-setup) installs both hook
-# types below without needing extra flags -- commit-msg is what actually
+# `pre-commit install` (called by make pre-commit-setup) installs every hook
+# type below without needing extra flags -- commit-msg is what actually
 # enforces Conventional Commits at commit time, matching the regex
-# ci-commit-lint.yml checks in CI (AGENTS.md SS7).
-default_install_hook_types: [pre-commit, commit-msg]
+# ci-commit-lint.yml checks in CI (AGENTS.md SS7); pre-push runs the slower
+# scans (semgrep, trivy).
+#
+# Hooks that need a tool run it through `scripts/shift-left.sh require-tool`,
+# which fails when the tool is missing instead of passing silently
+# (SHIFT_LEFT_ALLOW_MISSING=<tool> skips it knowingly). Every hook here runs in
+# CI (.github/workflows/pre-commit.yml) or .shift-left.yml says why not.
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
 
 repos:
   # ============================================================================
@@ -117,7 +123,7 @@ repos:
           - LICENSE
           - --comment-style
           - "#"
-        exclude: '^(\.github/|\.pre-commit-config\.yaml|\.yamllint|platform/apps/.*/upstream/)'
+        exclude: '^(\.github/|\.pre-commit-config\.yaml|\.shift-left\.yml|\.yamllint|platform/apps/.*/upstream/)'
 
   # ============================================================================
   # Secret Scanning (single comprehensive check - gitleaks)
@@ -195,26 +201,21 @@ repos:
         language: system
         stages: [commit-msg]
 
-      # Kubernetes manifest validation with kubeconform (preferred) or kubeval (fallback)
+      # Kubernetes manifest validation with kubeconform (the id stays kubeval
+      # so CI and SKIP lists keep working; kubeval itself is unmaintained).
       # Covers platform/ too (not just infra/kubernetes): every StorageClass/
       # VolumeSnapshotClass/etc bug found in #2010-#2018 lived under platform/apps/,
       # which this hook never touched before. -ignore-missing-schemas skips
       # CRD types kubeconform doesn't have a schema for (ArgoCD Application,
       # ApplicationSet, etc.) rather than failing on them.
       - id: kubeval
-        name: Validate Kubernetes manifests (kubeconform/kubeval)
+        name: Validate Kubernetes manifests (kubeconform)
         entry: |
-          bash -c '
+          scripts/shift-left.sh require-tool kubeconform -- bash -c '
             EXCLUDE_PATTERN="values.*\.yaml|kustomization\.yaml|devfiles/|recording-rules\.yaml|scrape-configs\.yaml|aliases\.yaml|dora\.yml"
-            if command -v kubeconform &> /dev/null; then
-              find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeconform -strict -ignore-missing-schemas {}
-            elif command -v kubeval &> /dev/null; then
-              find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeval --ignore-missing-schemas {}
-            else
-              echo "⚠️  kubeconform/kubeval not installed, skipping K8s validation"
-            fi
+            find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeconform -strict -ignore-missing-schemas {}
           '
-        language: system
+        language: script
         pass_filenames: false
         files: '^(infra/kubernetes|platform)/.*\.(yaml|yml)$'
 
@@ -222,17 +223,13 @@ repos:
       - id: kustomize-validate
         name: Validate Kustomize builds
         entry: |
-          bash -c '
-            if command -v kustomize &> /dev/null; then
-              for dir in $(find infra/kubernetes -name "kustomization.yaml" -exec dirname {} \;); do
-                echo "Validating $dir"
-                kustomize build "$dir" > /dev/null
-              done
-            else
-              echo "⚠️  kustomize not installed, skipping validation"
-            fi
+          scripts/shift-left.sh require-tool kustomize -- bash -c '
+            for dir in $(find infra/kubernetes -name "kustomization.yaml" -exec dirname {} \;); do
+              echo "Validating $dir"
+              kustomize build "$dir" > /dev/null || exit 1
+            done
           '
-        language: system
+        language: script
         pass_filenames: false
         files: '^infra/kubernetes/.*kustomization\.yaml$'
 
@@ -240,14 +237,10 @@ repos:
       - id: backstage-catalog-validate
         name: Validate Backstage catalog files
         entry: |
-          bash -c '
-            if command -v yq &> /dev/null; then
-              find . -name "catalog-info.yaml" -o -name "*.catalog-info.yaml" | xargs -I {} bash -c "yq eval . {} > /dev/null && echo \"✓ {}\""
-            else
-              echo "⚠️  yq not installed, skipping Backstage catalog validation"
-            fi
+          scripts/shift-left.sh require-tool yq -- bash -c '
+            find . -name "catalog-info.yaml" -o -name "*.catalog-info.yaml" | xargs -I {} bash -c "yq eval . {} > /dev/null && echo \"✓ {}\""
           '
-        language: system
+        language: script
         pass_filenames: false
         files: '(catalog-info|\.catalog-info)\.yaml$'
 
@@ -262,7 +255,7 @@ repos:
       - id: argocd-validate
         name: Validate ArgoCD applications (render check)
         entry: scripts/render-all-applications.sh
-        language: system
+        language: script
         pass_filenames: false
         files: 'platform/apps/.*-application\.yaml$'
 
@@ -270,18 +263,14 @@ repos:
       - id: helm-lint
         name: Lint Helm charts
         entry: |
-          bash -c '
-            if command -v helm &> /dev/null; then
-              for chart in infra/kubernetes/*/Chart.yaml; do
-                dir=$(dirname "$chart")
-                echo "Linting $dir"
-                helm lint "$dir"
-              done
-            else
-              echo "⚠️  helm not installed, skipping chart linting"
-            fi
+          scripts/shift-left.sh require-tool helm -- bash -c '
+            for chart in infra/kubernetes/*/Chart.yaml; do
+              dir=$(dirname "$chart")
+              echo "Linting $dir"
+              helm lint "$dir" || exit 1
+            done
           '
-        language: system
+        language: script
         pass_filenames: false
         files: '^infra/kubernetes/.*/Chart\.yaml$'
 
@@ -292,7 +281,7 @@ repos:
           bash -c '
             found=0
             for f in "$@"; do
-              if grep -nE ">=" "$f" | grep -vE "^\s*#" | grep -vE "python_requires|requires>;python_requires"; then
+              if grep -nE "^[^#]*>=" "$f" | grep -v "python_requires"; then
                 echo "⚠️  $f: ADR-034 requires == exact pins. Found >= above."
                 found=1
               fi
@@ -322,13 +311,53 @@ repos:
       - id: mkdocs-validate
         name: Validate MkDocs configuration
         entry: |
-          bash -c '
-            if command -v mkdocs &> /dev/null && [ -f mkdocs.yml ]; then
-              mkdocs build --verbose --site-dir /tmp/mkdocs-build-test && rm -rf /tmp/mkdocs-build-test
-            else
-              echo "⚠️  mkdocs not installed or mkdocs.yml not found"
-            fi
+          scripts/shift-left.sh require-tool mkdocs -- bash -c '
+            site=$(mktemp -d)
+            mkdocs build --verbose --site-dir "$site"
+            rc=$?
+            rm -rf "$site"
+            exit $rc
           '
-        language: system
+        language: script
         pass_filenames: false
         files: '^(mkdocs\.yml|docs/.*\.md)$'
+
+      # The offline unit suites (scripts/run-unit-tests.sh, ~25s): on commit
+      # when scripts change, and again before push.
+      - id: unit-tests
+        name: Unit tests (scripts/run-unit-tests.sh)
+        entry: scripts/run-unit-tests.sh
+        language: script
+        pass_filenames: false
+        files: ^scripts/
+        stages: [pre-commit, pre-push]
+
+  # ============================================================================
+  # GitHub Actions and config schemas (uFawkes.dev shift-left spec R2)
+  # ============================================================================
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        name: Lint GitHub Actions workflows (actionlint)
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.38.2
+    hooks:
+      - id: check-github-workflows
+        name: Validate workflow schemas
+      - id: check-dependabot
+        name: Validate dependabot.yml schema
+
+  # ============================================================================
+  # Shared shift-left hooks from uFawkesPipe (keep last: the stamps record that
+  # every hook above ran). Tools that aren't hooks run through scripts/shift-left.sh.
+  # ============================================================================
+  - repo: https://github.com/paruff/uFawkesPipe
+    rev: v1.11.1-beta.1
+    hooks:
+      - id: shift-left-parity
+      - id: semgrep
+      - id: trivy
+      - id: shift-left-stamp
+      - id: shift-left-stamp-pre-push
