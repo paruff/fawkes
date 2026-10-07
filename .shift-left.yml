@@ -10,6 +10,8 @@ local-only:
     reason: generates README tables; CI doesn't install terraform-docs, so doc drift is caught only locally
   - id: shfmt
     reason: code-quality.yml runs shfmt -d with the same flags over every *.sh (pinned v3.8.0 there)
+  - id: tsc
+    reason: code-quality.yml's TypeScript job runs the same npm run typecheck in design-system on every change there (it needs npm ci, which Pre-flight doesn't do)
   - id: trivy
     reason: security-and-terraform.yml runs trivy fs (vuln, misconfig) over the whole repo on every PR
   - id: shift-left-stamp
