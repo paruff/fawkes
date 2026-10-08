@@ -4,12 +4,6 @@ name: Release Please
 # Conventional Commits on main and maintains a standing "release PR" with the
 # next version bump plus a CHANGELOG entry. Nothing ships until a human merges
 # that PR, so this batches accumulated commits rather than releasing per merge.
-#
-# Migrated from paruff/uFawkesObs. One deliberate difference: uFawkesObs gates
-# this on a green "Acceptance Full (Post-Merge)" workflow_run. That workflow is
-# specific to uFawkesObs, so this repo uses release-please's canonical
-# `push: main` trigger instead. The safety property is unchanged -- the release
-# PR itself must pass this repo's required checks before anyone can merge it.
 
 on:
   push:
@@ -30,16 +24,22 @@ jobs:
       - name: job-start
         run: echo "job-start workflow=release-please job=release-please sha=${{ github.sha }} time=$(date -u +%FT%TZ)"
 
+      - name: Check for RELEASE_PLEASE_TOKEN
+        id: check-token
+        run: |
+          if [ -z "${{ secrets.RELEASE_PLEASE_TOKEN }}" ]; then
+            echo "⚠️  RELEASE_PLEASE_TOKEN secret not configured"
+            echo "   Release Please will use GITHUB_TOKEN, which may not have permission to create PRs"
+            echo "   See: https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#granting-additional-permissions"
+            echo "has_token=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ RELEASE_PLEASE_TOKEN is configured"
+            echo "has_token=true" >> $GITHUB_OUTPUT
+          fi
+
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           target-branch: main
-          # PRs created with the default GITHUB_TOKEN do not trigger other
-          # pull_request-scoped workflows (GitHub's anti-recursion protection).
-          # Confirmed live in uFawkesObs: the release PR never got its required
-          # checks to run, so it could never satisfy branch protection and sat
-          # permanently unmergeable. A PAT is not subject to that restriction.
-          # Falls back to the default token when the secret is absent, so this
-          # does not break anything before RELEASE_PLEASE_TOKEN is created.
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: job-finish
