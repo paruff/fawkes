@@ -1,145 +1,55 @@
-# Pull Request
+## What This PR Does
 
-## Description
+<!-- One sentence. -->
 
-<!-- Provide a brief description of the changes in this PR -->
+## Closes
 
-## Related Issue
+<!-- Issue number(s): Closes #N -->
 
-<!-- Link to the issue this PR addresses -->
+---
 
-Fixes #(issue number)
+## AI-Assisted Review Block
 
-## Type of Change
+<!-- REQUIRED. Complete before requesting review. Use Copilot or `/review-agents` to help fill this in. -->
+<!-- DORA 2025 (REVIEW-01): Structured review blocks reduce review time by making context explicit. -->
 
-<!-- Mark the relevant option with an "x" -->
+**What does this PR do in one sentence?**
 
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🎨 Code style update (formatting, renaming)
-- [ ] ♻️ Code refactoring (no functional changes)
-- [ ] ⚡ Performance improvement
-- [ ] ✅ Test update
-- [ ] 🔧 Configuration change
-- [ ] 🚀 CI/CD update
+<!-- Ask Copilot: "Summarise this diff in one sentence for a PR description" -->
 
-## Changes Made
+**What are the top 2–3 failure modes?**
 
-## <!-- Describe the changes in detail -->
+<!-- Ask Copilot: "What are the most likely ways this diff could fail in production?" -->
 
--
--
+**What tests cover this change?**
 
-## Testing
+<!-- List test files. If none: explain why, or add tests before requesting review. -->
 
-<!-- Describe the tests you ran and how to reproduce them -->
+**Architecture check:**
 
-### Test Configuration
+<!-- Ask Copilot: "Does this diff violate any rules in AGENTS.md or .github/copilot-instructions.md?" -->
 
-- Fawkes Version:
-- Cloud Provider:
-- Kubernetes Version:
+- [ ] No secrets or credentials in any changed file
+- [ ] No modifications to AGENTS.md (edit source, not symlinks)
+- [ ] No `--no-verify` or hook bypasses
+- [ ] Changes to `docs/ai-sdlc/**/` include intent → spec → plan chain
+- [ ] `make verify` passes locally before requesting review
+- [ ] Symlinks (CLAUDE.md, .cursorrules, .github/copilot-instructions.md) still point to AGENTS.md
+- [ ] Kubernetes manifests follow security best practices (no privileged, read-only rootfs, dropped capabilities)
+- [ ] Helm charts have values schema and README
 
-### Test Steps
+**What I was NOT sure about (flag for human review):**
 
-1.
-2.
-3.
+<!-- Any judgment call, ambiguous requirement, or edge case you deferred to the reviewer. -->
 
-### Test Results
-
-- [ ] All existing tests pass
-- [ ] New tests added and passing
-- [ ] Manual testing completed
-
-## Screenshots/Recordings
-
-<!-- If applicable, add screenshots or recordings to demonstrate the changes -->
+---
 
 ## Checklist
 
-<!-- Mark completed items with an "x" -->
-
-### Code Quality
-
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] My changes generate no new warnings
-- [ ] I have removed any debug logging or commented-out code
-
-### Documentation
-
-- [ ] I have updated the documentation to reflect my changes
-- [ ] I have added/updated relevant comments in the code
-- [ ] I have updated the CHANGELOG.md (if applicable)
-
-### Testing
-
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published
-
-### Security
-
-- [ ] I have checked for security vulnerabilities in my code
-- [ ] I have not exposed any sensitive information (credentials, tokens, etc.)
-- [ ] I have followed security best practices
-
-### Commits
-
-- [ ] My commits are signed (DCO)
-- [ ] My commit messages are clear and descriptive
-
-## DORA Metrics Impact
-
-<!-- If applicable, describe how this change affects DORA metrics -->
-
-- **Deployment Frequency**:
-- **Lead Time for Changes**:
-- **Change Failure Rate**:
-- **Mean Time to Restore**:
-
-## Breaking Changes
-
-<!-- If this is a breaking change, describe the impact and migration path -->
-
-## Deployment Notes
-
-<!-- Any special considerations for deployment? -->
-
-## Reviewer Notes
-
-<!-- Any specific areas you want reviewers to focus on? -->
-
-## Additional Context
-
-<!-- Add any other context about the PR here -->
-
----
-
-## For Maintainers
-
-### Review Checklist
-
-- [ ] Code quality and style
-- [ ] Test coverage adequate
-- [ ] Documentation complete
-- [ ] Security considerations addressed
-- [ ] Breaking changes documented
-- [ ] CHANGELOG.md updated (if needed)
-- [ ] ADR created (if architectural change)
-
-### Merge Checklist
-
-- [ ] All tests passing
-- [ ] All review comments addressed
-- [ ] At least 1 maintainer approval (2 for major changes)
-- [ ] DCO signed
-- [ ] Ready to merge
-
----
-
-**By submitting this pull request, I confirm that my contribution is made under the terms of the MIT license and that I have the right to submit it under this license.**
+- [ ] `make verify` passes (lint + typecheck + tests + artifact-chain)
+- [ ] PR is < 400 changed lines, OR `large-pr-approved` label has been applied by a human
+- [ ] No secrets or credentials in any changed file
+- [ ] New features are behind a feature flag (if applicable)
+- [ ] `docs/` updated if any public service or utility function changed
+- [ ] Helm charts have updated values schema
+- [ ] DORA metrics impact considered (deployment frequency, lead time, change failure rate, MTTR)
