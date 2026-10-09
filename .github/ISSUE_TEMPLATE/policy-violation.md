@@ -2,7 +2,6 @@
 name: Policy Violation Remediation
 about: Track remediation of a security policy violation
 title: "[POLICY] {{ POLICY_NAME }} violation in {{ COMPONENT }}"
-labels: security, policy-violation
 assignees: ""
 ---
 
