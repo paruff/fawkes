@@ -2,7 +2,6 @@
 name: Epic
 about: A large body of work that spans multiple features or stories.
 title: "[Epic]: "
-labels: ["epic", "planning"]
 ---
 
 ## 🎯 Goal & Problem Statement
