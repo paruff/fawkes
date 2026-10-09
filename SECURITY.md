@@ -98,8 +98,10 @@ requires explicit allow-lists. Verify policies match your threat model.
 GHCR. Image signatures and SBOMs are generated; verify before deployment.
 
 **Credential boundaries.** The `.env` / `.env.example` pattern defines
-credential boundaries. Never commit populated `.env` files. Startup
-validation in `make check-env` blocks deployment if defaults are detected.
+credential boundaries. Never commit populated `.env` files; replace every
+default before deploying. `make validate` runs the local-dev validation
+script (BDD acceptance plus Kyverno policy checks) before anything is
+applied to a cluster.
 
 **No TLS in default development configuration.** Inter-service mTLS is
 enabled via Istio in production profiles only. Configure TLS before
@@ -109,9 +111,8 @@ exposing any service outside the cluster.
 
 ## Dependency management
 
-Go module versions are pinned in `go.sum`. Helm chart dependencies are
-pinned in `Chart.lock` files. Container image tags are pinned in CI and
-Helm values. We review upstream release notes for security advisories and
+Go module versions are pinned in `go.sum`. GitHub Actions in CI are
+pinned to full commit SHAs rather than mutable tags. We review upstream release notes for security advisories and
 update pinned versions as part of each release cycle. If a critical upstream
 vulnerability is published between releases, we will cut a patch release.
 
