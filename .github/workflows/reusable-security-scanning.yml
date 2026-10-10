@@ -159,22 +159,20 @@ jobs:
 
       - name: Check for package vulnerabilities (npm)
         if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
-        continue-on-error: true
         run: |
           if [ -f "package.json" ]; then
             echo "📦 Running npm audit..."
-            npm audit --audit-level=moderate || true
+            npm audit --audit-level=moderate
           fi
 
       - name: Check for package vulnerabilities (pip)
         if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
-        continue-on-error: true
         run: |
           if [ -f "requirements.txt" ]; then
             echo "📦 Installing safety for Python vulnerability scanning..."
             pip install safety
             echo "🔍 Running safety check..."
-            safety check --file=requirements.txt || true
+            safety check --file=requirements.txt
           fi
 
       - name: Generate scan summary

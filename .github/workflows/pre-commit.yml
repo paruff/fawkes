@@ -121,13 +121,12 @@ jobs:
           pre-commit run shift-left-parity --from-ref "$BASE" --to-ref HEAD
           pre-commit run unit-tests --from-ref "$BASE" --to-ref HEAD
           pre-commit run semgrep --hook-stage pre-push --from-ref "$BASE" --to-ref HEAD
-        continue-on-error: true
 
+      # The hook step above already failed the job; this says which stage.
       - name: Check status
-        if: steps.pre-commit.outcome == 'failure'
+        if: failure() && steps.pre-commit.outcome == 'failure'
         run: |
           echo "::error::Base pre-commit hooks failed"
-          exit 1
 
       - name: DORA job finish
         if: always()
@@ -191,13 +190,12 @@ jobs:
           else
             echo "No Go file changes detected; skipping golangci-lint"
           fi
-        continue-on-error: true
 
+      # The hook step above already failed the job; this says which stage.
       - name: Check status
-        if: steps.pre-commit.outcome == 'failure'
+        if: failure() && steps.pre-commit.outcome == 'failure'
         run: |
           echo "::error::Language pre-commit hooks failed"
-          exit 1
 
       - name: DORA job finish
         if: always()
@@ -277,13 +275,12 @@ jobs:
           pre-commit run terraform_fmt --from-ref "$BASE" --to-ref HEAD
           pre-commit run terraform_tflint --from-ref "$BASE" --to-ref HEAD
           pre-commit run terraform_tfsec --from-ref "$BASE" --to-ref HEAD
-        continue-on-error: true
 
+      # The hook step above already failed the job; this says which stage.
       - name: Check status
-        if: steps.pre-commit.outcome == 'failure'
+        if: failure() && steps.pre-commit.outcome == 'failure'
         run: |
           echo "::error::Tool pre-commit hooks failed"
-          exit 1
 
       - name: DORA job finish
         if: always()
@@ -388,13 +385,12 @@ jobs:
           pre-commit run helm-lint --from-ref "$BASE" --to-ref HEAD
           pre-commit run check-k8s-secrets --from-ref "$BASE" --to-ref HEAD
           pre-commit run mkdocs-validate --from-ref "$BASE" --to-ref HEAD
-        continue-on-error: true
 
+      # The hook step above already failed the job; this says which stage.
       - name: Check status
-        if: steps.pre-commit.outcome == 'failure'
+        if: failure() && steps.pre-commit.outcome == 'failure'
         run: |
           echo "::error::Platform pre-commit hooks failed"
-          exit 1
 
       - name: DORA job finish
         if: always()

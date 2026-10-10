@@ -115,9 +115,12 @@ jobs:
           IMAGE_REF="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 
           echo "🔍 Verifying signature..."
+          # Signed keylessly by a workflow in this repo, via GitHub's OIDC issuer.
+          # A failed verify fails the job; it used to be `|| true`, with the
+          # "complete" line below printed regardless.
           cosign verify "$IMAGE_REF" \
-            --certificate-identity-regexp=".*" \
-            --certificate-oidc-issuer-regexp=".*" || true
+            --certificate-identity-regexp="^https://github\.com/paruff/fawkes/" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
 
           echo "✅ Signature verification complete"
 
