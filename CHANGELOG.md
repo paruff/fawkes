@@ -5,6 +5,33 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.164](https://github.com/paruff/fawkes/compare/v0.3.163...v0.3.164) (2026-10-10)
+
+
+### Added
+
+* **shift-left:** keep this clone's git hooks in step with the hook config ([#2231](https://github.com/paruff/fawkes/issues/2231)) ([a52d0f7](https://github.com/paruff/fawkes/commit/a52d0f7c7aaf556ab6f310e0a2b2e924adca0fce))
+* **types:** add a mypy type check over services/ and extensions/ ([#2226](https://github.com/paruff/fawkes/issues/2226)) ([74188fa](https://github.com/paruff/fawkes/commit/74188fa7b2c37997f1bf44003bc3a735070a374d))
+* **types:** type-check design-system, and run CI on design-system changes ([#2228](https://github.com/paruff/fawkes/issues/2228)) ([a3d473a](https://github.com/paruff/fawkes/commit/a3d473a4a57f69f657b8e22dedbd1cef78c6791f))
+
+
+### Fixed
+
+* **ci:** remove silent passes from the scan, hook and signing gates ([#180](https://github.com/paruff/fawkes/issues/180)) ([#2239](https://github.com/paruff/fawkes/issues/2239)) ([678abe8](https://github.com/paruff/fawkes/commit/678abe82b52fa26f3590a90eaad6a2f132ed05d8))
+* **templates:** fix security contact, placeholder template, PR gate commands ([#2238](https://github.com/paruff/fawkes/issues/2238)) ([db7e64e](https://github.com/paruff/fawkes/commit/db7e64e7b52b2bd35298f88a9079825e64a5c6ef))
+* **types:** restore the mypy hook dropped when [#2228](https://github.com/paruff/fawkes/issues/2228) merged ([#2230](https://github.com/paruff/fawkes/issues/2230)) ([bffda7f](https://github.com/paruff/fawkes/commit/bffda7f3a8df6d3f60d6c4a138edc47ae96338c4))
+
+
+### Docs
+
+* **governance:** add CODE_OF_CONDUCT, SECURITY.md, expand FUNDING.yml ([#2234](https://github.com/paruff/fawkes/issues/2234)) ([ef5978d](https://github.com/paruff/fawkes/commit/ef5978d542cb6ee9aec74008e264bd4fe09082c5))
+* **pr-template:** add standardized PR template ([#2236](https://github.com/paruff/fawkes/issues/2236)) ([a88b4b6](https://github.com/paruff/fawkes/commit/a88b4b6c7b17be494f881a44e6dacdf1c5517874))
+
+
+### Chores
+
+* **templates:** drop dangling label references from issue templates ([#2237](https://github.com/paruff/fawkes/issues/2237)) ([b2b5055](https://github.com/paruff/fawkes/commit/b2b5055dfd667f6ac31350b44baded16b6385e0c))
+
 ## [0.3.163](https://github.com/paruff/fawkes/compare/v0.3.162...v0.3.163) (2026-10-07)
 
 
