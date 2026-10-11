@@ -310,7 +310,9 @@ jobs:
         run: |
           curl -f http://localhost:8080/
           curl -f http://localhost:8080/slow
-          curl -f http://localhost:8080/error || true
+          # /error returns 5xx on purpose, to generate error traffic: without -f
+          # curl exits 0 on an HTTP error and non-zero only if the app is unreachable.
+          curl -s -o /dev/null http://localhost:8080/error
 
       - name: Shutdown
         if: always() && steps.check_apps.outputs.has_apps == 'true'
