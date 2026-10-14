@@ -65,6 +65,8 @@ jobs:
   pre-commit-base:
     name: "Pre-commit · Base"
     runs-on: ubuntu-latest
+    # The hook stages run in the suite's CI image, by digest (ci-pipeline spec R4).
+    container: ghcr.io/paruff/ufawkes-ci@sha256:e85db8b3554da7c3362303d0e1e9681997d78093269b641e3535989f9c66f4da
     timeout-minutes: 15
     needs: detect-changes
     permissions:
@@ -83,13 +85,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
-        with:
-          python-version: "3.13"
-
-      - name: Install pre-commit
-        run: pip install pre-commit
+      - name: CI image and devcontainer come from one release
+        run: pipe-ci release-match
 
       - name: Cache pre-commit environments
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
