@@ -5,6 +5,40 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.164](https://github.com/paruff/fawkes/compare/v0.3.163...v0.3.164) (2026-10-16)
+
+
+### Added
+
+* **shift-left:** keep this clone's git hooks in step with the hook config ([#2231](https://github.com/paruff/fawkes/issues/2231)) ([7cfc58d](https://github.com/paruff/fawkes/commit/7cfc58d96c3c8aba372eb4050fa110dbd386d2f6))
+* **types:** add a mypy type check over services/ and extensions/ ([#2226](https://github.com/paruff/fawkes/issues/2226)) ([72d93d3](https://github.com/paruff/fawkes/commit/72d93d3239ac475bf75124556ec3a5efeb065a08))
+* **types:** type-check design-system, and run CI on design-system changes ([#2228](https://github.com/paruff/fawkes/issues/2228)) ([120116f](https://github.com/paruff/fawkes/commit/120116ff7ff90aff847f5aa78ee47c9b3449abaa))
+
+
+### Fixed
+
+* **ci:** mark PR comments informational; stop swallowing curl ([#180](https://github.com/paruff/fawkes/issues/180)) ([#2240](https://github.com/paruff/fawkes/issues/2240)) ([e5ae173](https://github.com/paruff/fawkes/commit/e5ae17370d76fd9a5b0e5e7420ccc576b7c5bd24))
+* **ci:** remove silent passes from the scan, hook and signing gates ([#180](https://github.com/paruff/fawkes/issues/180)) ([#2239](https://github.com/paruff/fawkes/issues/2239)) ([f795511](https://github.com/paruff/fawkes/commit/f795511775b432404293ca24a916bb0383e9dc79))
+* **templates:** fix security contact, placeholder template, PR gate commands ([#2238](https://github.com/paruff/fawkes/issues/2238)) ([5e7133b](https://github.com/paruff/fawkes/commit/5e7133b7fd965040619674979a4210467a6535fe))
+* **types:** restore the mypy hook dropped when [#2228](https://github.com/paruff/fawkes/issues/2228) merged ([#2230](https://github.com/paruff/fawkes/issues/2230)) ([2a2ba25](https://github.com/paruff/fawkes/commit/2a2ba25c7400e446477bdc32dd25a6d5887a327a))
+
+
+### Docs
+
+* **governance:** add CODE_OF_CONDUCT, SECURITY.md, expand FUNDING.yml ([#2234](https://github.com/paruff/fawkes/issues/2234)) ([612f17e](https://github.com/paruff/fawkes/commit/612f17e86b9cc1fddbdc83c1396adb7bc31cf9bb))
+* **pr-template:** add standardized PR template ([#2236](https://github.com/paruff/fawkes/issues/2236)) ([5e5e552](https://github.com/paruff/fawkes/commit/5e5e5522ebf52bdcaf61de2ea76849c5658fda6f))
+
+
+### Chores
+
+* **ci:** adopt Pipe v1.15.0-beta.1; drop unused local copies ([#181](https://github.com/paruff/fawkes/issues/181)) ([#2241](https://github.com/paruff/fawkes/issues/2241)) ([b985734](https://github.com/paruff/fawkes/commit/b9857347322261b6e29898879f3f456d963e3eaf))
+* **ci:** bump uFawkesPipe reusables to v1.16.0-beta.1 ([#2246](https://github.com/paruff/fawkes/issues/2246)) ([034cde1](https://github.com/paruff/fawkes/commit/034cde1fabe293799f9c571c98e0f03e3a1ba1c4))
+* **deps-dev:** bump the python-patch group with 3 updates ([#2242](https://github.com/paruff/fawkes/issues/2242)) ([db18e55](https://github.com/paruff/fawkes/commit/db18e556f9f181e869dfc44f11d2a6dcc7a78d3e))
+* **deps:** bump azure/setup-kubectl from 5.1.0 to 5.2.0 ([#2244](https://github.com/paruff/fawkes/issues/2244)) ([48f8c50](https://github.com/paruff/fawkes/commit/48f8c50e7966964085c2a8cf98a91cf4625a6946))
+* **deps:** bump the github-actions-patch group with 2 updates ([#2243](https://github.com/paruff/fawkes/issues/2243)) ([e5ab71f](https://github.com/paruff/fawkes/commit/e5ab71f22c8a6ada46e04c32eb1c8a6e6870ad94))
+* **infra:** adopt the OpenCode shift-left plugin ([#153](https://github.com/paruff/fawkes/issues/153)) ([#2245](https://github.com/paruff/fawkes/issues/2245)) ([8fc9af8](https://github.com/paruff/fawkes/commit/8fc9af821a7b450ff061220052a64692cc0faf8e))
+* **templates:** drop dangling label references from issue templates ([#2237](https://github.com/paruff/fawkes/issues/2237)) ([7ae1593](https://github.com/paruff/fawkes/commit/7ae15936c9e4d57f91dd658d2136780bbeb40491))
+
 ## [0.3.163](https://github.com/paruff/fawkes/compare/v0.3.162...v0.3.163) (2026-10-07)
 
 
