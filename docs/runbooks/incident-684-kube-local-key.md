@@ -22,8 +22,9 @@ the default rules (2694 commits, `--max-target-megabytes 2`) reports 127 finding
 | --- | --- | --- |
 | Untrack file, add to `.gitignore` | Done in this PR | agent |
 | Rotate: reset Kubernetes in Docker Desktop (regenerates certs/keys) | Pending | human |
-| Purge from history (`git filter-repo --path .kube.local.yaml --invert-paths`), force-push, re-clone | Pending, needs explicit human approval | human |
-| Re-run `gitleaks detect --log-opts="--all"` on the rewritten repo; expect 0 `private-key` hits for this file | Pending | human |
+| Purge from history (`git filter-repo --path .kube.local.yaml --invert-paths`), force-push, re-clone | Done 2026-10-16 for `main`, all other branches and tags. Everyone must re-clone | human |
+| Ask GitHub Support to drop cached views and GC the old commits `353afabf`, `9a2a3bec`, `03d36dba`, still reachable from `refs/pull/*/head` (read-only refs) | Pending | human |
+| Re-run `gitleaks detect --log-opts="--all"` on a fresh remote clone | Done 2026-10-16: 0 hits reachable from branches/tags; 3 remain only via `refs/pull/*` | agent |
 | Fix `.gitleaks.toml`: `[extend] useDefault = true`, drop blanket path allowlists, add rule-scoped allowlists | Pending triage of the findings below | human |
 
 ## Other history findings needing triage (values not recorded here)
