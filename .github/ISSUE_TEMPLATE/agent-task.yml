@@ -1,0 +1,42 @@
+name: Task for an agent
+description: 'Bounded work an agent can pick from "Ready for agent" on Project #7.'
+projects: ["paruff/7"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write it for the model: the exact files, the check that proves it's done, and what not to touch.
+        If you can't write that down, it's a `goal`. Add exactly one routing label after creating it
+        (`goal` + `claude-code`, or `opencode` + a `model:` label): see the suite plan's routing rubric.
+  - type: input
+    id: plan
+    attributes:
+      label: Plan section
+      description: "Link to docs/ai-sdlc/<feature>/plan.md#section (or the suite plan phase) this task comes from."
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec or acceptance IDs
+      description: 'IDs from spec.md or acceptance.yml, or "n/a: bug/polish".'
+    validations:
+      required: true
+  - type: textarea
+    id: exit
+    attributes:
+      label: Exit criterion
+      description: One command or check that passes when this is done.
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to change, and what not to touch
+    validations:
+      required: true
+  - type: input
+    id: design
+    attributes:
+      label: Design (UI work only)
+      description: The DESIGN.md section this follows, or leave empty.

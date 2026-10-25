@@ -1,0 +1,41 @@
+name: Decision for the owner
+description: 'A question only the owner can answer. Goes to "Needs human" on Project #7.'
+title: "Decision: "
+labels: ["question"]
+assignees: ["paruff"]
+projects: ["paruff/7"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and what each changes
+      value: "- "
+    validations:
+      required: true
+  - type: textarea
+    id: default
+    attributes:
+      label: Default if unanswered
+      description: What happens, or what stays blocked, until the owner answers.
+    validations:
+      required: true
+  - type: dropdown
+    id: gate
+    attributes:
+      label: Gate it holds
+      options: [intent, spec, plan, PR review, merge/release]
+    validations:
+      required: true
+  - type: input
+    id: trace
+    attributes:
+      label: Plan section affected
+      description: Link to docs/ai-sdlc/<feature>/plan.md#section, or the suite plan phase.
+    validations:
+      required: true
