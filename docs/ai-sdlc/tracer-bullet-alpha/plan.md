@@ -6,13 +6,16 @@ This plan lists no tasks. The sequence is
 [Phase 6 of the suite plan](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/plan.md#phase-6--fawkes-alpha--dojo-06-gate-ac-fawkes-0104),
 and the tasks are the Alpha epic's children (paruff/fawkes#1804) on
 [Project #7](https://github.com/users/paruff/projects/7).
+The findings of the 2026-11-13 suite audit are the sub-issues of
+paruff/fawkes#2314, which sits beside the Alpha epic; only paruff/fawkes#2310
+bears on an Alpha criterion.
 
 ## Verification Strategy
 
 | Criterion | Evidence |
 | --- | --- |
 | AC-FAWKES-01 | One CI run plus the ArgoCD sync history, linked (paruff/fawkes#1858) |
-| AC-FAWKES-02 | A screenshot plus the PromQL behind each panel |
+| AC-FAWKES-02 | A screenshot plus the PromQL behind each panel. Each expression names a rule or metric the manifests produce, shown by a script over the dashboard JSON (paruff/fawkes#2310) |
 | AC-FAWKES-03 | paruff/fawkes#2004 and paruff/fawkes#1797 closed, with linked PRs |
 | AC-FAWKES-04 | The suite's AC-SUITE-01 check, plus a README review |
 
