@@ -5,6 +5,93 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.164](https://github.com/paruff/fawkes/compare/v0.3.163...v0.3.164) (2026-11-14)
+
+
+### Added
+
+* **shift-left:** keep this clone's git hooks in step with the hook config ([#2231](https://github.com/paruff/fawkes/issues/2231)) ([7cfc58d](https://github.com/paruff/fawkes/commit/7cfc58d96c3c8aba372eb4050fa110dbd386d2f6))
+* **types:** add a mypy type check over services/ and extensions/ ([#2226](https://github.com/paruff/fawkes/issues/2226)) ([72d93d3](https://github.com/paruff/fawkes/commit/72d93d3239ac475bf75124556ec3a5efeb065a08))
+* **types:** type-check design-system, and run CI on design-system changes ([#2228](https://github.com/paruff/fawkes/issues/2228)) ([120116f](https://github.com/paruff/fawkes/commit/120116ff7ff90aff847f5aa78ee47c9b3449abaa))
+
+
+### Fixed
+
+* **ci:** mark PR comments informational; stop swallowing curl ([#180](https://github.com/paruff/fawkes/issues/180)) ([#2240](https://github.com/paruff/fawkes/issues/2240)) ([e5ae173](https://github.com/paruff/fawkes/commit/e5ae17370d76fd9a5b0e5e7420ccc576b7c5bd24))
+* **ci:** remove silent passes from the scan, hook and signing gates ([#180](https://github.com/paruff/fawkes/issues/180)) ([#2239](https://github.com/paruff/fawkes/issues/2239)) ([f795511](https://github.com/paruff/fawkes/commit/f795511775b432404293ca24a916bb0383e9dc79))
+* **ci:** skip artifact-chain for dependabot by PR author, not actor ([#2329](https://github.com/paruff/fawkes/issues/2329)) ([658e849](https://github.com/paruff/fawkes/commit/658e849220c867506d762192a7ecd014ed8ebd9b))
+* **dora-metrics:** refresh off the request path, never report a failure as zero ([#2319](https://github.com/paruff/fawkes/issues/2319)) ([#2320](https://github.com/paruff/fawkes/issues/2320)) ([9b4559c](https://github.com/paruff/fawkes/commit/9b4559c514d049c8c0b67262eeefb3c96014c292))
+* **security:** untrack .kube.local.yaml and document incident ([#684](https://github.com/paruff/fawkes/issues/684)) ([#2251](https://github.com/paruff/fawkes/issues/2251)) ([918f2b1](https://github.com/paruff/fawkes/commit/918f2b155b851291840af105417da3a0e8784657))
+* **services:** bump psycopg2-binary to 2.9.10 for Python 3.13 ([#2328](https://github.com/paruff/fawkes/issues/2328)) ([af369aa](https://github.com/paruff/fawkes/commit/af369aa1416cf2f5ec6be8c902f3b424826f1841))
+* **templates:** fix security contact, placeholder template, PR gate commands ([#2238](https://github.com/paruff/fawkes/issues/2238)) ([5e7133b](https://github.com/paruff/fawkes/commit/5e7133b7fd965040619674979a4210467a6535fe))
+* **tests:** BDD security steps use Pipe's scan, not the deleted copy ([#2327](https://github.com/paruff/fawkes/issues/2327)) ([3e05ca3](https://github.com/paruff/fawkes/commit/3e05ca35e99d1936ab655607f2181b92f7873695))
+* **types:** restore the mypy hook dropped when [#2228](https://github.com/paruff/fawkes/issues/2228) merged ([#2230](https://github.com/paruff/fawkes/issues/2230)) ([2a2ba25](https://github.com/paruff/fawkes/commit/2a2ba25c7400e446477bdc32dd25a6d5887a327a))
+
+
+### Docs
+
+* **adr:** ADR-039 proposes the monolith and services/common layout ([#2299](https://github.com/paruff/fawkes/issues/2299)) ([#2321](https://github.com/paruff/fawkes/issues/2321)) ([f08f1da](https://github.com/paruff/fawkes/commit/f08f1da78c186241a921d2c103ef71822a883bd4))
+* **ai-sdlc:** phased plan for the path to Beta ([#2305](https://github.com/paruff/fawkes/issues/2305)) ([5d71a0c](https://github.com/paruff/fawkes/commit/5d71a0c3b60ac8728f2f87fc11b145c4f02398b0))
+* **design:** DESIGN.md, REVIEW.md and the Project 7 workflow ([#2267](https://github.com/paruff/fawkes/issues/2267)) ([0161569](https://github.com/paruff/fawkes/commit/0161569c7eaf429d6fd4de1ccd34587ed732175a))
+* **docs:** Alpha spec records the DORA dashboard and token gaps ([#2314](https://github.com/paruff/fawkes/issues/2314)) ([#2315](https://github.com/paruff/fawkes/issues/2315)) ([269b4e2](https://github.com/paruff/fawkes/commit/269b4e2e40e1c30c6d4e7011353bd604e74b0550))
+* **docs:** interfaces, pipeline invariants and make commands ([#2307](https://github.com/paruff/fawkes/issues/2307)) ([73dfd53](https://github.com/paruff/fawkes/commit/73dfd5334f8972d63d6a1cbac5b4a7fb7e2c1500))
+* **docs:** pin survey of services/*/requirements.txt ([#2299](https://github.com/paruff/fawkes/issues/2299)) ([#2317](https://github.com/paruff/fawkes/issues/2317)) ([c252653](https://github.com/paruff/fawkes/commit/c252653697990d74dfc7e2284892de228dc8fa87))
+* **governance:** add CODE_OF_CONDUCT, SECURITY.md, expand FUNDING.yml ([#2234](https://github.com/paruff/fawkes/issues/2234)) ([612f17e](https://github.com/paruff/fawkes/commit/612f17e86b9cc1fddbdc83c1396adb7bc31cf9bb))
+* **pr-template:** add standardized PR template ([#2236](https://github.com/paruff/fawkes/issues/2236)) ([5e5e552](https://github.com/paruff/fawkes/commit/5e5e5522ebf52bdcaf61de2ea76849c5658fda6f))
+
+
+### Chores
+
+* **ci:** adopt Pipe v1.15.0-beta.1; drop unused local copies ([#181](https://github.com/paruff/fawkes/issues/181)) ([#2241](https://github.com/paruff/fawkes/issues/2241)) ([b985734](https://github.com/paruff/fawkes/commit/b9857347322261b6e29898879f3f456d963e3eaf))
+* **ci:** bump uFawkesPipe reusables to v1.16.0-beta.1 ([#2246](https://github.com/paruff/fawkes/issues/2246)) ([034cde1](https://github.com/paruff/fawkes/commit/034cde1fabe293799f9c571c98e0f03e3a1ba1c4))
+* **deps-dev:** bump flake8 from 7.4.1 to 7.5.0 ([#2292](https://github.com/paruff/fawkes/issues/2292)) ([1f1c574](https://github.com/paruff/fawkes/commit/1f1c574f29f5d03b40c00b18b242a2e9d3407e43))
+* **deps-dev:** bump gitpython from 3.2.0 to 3.2.1 ([#2265](https://github.com/paruff/fawkes/issues/2265)) ([81ddeb8](https://github.com/paruff/fawkes/commit/81ddeb8e80a7a6b44bb714c63fbc521eaa634c98))
+* **deps-dev:** bump hypothesis from 6.168.5 to 6.169.0 ([#2259](https://github.com/paruff/fawkes/issues/2259)) ([2b1c967](https://github.com/paruff/fawkes/commit/2b1c96724ba398120ba79d2215928a0b6de4eba7))
+* **deps-dev:** bump hypothesis from 6.169.1 to 6.170.2 ([#2271](https://github.com/paruff/fawkes/issues/2271)) ([86493ec](https://github.com/paruff/fawkes/commit/86493ecc9f27e25624294acad155ffa47d5801b9))
+* **deps-dev:** bump ipython from 9.17.1 to 9.18.0 ([#2293](https://github.com/paruff/fawkes/issues/2293)) ([6c5b166](https://github.com/paruff/fawkes/commit/6c5b166d42ef572691698e649e6d8d4d9bc21605))
+* **deps-dev:** bump kubernetes from 36.0.3 to 37.0.1 ([#2258](https://github.com/paruff/fawkes/issues/2258)) ([47249a6](https://github.com/paruff/fawkes/commit/47249a6be181f25302e82f5e0239df8be71bd733))
+* **deps-dev:** bump pre-commit from 4.6.2 to 4.7.0 ([#2270](https://github.com/paruff/fawkes/issues/2270)) ([660e7d3](https://github.com/paruff/fawkes/commit/660e7d36916e78fce4938ec3804dd9d3ad0a131a))
+* **deps-dev:** bump pytest from 9.1.1 to 9.2.0 ([#2294](https://github.com/paruff/fawkes/issues/2294)) ([97ccc49](https://github.com/paruff/fawkes/commit/97ccc49d27403f1c35a18491a4ff354f297d2176))
+* **deps-dev:** bump pytest-asyncio from 1.4.1 to 1.4.1.post1 ([#2291](https://github.com/paruff/fawkes/issues/2291)) ([a7ab438](https://github.com/paruff/fawkes/commit/a7ab4386034e385677b0eb8d5a5184bf766a9151))
+* **deps-dev:** bump ruff from 0.16.10 to 0.17.0 ([#2254](https://github.com/paruff/fawkes/issues/2254)) ([6f8be88](https://github.com/paruff/fawkes/commit/6f8be888983361a563622fce1fa22461da57e01a))
+* **deps-dev:** bump the python-patch group across 1 directory with 3 updates ([#2264](https://github.com/paruff/fawkes/issues/2264)) ([498545d](https://github.com/paruff/fawkes/commit/498545d6e37f0949f7635e257a2339b0d67fbb67))
+* **deps-dev:** bump the python-patch group across 1 directory with 7 updates ([#2297](https://github.com/paruff/fawkes/issues/2297)) ([8d13acc](https://github.com/paruff/fawkes/commit/8d13accfdfc053ced9117fb70db3468ca123716f))
+* **deps-dev:** bump the python-patch group with 2 updates ([#2268](https://github.com/paruff/fawkes/issues/2268)) ([76c22a1](https://github.com/paruff/fawkes/commit/76c22a1de53141624fe842db4755192890e08e39))
+* **deps-dev:** bump the python-patch group with 3 updates ([#2242](https://github.com/paruff/fawkes/issues/2242)) ([db18e55](https://github.com/paruff/fawkes/commit/db18e556f9f181e869dfc44f11d2a6dcc7a78d3e))
+* **deps-dev:** bump the python-patch group with 4 updates ([#2283](https://github.com/paruff/fawkes/issues/2283)) ([f3d6f8d](https://github.com/paruff/fawkes/commit/f3d6f8d08944ca2b368b059afe4444cd75d6e522))
+* **deps-dev:** bump vite ([#2263](https://github.com/paruff/fawkes/issues/2263)) ([decf751](https://github.com/paruff/fawkes/commit/decf751dd404696a635db459d69297455721d8cd))
+* **deps-dev:** bump weaviate-client from 4.23.1 to 4.24.0 ([#2285](https://github.com/paruff/fawkes/issues/2285)) ([90b587a](https://github.com/paruff/fawkes/commit/90b587a35d279a8e07b1d4397db1569eeda3a5dc))
+* **deps:** bump actions/setup-node from 7.0.0 to 7.1.0 ([#2262](https://github.com/paruff/fawkes/issues/2262)) ([680615d](https://github.com/paruff/fawkes/commit/680615d0f40e52983374b0d60cc5cd3216bf8997))
+* **deps:** bump actions/setup-python from 7.0.0 to 7.1.0 ([#2289](https://github.com/paruff/fawkes/issues/2289)) ([fbe2c08](https://github.com/paruff/fawkes/commit/fbe2c08a82921c88f1dfe350ad2ddc128942c330))
+* **deps:** bump anomalyco/opencode/github ([#2272](https://github.com/paruff/fawkes/issues/2272)) ([033a0b5](https://github.com/paruff/fawkes/commit/033a0b51494e04e2533d865cb8875b575be023af))
+* **deps:** bump anomalyco/opencode/github from 2.0.32 to 2.1.4 ([#2288](https://github.com/paruff/fawkes/issues/2288)) ([b011a4e](https://github.com/paruff/fawkes/commit/b011a4e21731d9e531c5c8ea1348e759dba2f139))
+* **deps:** bump anomalyco/opencode/github from 2.1.4 to 2.2.5 ([#2295](https://github.com/paruff/fawkes/issues/2295)) ([65f4a40](https://github.com/paruff/fawkes/commit/65f4a40a693a483055ac5448bc4c8aa2361c351a))
+* **deps:** bump azure/setup-kubectl from 5.1.0 to 5.2.0 ([#2244](https://github.com/paruff/fawkes/issues/2244)) ([48f8c50](https://github.com/paruff/fawkes/commit/48f8c50e7966964085c2a8cf98a91cf4625a6946))
+* **deps:** bump docker/login-action from 4.6.0 to 4.7.0 ([#2287](https://github.com/paruff/fawkes/issues/2287)) ([b4b3750](https://github.com/paruff/fawkes/commit/b4b3750e5cdfc6d8b98b69867e7d43335d1841f7))
+* **deps:** bump EnricoMi/publish-unit-test-result-action ([#2261](https://github.com/paruff/fawkes/issues/2261)) ([6324613](https://github.com/paruff/fawkes/commit/63246130efc292df1786d04dfa223a4fb2fcc092))
+* **deps:** bump github/codeql-action/upload-sarif ([#2274](https://github.com/paruff/fawkes/issues/2274)) ([54f8c7a](https://github.com/paruff/fawkes/commit/54f8c7abfe8f2a90069467b033f1e55f5633a85a))
+* **deps:** bump github/codeql-action/upload-sarif ([#2286](https://github.com/paruff/fawkes/issues/2286)) ([0d2021d](https://github.com/paruff/fawkes/commit/0d2021d70400308391cf6bc69bb61be78ae1a6da))
+* **deps:** bump hashicorp/aws from 6.67.0 to 6.68.0 in /infra/aws ([#2257](https://github.com/paruff/fawkes/issues/2257)) ([af6dd88](https://github.com/paruff/fawkes/commit/af6dd883853e494db32ecba8fb628d11e4a2b1f4))
+* **deps:** bump hashicorp/aws from 6.69.1 to 6.70.0 in /infra/aws ([#2282](https://github.com/paruff/fawkes/issues/2282)) ([4da6452](https://github.com/paruff/fawkes/commit/4da645250f4455eb4f788a39c470e6d33b5d6e7b))
+* **deps:** bump hashicorp/azurerm from 5.8.0 to 5.9.0 in /infra/azure ([#2253](https://github.com/paruff/fawkes/issues/2253)) ([64183c6](https://github.com/paruff/fawkes/commit/64183c6c9ed174a24d554f54f876705ead04d05a))
+* **deps:** bump hashicorp/azurerm in /infra/azure ([#2281](https://github.com/paruff/fawkes/issues/2281)) ([55d7f99](https://github.com/paruff/fawkes/commit/55d7f994b38c1341164f401b48d4c56fc0e6e5cb))
+* **deps:** bump hashicorp/http from 3.6.2 to 3.6.3 in /infra/azure ([#2279](https://github.com/paruff/fawkes/issues/2279)) ([0285579](https://github.com/paruff/fawkes/commit/0285579fa552ffdb4fdc60c803a4d7a8dfb2e102))
+* **deps:** bump hashicorp/kubernetes from 3.3.0 to 3.4.0 in /infra/aws ([#2280](https://github.com/paruff/fawkes/issues/2280)) ([f0b8755](https://github.com/paruff/fawkes/commit/f0b8755c245f47a21a93f2661306151a8d37da9a))
+* **deps:** bump infracost/actions/setup from 4.2.0 to 5.0.1 ([#2273](https://github.com/paruff/fawkes/issues/2273)) ([c717984](https://github.com/paruff/fawkes/commit/c717984b838df52774bf17a29f32d20413241751))
+* **deps:** bump mkdocs-material from 9.7.7 to 9.8.0 ([#2284](https://github.com/paruff/fawkes/issues/2284)) ([769bcaf](https://github.com/paruff/fawkes/commit/769bcaf71699cab7e8522f4133b129e4298f85f5))
+* **deps:** bump pymdown-extensions from 12.1 to 12.2 ([#2256](https://github.com/paruff/fawkes/issues/2256)) ([8a57f62](https://github.com/paruff/fawkes/commit/8a57f624820e0a9a6cf0669fc8a1540517adb17e))
+* **deps:** bump pymdown-extensions from 12.2 to 12.3 ([#2269](https://github.com/paruff/fawkes/issues/2269)) ([c51e506](https://github.com/paruff/fawkes/commit/c51e506da4d7026d1a5e54a106027d943e4a647a))
+* **deps:** bump python in /services/mcp-k8s-server ([#2278](https://github.com/paruff/fawkes/issues/2278)) ([13fac8f](https://github.com/paruff/fawkes/commit/13fac8fea30450536c3a087bf1e534d065f4a060))
+* **deps:** bump the github-actions-patch group with 2 updates ([#2243](https://github.com/paruff/fawkes/issues/2243)) ([e5ab71f](https://github.com/paruff/fawkes/commit/e5ab71f22c8a6ada46e04c32eb1c8a6e6870ad94))
+* **deps:** bump the github-actions-patch group with 4 updates ([#2260](https://github.com/paruff/fawkes/issues/2260)) ([1148854](https://github.com/paruff/fawkes/commit/11488545478db37f93af40c2c3044d6f04568530))
+* **deps:** bump the go_modules group across 1 directory with 2 updates ([#2275](https://github.com/paruff/fawkes/issues/2275)) ([31e0d41](https://github.com/paruff/fawkes/commit/31e0d41dd551387e859b017a1b8539fa1e03c7aa))
+* **deps:** bump the go_modules group across 1 directory with 4 updates ([#2309](https://github.com/paruff/fawkes/issues/2309)) ([f9dec65](https://github.com/paruff/fawkes/commit/f9dec65f04f345a698bae44f9f707364d4fe42c0))
+* **deps:** bump the npm_and_yarn group across 1 directory with 6 updates ([#2276](https://github.com/paruff/fawkes/issues/2276)) ([add8ac6](https://github.com/paruff/fawkes/commit/add8ac60c8b33d9369112d258cfe8889c7a66391))
+* **deps:** bump the pip group across 8 directories with 2 updates ([#2308](https://github.com/paruff/fawkes/issues/2308)) ([563149f](https://github.com/paruff/fawkes/commit/563149f9e9321226208ff1fe457d4ca976e00e9a))
+* **infra:** adopt the OpenCode shift-left plugin ([#153](https://github.com/paruff/fawkes/issues/153)) ([#2245](https://github.com/paruff/fawkes/issues/2245)) ([8fc9af8](https://github.com/paruff/fawkes/commit/8fc9af821a7b450ff061220052a64692cc0faf8e))
+* **lint:** ignore UP017 and FURB162, new in ruff 0.17.3 ([#2297](https://github.com/paruff/fawkes/issues/2297)) ([#2324](https://github.com/paruff/fawkes/issues/2324)) ([368206d](https://github.com/paruff/fawkes/commit/368206d7f0146a02ad5fb4cd5d4108d831232ae2))
+* **templates:** drop dangling label references from issue templates ([#2237](https://github.com/paruff/fawkes/issues/2237)) ([7ae1593](https://github.com/paruff/fawkes/commit/7ae15936c9e4d57f91dd658d2136780bbeb40491))
+
 ## [0.3.163](https://github.com/paruff/fawkes/compare/v0.3.162...v0.3.163) (2026-10-07)
 
 
