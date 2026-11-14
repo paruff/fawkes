@@ -17,6 +17,9 @@ from datetime import datetime
 
 from .base import CommitInfo, MergedPR, RepoSourceCollector
 
+GH_TIMEOUT_SECONDS = 30
+PR_LIST_LIMIT = 500
+
 
 class GitHubCollector(RepoSourceCollector):
     def __init__(self, gh_binary: str = "gh") -> None:
@@ -28,6 +31,7 @@ class GitHubCollector(RepoSourceCollector):
             capture_output=True,
             text=True,
             check=True,
+            timeout=GH_TIMEOUT_SECONDS,  # a hung gh must not hang the refresh for good
         )
         return result.stdout
 
@@ -45,13 +49,16 @@ class GitHubCollector(RepoSourceCollector):
             "--json",
             "number,title,mergedAt",
             "--limit",
-            "500",
+            str(PR_LIST_LIMIT),
         )
         prs_json = json.loads(raw)
+        if len(prs_json) >= PR_LIST_LIMIT:
+            # gh truncates silently; an undercount would look like a real number.
+            raise RuntimeError(f"{repo}: merged PR list hit the limit of {PR_LIST_LIMIT}; narrow the window")
 
         merged_prs = []
         for pr in prs_json:
-            merged_at = datetime.fromisoformat(pr["mergedAt"].replace("Z", "+00:00"))
+            merged_at = datetime.fromisoformat(pr["mergedAt"])
             if not (since <= merged_at < until):
                 continue
             commits_raw = self._run_gh(
@@ -69,11 +76,7 @@ class GitHubCollector(RepoSourceCollector):
                     sha=c.get("oid", ""),
                     message_headline=c.get("messageHeadline", "") or "",
                     message_body=c.get("messageBody", "") or "",
-                    committed_at=(
-                        datetime.fromisoformat(c["committedDate"].replace("Z", "+00:00"))
-                        if c.get("committedDate")
-                        else None
-                    ),
+                    committed_at=(datetime.fromisoformat(c["committedDate"]) if c.get("committedDate") else None),
                 )
                 for c in commits_json
             ]
