@@ -35,8 +35,11 @@ jobs:
 
       # Dependabot bumps lockfiles, requirements and base images under the code
       # paths, and a bot can't write a plan.md. Everything else is checked.
+      # Key off the PR author, not github.actor: a human pushing to (or
+      # updating) a Dependabot PR makes the triggerer a human, and the check
+      # must still be skipped for the bot's PR.
       - name: Check this PR's artifact chain
-        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+        if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: bash scripts/check-artifact-chain.sh "$BASE_SHA" HEAD
