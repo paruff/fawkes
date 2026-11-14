@@ -5414,6 +5414,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dora-dashboards-and-rule-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DORA dashboards and rule names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design tokens
+      
+    </span>
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5493,6 +5521,37 @@ rows of the suite's <a href="https://github.com/paruff/uFawkes.dev/blob/main/doc
 <p>fawkes doesn't use uFawkesPipe's <code>.fawkespipe.yml</code> contract or Woodpecker, and
 it doesn't send DORA events to uFawkesObs: its DORA metrics come from its own
 Prometheus (AC-FAWKES-02).</p>
+<h3 id="dora-dashboards-and-rule-names">DORA dashboards and rule names</h3>
+<p>Read from <code>main</code> at <code>73dfd533</code> on 2026-11-13, with no cluster (paruff/fawkes#2310):</p>
+<ul>
+<li><code>platform/apps/grafana-dashboards/</code> ships two copies of uFawkesObs
+  dashboards. The overview copy queries <code>dora_*{team_id}</code> gauges that only
+  uFawkesObs's <code>dora-api</code> emits, so in fawkes those panels have no data.</li>
+<li>Two rules that carry the Alpha's repo-level metrics,
+  <code>dora:fawkes_repo_deployment_frequency:rate30d</code> and
+  <code>dora:fawkes_repo_lead_time_hours:avg30d</code>, are in
+  <code>platform/apps/prometheus/rules/dora.yml</code> (the reference copy) and not in
+  the live map in <code>prometheus-application.yaml</code>. Two panels query them.</li>
+<li><code>dora:deployment_frequency:rate30d</code> is deployments per day here and a sum
+  of per-week values in uFawkesObs, under the same name.</li>
+<li>One panel reads a <code>ufawkesres-postgres</code> datasource that doesn't exist.</li>
+</ul>
+<p>What Alpha needs from this, as part of AC-FAWKES-02's evidence and not a new
+criterion:</p>
+<ul>
+<li>Every panel on a dashboard that ArgoCD deploys names a metric or rule that
+  the manifests produce.</li>
+<li>A rule that shares its name with a uFawkesObs rule states its unit in the
+  rule's comment and in the panel title, or takes another name.</li>
+</ul>
+<h2 id="design-tokens">Design tokens</h2>
+<p>The design system follows the suite's tokens
+(<a href="../../../DESIGN.md"><code>DESIGN.md</code></a>), copied by hand.
+<code>scripts/check-design-token-sync.py</code> compares two colour scales and runs in
+no hook or workflow. Outside those scales the code has a teal secondary,
+<code>#16a34a</code>, five breakpoints and eight radii where the tokens have none of the
+first two, two breakpoints and two radii (paruff/fawkes#2311). This is not an
+Alpha criterion.</p>
 <h2 id="pipeline-invariants">Pipeline invariants</h2>
 <p>The <a href="https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#pipeline-invariants">suite pipeline invariants</a> apply here, with one departure:</p>
 <ul>

@@ -5483,6 +5483,32 @@
 <p>Wire the sync check into CI once the published <code>tokens.json</code> is reachable from
 runners, and decide whether the design system's default primary moves from 500
 to 600 (500 is 4.47:1 on white).</p>
+<p>State on 2026-11-13 (paruff/fawkes#2311): the primary moved to 600
+(<a href="../../design-primary-600/plan/"><code>design-primary-600</code></a>). The check still runs
+in no hook, workflow or Make target, and it compares only the indigo and gray
+scales. A pre-commit hook against a vendored <code>tokens.json</code> needs no network,
+so it doesn't have to wait for runners to reach the published file.</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Evidence</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The check runs on every commit</td>
+<td>A <code>design-token-sync</code> hook in <code>.pre-commit-config.yaml</code></td>
+<td><code>make lint</code></td>
+</tr>
+<tr>
+<td>Values outside the two scales are accounted for</td>
+<td>Each one matches the tokens or is listed in <code>DESIGN.md</code> as a departure</td>
+<td>Review of <code>DESIGN.md</code>'s "Today" table against the code</td>
+</tr>
+</tbody>
+</table>
 
 
 
