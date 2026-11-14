@@ -2,9 +2,17 @@
 // inside OpenCode (uFawkes.dev docs/ai-sdlc/shift-left/spec.md R6, R9): the same
 // two tools Claude Code runs from .claude/settings.json, through the same shim.
 //
-//   session.created     doctor --quiet; a problem goes into the session as context
-//   session.idle        agent-gate; a failure is sent back so the agent keeps working
-//   tool.execute.before refuses a commit or push that skips the git hooks
+// OpenCode V2 loads a plugin through its default export — `{ id, setup }` — and
+// exposes typed hooks instead of the V1 string-named hook object:
+//
+//   ctx.event.subscribe({ types: ["session.created"] })
+//                       doctor --quiet; a problem goes into the session as a
+//                       non-waking notice (ctx.session.synthetic, resume:false)
+//   ctx.event.subscribe({ types: ["session.idle"] })
+//                       agent-gate; a failure wakes the session
+//                       (ctx.session.prompt) so the agent keeps working
+//   ctx.tool.hook("execute.before")
+//                       refuses a commit or push that skips the git hooks
 //
 // OpenCode can't block a stop the way Claude Code's Stop hook does, so the gate
 // answers an idle session with a prompt instead: the agent is told what fails and
@@ -28,53 +36,78 @@ const SHIMS = ["scripts/shift-left.sh", "scripts/shift-left/shift-left.sh"];
 // start, so prose that mentions the flag isn't blocked.
 const SKIPS_HOOKS = /(^|[;&|]\s*)git\s+(-\S+\s+(\S+\s+)?)*(commit|push)\b[^;&|]*--no-verify/;
 
-/** @type {import("@opencode-ai/plugin").Plugin} */
-export const ShiftLeft = async ({ client, directory }) => {
-  const shim = SHIMS.map((s) => path.join(directory, s)).find(existsSync);
-  const run = (tool, args = [], input = "") =>
-    spawnSync("bash", [shim, tool, ...args], { cwd: directory, input, encoding: "utf8", timeout: 120_000 });
-  const lastSaid = new Map(); // session -> last message, so nothing is sent twice in a row
-  const say = async (id, text, reply) => {
-    if (lastSaid.get(id) === text) return;
-    lastSaid.set(id, text);
-    await client.session.prompt({
-      path: { id },
-      body: { ...(reply ? {} : { noReply: true }), parts: [{ type: "text", text }] },
-    });
-  };
-  const blocked = new Set(); // sessions the gate already sent back once
+export default {
+  id: "shift-left",
+  async setup(ctx) {
+    const directory = ctx.location?.directory;
+    if (!directory) return;
 
-  return {
-    event: async ({ event }) => {
-      if (!shim) return;
-      if (event.type === "session.created") {
-        const r = run("doctor", ["--quiet"]);
-        const text = `${r.stdout ?? ""}${r.stderr ?? ""}`.trim();
-        if (r.status !== 0 && text) await say(event.properties.info.id, `shift-left doctor:\n${text}`, false);
-      } else if (event.type === "session.idle") {
-        const id = event.properties.sessionID;
-        const r = run("agent-gate", [], JSON.stringify({ stop_hook_active: blocked.has(id) }));
-        if (r.status === 2) {
-          blocked.add(id);
-          await say(id, (r.stderr ?? "").trim(), true);
-          return;
-        }
-        blocked.delete(id);
-        try {
-          const note = JSON.parse(r.stdout || "{}").systemMessage;
-          if (note) await say(id, note, false);
-        } catch {
-          // Not JSON: nothing to relay.
-        }
+    const shim = SHIMS.map((s) => path.join(directory, s)).find(existsSync);
+    if (!shim) return;
+
+    const run = (tool, args = [], input = "") =>
+      spawnSync("bash", [shim, tool, ...args], { cwd: directory, input, encoding: "utf8", timeout: 120_000 });
+
+    const lastSaid = new Map(); // session -> last message, so nothing is sent twice in a row
+    const say = async (id, text, wake) => {
+      if (lastSaid.get(id) === text) return;
+      lastSaid.set(id, text);
+      if (wake) {
+        await ctx.session.prompt({ sessionID: id, text });
+      } else {
+        await ctx.session.synthetic({ sessionID: id, text, resume: false });
       }
-    },
+    };
+    const blocked = new Set(); // sessions the gate already sent back once
 
-    "tool.execute.before": async (input, output) => {
-      if (input.tool === "bash" && SKIPS_HOOKS.test(output.args?.command ?? "")) {
+    await ctx.tool.hook("execute.before", (input) => {
+      if (input.tool !== "bash") return;
+      const command = input.input?.command;
+      if (typeof command === "string" && SKIPS_HOOKS.test(command)) {
         throw new Error(
           "Blocked: skipping the git hooks is not allowed here. Fix what the hook reports; if the hook is wrong, say so and ask a person.",
         );
       }
-    },
-  };
+    });
+
+    const controller = new AbortController();
+    const events = ctx.event.subscribe({
+      types: ["session.created", "session.idle"],
+      signal: controller.signal,
+    });
+
+    // Consume the event stream in the background: setup must return so the
+    // plugin activates, and the stream runs for the life of the plugin.
+    void (async () => {
+      for await (const event of events) {
+        if (event.type === "session.created") {
+          const id = event.data?.sessionID;
+          if (!id) continue;
+          const r = run("doctor", ["--quiet"]);
+          const text = `${r.stdout ?? ""}${r.stderr ?? ""}`.trim();
+          if (r.status !== 0 && text) await say(id, `shift-left doctor:\n${text}`, false);
+        } else if (event.type === "session.idle") {
+          const id = event.data?.sessionID;
+          if (!id) continue;
+          const r = run("agent-gate", [], JSON.stringify({ stop_hook_active: blocked.has(id) }));
+          if (r.status === 2) {
+            blocked.add(id);
+            await say(id, (r.stderr ?? "").trim(), true);
+            continue;
+          }
+          blocked.delete(id);
+          try {
+            const note = JSON.parse(r.stdout || "{}").systemMessage;
+            if (note) await say(id, note, false);
+          } catch {
+            // Not JSON: nothing to relay.
+          }
+        }
+      }
+    })().catch((err) => {
+      if (!controller.signal.aborted) console.error("[shift-left] event loop failed:", err);
+    });
+
+    return () => controller.abort();
+  },
 };

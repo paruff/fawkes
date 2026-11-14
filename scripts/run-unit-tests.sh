@@ -20,6 +20,7 @@ SUITES=(
   scripts/test-emit-dora-event.sh
   scripts/test-artifact-chain.sh
   scripts/test-dojo-feedback-intent.sh
+  scripts/test-opencode-plugins.sh
 )
 
 failed=0
