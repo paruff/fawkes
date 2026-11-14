@@ -35,6 +35,40 @@ fawkes doesn't use uFawkesPipe's `.fawkespipe.yml` contract or Woodpecker, and
 it doesn't send DORA events to uFawkesObs: its DORA metrics come from its own
 Prometheus (AC-FAWKES-02).
 
+### DORA dashboards and rule names
+
+Read from `main` at `73dfd533` on 2026-11-13, with no cluster (paruff/fawkes#2310):
+
+- `platform/apps/grafana-dashboards/` ships two copies of uFawkesObs
+  dashboards. The overview copy queries `dora_*{team_id}` gauges that only
+  uFawkesObs's `dora-api` emits, so in fawkes those panels have no data.
+- Two rules that carry the Alpha's repo-level metrics,
+  `dora:fawkes_repo_deployment_frequency:rate30d` and
+  `dora:fawkes_repo_lead_time_hours:avg30d`, are in
+  `platform/apps/prometheus/rules/dora.yml` (the reference copy) and not in
+  the live map in `prometheus-application.yaml`. Two panels query them.
+- `dora:deployment_frequency:rate30d` is deployments per day here and a sum
+  of per-week values in uFawkesObs, under the same name.
+- One panel reads a `ufawkesres-postgres` datasource that doesn't exist.
+
+What Alpha needs from this, as part of AC-FAWKES-02's evidence and not a new
+criterion:
+
+- Every panel on a dashboard that ArgoCD deploys names a metric or rule that
+  the manifests produce.
+- A rule that shares its name with a uFawkesObs rule states its unit in the
+  rule's comment and in the panel title, or takes another name.
+
+## Design tokens
+
+The design system follows the suite's tokens
+([`DESIGN.md`](../../../DESIGN.md)), copied by hand.
+`scripts/check-design-token-sync.py` compares two colour scales and runs in
+no hook or workflow. Outside those scales the code has a teal secondary,
+`#16a34a`, five breakpoints and eight radii where the tokens have none of the
+first two, two breakpoints and two radii (paruff/fawkes#2311). This is not an
+Alpha criterion.
+
 ## Pipeline invariants
 
 The [suite pipeline invariants](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#pipeline-invariants) apply here, with one departure:
