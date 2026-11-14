@@ -39,6 +39,15 @@ def _pre_commit_config() -> str:
     return _read_repo_file(".pre-commit-config.yaml")
 
 
+_PIPE_SCANNING = "ufawkespipe/.github/workflows/reusable-security-scanning.yml@"
+
+
+def _pipe_scanning_callers() -> list[str]:
+    """Workflows here that call uFawkesPipe's reusable security scan (no local copy since #2247)."""
+    workflows = (_REPO_ROOT / ".github" / "workflows").glob("*.yml")
+    return [w.name for w in workflows if _PIPE_SCANNING in w.read_text().lower()]
+
+
 def _tekton_pipeline() -> str:
     """Read the Tekton golden-path pipeline (the current CI engine)."""
     return _read_repo_file("platform/apps/tekton/golden-path-pipeline.yaml")
@@ -62,9 +71,9 @@ def step_given_jenkins_pipeline(context):
 
 @given("Gitleaks is available as a container in the pipeline")
 def step_given_gitleaks_container(context):
-    """Verify Gitleaks is configured in the reusable security-scanning workflow."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
-    assert "gitleaks" in scanning
+    """Verify Gitleaks is configured here and the Pipe scan is wired in."""
+    assert "gitleaks" in _gitleaks_config().lower()
+    assert _pipe_scanning_callers()
 
 
 @given("the secrets scanning stage is enabled")
@@ -292,8 +301,8 @@ def step_then_custom_rules_applied():
 
 @given("a project uses the securityScan shared library")
 def step_given_security_scan_library():
-    """Verify a reusable security-scanning workflow exists."""
-    assert (_REPO_ROOT / ".github" / "workflows" / "reusable-security-scanning.yml").exists()
+    """Verify a workflow here calls the shared security-scanning workflow from uFawkesPipe."""
+    assert _pipe_scanning_callers()
 
 
 @when("the pipeline calls securityScan with default configuration")
@@ -303,9 +312,9 @@ def step_when_security_scan_default():
 
 @then("the secrets scanning is automatically included")
 def step_then_secrets_scan_included():
-    """Verify secrets scanning is included by default."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
-    assert "scan-type == 'all'" in scanning or "scan-type == 'secrets'" in scanning
+    """Verify at least one caller takes the shared scan's defaults (no scan-type override)."""
+    callers = _pipe_scanning_callers()
+    assert any("scan-type:" not in _read_repo_file(f".github/workflows/{n}") for n in callers)
 
 
 @then("runs in parallel with other security checks")
