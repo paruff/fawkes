@@ -3,7 +3,7 @@
 Covers the four security-plane feature files (sbom, signing, scanning,
 policies). Assertions are repo-static checks against the real reusable
 workflows (`.github/workflows/reusable-sbom-generation.yml`,
-`reusable-image-signing.yml`, `reusable-security-scanning.yml`) and the
+`reusable-image-signing.yml`; the scan workflow is fetched from uFawkesPipe) and the
 repository's security configuration (`.gitleaks.toml`,
 `.pre-commit-config.yaml`, `.trivyignore`), so the suite produces a real
 signal without requiring a live cluster.
@@ -11,7 +11,10 @@ signal without requiring a live cluster.
 
 from __future__ import annotations
 
+import re
 import subprocess
+import urllib.request
+from functools import cache
 from pathlib import Path
 
 from pytest_bdd import given, parsers, scenarios, then, when
@@ -29,6 +32,23 @@ def _read_repo_file(relative_path: str) -> str:
     path = _REPO_ROOT / relative_path
     assert path.exists(), f"Expected repository file missing: {relative_path}"
     return path.read_text(encoding="utf-8")
+
+
+@cache
+def _pipe_security_scanning() -> str:
+    """Fetch uFawkesPipe's reusable security scan at the SHA code-quality.yml pins.
+
+    The local copy was removed in #2247. A pinned SHA is immutable, so this stays
+    reproducible; an unreachable Pipe fails the test rather than passing silently.
+    """
+    caller = _read_repo_file(".github/workflows/code-quality.yml")
+    match = re.search(
+        r"ufawkespipe/\.github/workflows/reusable-security-scanning\.yml@([0-9a-f]{40})", caller, re.IGNORECASE
+    )
+    assert match, "code-quality.yml no longer pins uFawkesPipe's reusable-security-scanning.yml"
+    url = f"https://raw.githubusercontent.com/paruff/uFawkesPipe/{match[1]}/.github/workflows/reusable-security-scanning.yml"
+    with urllib.request.urlopen(url, timeout=20) as resp:
+        return resp.read().decode("utf-8")
 
 
 def _config_flag(workflow: str, flag: str) -> bool:
@@ -66,14 +86,14 @@ def step_given_cosign_configured():
 @given("Trivy vulnerability scanner is available")
 def step_given_trivy_available():
     """Verify Trivy is configured in the reusable security-scanning workflow."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "trivy" in scanning
 
 
 @given("Gitleaks secret scanner is available")
 def step_given_gitleaks_available():
     """Verify Gitleaks is configured in the reusable security-scanning workflow."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "gitleaks" in scanning
 
 
@@ -361,7 +381,7 @@ def step_when_sarif_enabled():
 @then("no hardcoded secrets should be found")
 def step_then_no_secrets():
     """Verify Gitleaks scan runs and would flag secrets."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "gitleaks" in scanning
 
 
@@ -377,7 +397,7 @@ def step_then_secret_types_checked():
 @then("the scan should fail")
 def step_then_scan_fails():
     """Verify the workflow fails on critical findings."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "exit-code" in scanning
 
 
@@ -391,7 +411,7 @@ def step_then_secret_reported():
 @then("all dependencies should be scanned")
 def step_then_deps_scanned():
     """Verify dependency scanning is configured."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "dependencies" in scanning
 
 
@@ -411,7 +431,7 @@ def step_then_image_layers_scanned():
 @then("results should be uploaded to GitHub Security")
 def step_then_uploaded_gh_security():
     """Verify SARIF upload to GitHub Security is configured."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "upload-sarif" in scanning
 
 
@@ -443,7 +463,7 @@ def step_then_pr_not_blocked():
 @then("pip packages should be scanned")
 def step_then_pip_scanned():
     """Verify pip dependency scanning is configured."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "safety check" in scanning
 
 
@@ -456,7 +476,7 @@ def step_then_vuln_packages_identified():
 @then("npm packages should be scanned")
 def step_then_npm_scanned():
     """Verify npm dependency scanning is configured."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "npm audit" in scanning
 
 
@@ -469,14 +489,14 @@ def step_then_npm_vulns_reported():
 @then("results should be formatted as SARIF")
 def step_then_sarif_formatted():
     """Verify results are formatted as SARIF."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "sarif" in scanning.lower()
 
 
 @then("SARIF should be uploaded to GitHub Security tab")
 def step_then_sarif_uploaded():
     """Verify SARIF is uploaded to GitHub Security."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "upload-sarif" in scanning
 
 
@@ -488,21 +508,21 @@ def step_then_security_alerts():
 @then("secret scanning should execute")
 def step_then_secret_scan_executes():
     """Verify scan-type 'all' runs secret scanning."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "scan-type == 'all'" in scanning
 
 
 @then("vulnerability scanning should execute")
 def step_then_vuln_scan_executes():
     """Verify scan-type 'all' runs vulnerability scanning."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "vulnerabilities" in scanning
 
 
 @then("dependency scanning should execute")
 def step_then_dep_scan_executes():
     """Verify scan-type 'all' runs dependency scanning."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "dependencies" in scanning
 
 
@@ -514,7 +534,7 @@ def step_then_results_aggregated():
 @then("only HIGH and CRITICAL issues should be reported")
 def step_then_high_critical_only():
     """Verify the severity threshold filters to HIGH and CRITICAL."""
-    scanning = _read_repo_file(".github/workflows/reusable-security-scanning.yml")
+    scanning = _pipe_security_scanning()
     assert "severity-threshold" in scanning
 
 
