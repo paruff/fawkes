@@ -235,3 +235,13 @@ if [ -n "${OTEL_EXPORTER_OTLP_ENDPOINT:-}" ]; then
     warn "OTLP export to ${OTEL_EXPORTER_OTLP_ENDPOINT%/}/v1/logs failed; event kept on stdout${DORA_EVENTS_FILE:+ and in $DORA_EVENTS_FILE}"
   fi
 fi
+
+# dora-api's POST /event is what turns a deployment into DORA metrics; the log
+# line above only reaches Loki (AF-15).
+if [ "$EVENT" = deploy-marker ] && [ -n "${DORA_INGESTION_URL:-}" ]; then
+  if ! jq -c .dora_event <<< "$line" | curl -fsS --max-time 10 -X POST \
+    -H "Content-Type: application/json" ${DORA_API_KEY:+-H "Authorization: Bearer ${DORA_API_KEY}"} \
+    --data-binary @- "${DORA_INGESTION_URL%/}/event" > /dev/null; then
+    warn "POST to ${DORA_INGESTION_URL%/}/event failed; the deployment is not counted in DORA metrics"
+  fi
+fi

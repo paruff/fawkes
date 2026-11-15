@@ -31,3 +31,7 @@ tests are the spec). Found while reviewing failure modes for paruff/fawkes#2314.
 | Not covered | The image build, and behaviour under the real probes on a cluster | After deploy: the success timestamp advances every 10 minutes |
 
 All but the last two rows run with `cd services/dora-metrics && pytest tests/`.
+
+### Audit follow-up, 2026-11-15
+
+This branch fixes High findings from the suite integration harness (uFawkes.dev `tests/suite-integration/AUDIT_FINDINGS.md`). Verified by running the harness against it: `make suite-integration-test` passes with the fix applied and the finding's reproduction test no longer reproduces.
