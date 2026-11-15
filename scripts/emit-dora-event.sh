@@ -185,6 +185,11 @@ case "$EVENT" in
       '. + {message: $m, level: $level, status: $status, duration_ms: $duration} + $delivery' <<< "$base")"
     ;;
   deploy-marker)
+    # dora-api requires both; an event without them would be dropped with a 422 (AF-14).
+    if [ -z "$commit_sha" ] || [ -z "$pipeline_url" ]; then
+      warn "deploy-marker needs a commit SHA (GITHUB_SHA, CI_COMMIT_SHA or a git checkout) and a pipeline URL (GITHUB_RUN_ID or CI_PIPELINE_URL); no event emitted"
+      exit 1
+    fi
     delivery="$(delivery_json)"
     deploy_status="$status"
     [ "$status" = failure ] && deploy_status=failed
