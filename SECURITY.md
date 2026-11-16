@@ -99,7 +99,7 @@ GHCR. Image signatures and SBOMs are generated; verify before deployment.
 
 **Credential boundaries.** The `.env` / `.env.example` pattern defines
 credential boundaries. Never commit populated `.env` files; replace every
-default before deploying. `make validate` runs the local-dev validation
+default before deploying. `make validate-cluster` runs the local-dev validation
 script (BDD acceptance plus Kyverno policy checks) before anything is
 applied to a cluster.
 

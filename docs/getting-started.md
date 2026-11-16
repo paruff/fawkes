@@ -169,7 +169,7 @@ cd fawkes
 ./scripts/ignite.sh --provider aws dev
 
 # 5. Verify all components are healthy
-make validate
+make validate-cluster
 ```
 
 > **Important:** Configure GitHub OAuth before running `ignite.sh`. The script will prompt if the secret is missing, but Backstage will not be accessible until OAuth is configured. See [GitHub OAuth Quick Start](how-to/security/github-oauth-quickstart.md).

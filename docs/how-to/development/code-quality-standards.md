@@ -851,7 +851,7 @@ pre-commit run --all-files     # Run all pre-commit hooks
 pre-commit run terraform_fmt   # Run specific hook
 
 # Validation
-make validate                  # Validate manifests
+make validate-cluster          # Validate manifests in a live cluster
 make terraform-validate        # Validate Terraform
 make k8s-validate             # Validate Kubernetes
 

@@ -116,7 +116,7 @@ This document summarizes the resource optimization and tuning work completed for
 1. **Manifest Validation**
 
    ```bash
-   make validate
+   make validate-cluster
    ```
 
 2. **Resource Calculation**

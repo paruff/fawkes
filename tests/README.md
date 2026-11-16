@@ -17,7 +17,7 @@ pytest tests/unit -q # fastest gate: pure unit tests, no cluster needed
 | Unit               | `pytest tests/unit -q`             | No            | Python helpers, routing logic, RAG indexing (skipped without `weaviate-client`) |
 | BATS (shell)       | `./tests/bats/run-tests.sh`        | No            | `scripts/` helpers: error handling, state, AKS auth |
 | BDD acceptance     | `make test-bdd`                    | Partial       | Gherkin scenarios in `tests/bdd/features/` (45+ scenarios still lack step definitions — see KL-05 in `docs/KNOWN_LIMITATIONS.md`) |
-| Integration        | `pytest tests/integration -v`      | **Yes**       | Live-cluster checks (ArgoCD apps, Prometheus, Grafana). Fails without `KUBECONFIG`; use `make validate` for local validation instead |
+| Integration        | `pytest tests/integration -v`      | **Yes**       | Live-cluster checks (ArgoCD apps, Prometheus, Grafana). Fails without `KUBECONFIG`; use `make validate-cluster` for local validation instead |
 | E2E                | `make test-e2e-integration-dry-run`| Yes           | Scaffold → deploy → metrics flow (dry-run first)    |
 | Terratest (Go)     | `make terraform-test`              | No (validate) | Terraform validation only; integration/E2E deploy real Azure resources (costs apply) |
 

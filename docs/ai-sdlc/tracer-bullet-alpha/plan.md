@@ -21,16 +21,15 @@ bears on an Alpha criterion.
 
 ### Make commands
 
-Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` here checks manifests in a running cluster (paruff/fawkes#2306); the hook gate is
-`make lint`.
+Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` runs the hooks and needs no cluster; `make validate-cluster` checks manifests in a running one. `make lint` is an alias of `make validate`.
 
 | Command | Proves | Needs |
 | --- | --- | --- |
-| `make lint` | Every pre-commit hook passes on every file | Nothing |
+| `make validate` (alias: `make lint`) | Every pre-commit hook passes on every file | Nothing |
 | `make format-check` | No file needs formatting | Nothing |
 | `make test-unit`, `make test-bats` | Unit tests and the shell scripts' BATS tests pass | Nothing |
 | `make terraform-validate` | The Terraform configurations are valid | Terraform |
 | `make k8s-validate` | The Kubernetes manifests are valid | kubeval, kustomize, kubectl |
-| `make dev-up`, then `make validate` | The local platform starts on k3d, and its manifests pass the policy checks | Docker, k3d, kubectl, helm |
+| `make dev-up`, then `make validate-cluster` | The local platform starts on k3d, and its manifests pass the policy checks | Docker, k3d, kubectl, helm |
 | `make test-all` | Unit, BATS, BDD and integration tests pass | `make dev-up` first |
 | `make doctor` | This clone's hooks are installed and its tools are present | Nothing |
