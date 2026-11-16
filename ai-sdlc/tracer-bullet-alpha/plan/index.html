@@ -5465,8 +5465,7 @@ bears on an Alpha criterion.</p>
 </tbody>
 </table>
 <h3 id="make-commands">Make commands</h3>
-<p>Per <a href="https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands">the suite's rule for <code>make</code> commands</a>. <code>make validate</code> here checks manifests in a running cluster (paruff/fawkes#2306); the hook gate is
-<code>make lint</code>.</p>
+<p>Per <a href="https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands">the suite's rule for <code>make</code> commands</a>. <code>make validate</code> runs the hooks and needs no cluster; <code>make validate-cluster</code> checks manifests in a running one. <code>make lint</code> is an alias of <code>make validate</code>.</p>
 <table>
 <thead>
 <tr>
@@ -5477,7 +5476,7 @@ bears on an Alpha criterion.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>make lint</code></td>
+<td><code>make validate</code> (alias: <code>make lint</code>)</td>
 <td>Every pre-commit hook passes on every file</td>
 <td>Nothing</td>
 </tr>
@@ -5502,7 +5501,7 @@ bears on an Alpha criterion.</p>
 <td>kubeval, kustomize, kubectl</td>
 </tr>
 <tr>
-<td><code>make dev-up</code>, then <code>make validate</code></td>
+<td><code>make dev-up</code>, then <code>make validate-cluster</code></td>
 <td>The local platform starts on k3d, and its manifests pass the policy checks</td>
 <td>Docker, k3d, kubectl, helm</td>
 </tr>
