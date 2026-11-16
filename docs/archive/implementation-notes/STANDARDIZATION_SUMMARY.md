@@ -430,7 +430,7 @@ Reports:
 
 ### Post-deployment Testing (Recommended)
 
-- Run `make validate` to check manifest validity
+- Run `make validate-cluster` to check manifest validity
 - Run `make validate-resources` to verify resource usage
 - Monitor pod startup after applying changes
 - Verify metrics collection continues working

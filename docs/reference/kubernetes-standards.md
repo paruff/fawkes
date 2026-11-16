@@ -627,7 +627,7 @@ make lint
 make k8s-validate
 
 # Validate with policy engine
-make validate
+make validate-cluster
 ```
 
 ### Runtime Validation
