@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -73,7 +73,7 @@ jobs:
           echo "✅ Validation tests completed"
           echo "These tests validate Terraform syntax without deploying resources"
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -83,7 +83,7 @@ jobs:
     timeout-minutes: 45
     if: github.event_name == 'pull_request'
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -136,7 +136,7 @@ jobs:
               body: body
             });
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -150,7 +150,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' && inputs.run_integration_tests == true
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -202,7 +202,7 @@ jobs:
             tests/terratest/*.log
             tests/terratest/test-results.json
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -213,7 +213,7 @@ jobs:
     # Only run E2E tests when manually triggered
     if: github.event_name == 'workflow_dispatch' && inputs.run_e2e_tests == true
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -265,7 +265,7 @@ jobs:
             tests/terratest/*.log
             tests/terratest/test-results.json
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -276,7 +276,7 @@ jobs:
     needs: [terraform-validation, terraform-cost-estimation]
     if: always()
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -297,6 +297,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "For more information, see [Terratest README](tests/terratest/README.md)" >> $GITHUB_STEP_SUMMARY
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

@@ -39,7 +39,7 @@ jobs:
       yaml: ${{ steps.filter.outputs.yaml }}
       security: ${{ steps.filter.outputs.security }}
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -121,7 +121,7 @@ jobs:
             echo "ℹ️  No security-relevant file changes"
           fi
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -138,7 +138,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -184,7 +184,7 @@ jobs:
           MINIMUM_ORANGE: 60
         continue-on-error: true
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -206,7 +206,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -241,7 +241,7 @@ jobs:
           path: reports/
           if-no-files-found: ignore
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -262,7 +262,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -278,7 +278,7 @@ jobs:
       - name: Collect integration tests
         run: pytest -c tests/pytest.ini tests/integration/ --collect-only -q
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -295,7 +295,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -336,7 +336,7 @@ jobs:
           name: typescript-coverage-report
           path: design-system/coverage/
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -353,7 +353,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -377,7 +377,7 @@ jobs:
           working-directory: tests/terratest
           args: --timeout=5m --config ../../.golangci.yml
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -393,7 +393,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -427,7 +427,7 @@ jobs:
           find . -name "*.sh" -not -path "./.git/*" | grep -vF '/buildplatform.sh' \
             | xargs -r shfmt -i 2 -ci -bn -sr -d
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -444,7 +444,7 @@ jobs:
       contents: read
       checks: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -526,7 +526,7 @@ jobs:
             });
         continue-on-error: true
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -542,7 +542,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -558,7 +558,7 @@ jobs:
       - name: Run yamllint
         run: yamllint -f github -c .yamllint .
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -575,7 +575,7 @@ jobs:
       contents: read
       security-events: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -644,7 +644,7 @@ jobs:
             exit 1
           fi
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -694,7 +694,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -773,6 +773,6 @@ jobs:
             });
         continue-on-error: true
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

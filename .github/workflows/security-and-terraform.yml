@@ -18,7 +18,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -156,6 +156,6 @@ jobs:
             gitleaks-results.sarif
             trivy-results.sarif
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

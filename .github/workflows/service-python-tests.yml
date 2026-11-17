@@ -54,6 +54,13 @@ jobs:
     outputs:
       matrix: ${{ steps.discover.outputs.matrix }}
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Discover Python services
@@ -66,6 +73,10 @@ jobs:
             | sort | jq -R -s -c 'split("\n")[:-1]')
           echo "Discovered services: $services"
           echo "matrix=$services" >> "$GITHUB_OUTPUT"
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
   # Job 2: Lint + test each discovered service
@@ -81,7 +92,7 @@ jobs:
       matrix:
         service: ${{ fromJson(needs.discover.outputs.matrix) }}
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -125,6 +136,6 @@ jobs:
             echo "No tests/ directory for ${{ matrix.service }}; skipping"
           fi
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
