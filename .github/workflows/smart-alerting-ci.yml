@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -80,7 +80,7 @@ jobs:
           # pipeline pilot.
           pytest --cov=app --cov-report=term-missing tests/
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -96,7 +96,7 @@ jobs:
     outputs:
       image_tag: ${{ steps.image_tag.outputs.tag }}
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -139,7 +139,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -205,7 +205,7 @@ jobs:
     needs: [build, security-scan, sbom, sign-and-attest]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -260,6 +260,6 @@ jobs:
           echo "::error::Failed to merge GitOps PR after 5 attempts"
           exit 1
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

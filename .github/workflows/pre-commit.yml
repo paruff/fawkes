@@ -22,6 +22,13 @@ jobs:
       terraform: ${{ steps.filter.outputs.terraform }}
       platform: ${{ steps.filter.outputs.platform }}
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
@@ -57,6 +64,10 @@ jobs:
             echo "platform=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Layer 0 — Base: whitespace, syntax, secrets, workflows, SAST. Runs on
   # every change. Every hook in .pre-commit-config.yaml runs in some layer
@@ -73,7 +84,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -125,7 +136,7 @@ jobs:
         run: |
           echo "::error::Base pre-commit hooks failed"
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -141,7 +152,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -194,7 +205,7 @@ jobs:
         run: |
           echo "::error::Language pre-commit hooks failed"
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -210,7 +221,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -279,7 +290,7 @@ jobs:
         run: |
           echo "::error::Tool pre-commit hooks failed"
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
@@ -295,7 +306,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -389,6 +400,6 @@ jobs:
         run: |
           echo "::error::Platform pre-commit hooks failed"
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

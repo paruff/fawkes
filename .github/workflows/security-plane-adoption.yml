@@ -39,10 +39,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Run Security Scan
         run: |
           echo "Running security scan..."
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           # Add your actual security scan commands here
 
   policy-enforcement:
@@ -51,10 +62,21 @@ jobs:
     needs: security-scan
     timeout-minutes: 20
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Run Policy Enforcement
         run: |
           echo "Running policy enforcement..."
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           # Add your actual policy enforcement commands here
 
   generate-sbom:
@@ -65,6 +87,13 @@ jobs:
       github.event.inputs.image-name != ''
     timeout-minutes: 20
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Generate SBOM
         env:
@@ -74,6 +103,10 @@ jobs:
           IMAGE_NAME="${IMAGE_NAME}"
           IMAGE_TAG="${SHA}"
           echo "Generating SBOM for $IMAGE_NAME:$IMAGE_TAG"
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           # Add SBOM generation logic here (e.g., Syft/CycloneDX)
 
   sign-image:
@@ -85,6 +118,13 @@ jobs:
     needs: [security-scan, policy-enforcement]
     timeout-minutes: 20
     steps:
+      - name: job-start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Sign Container Image
         env:
@@ -96,6 +136,10 @@ jobs:
           IMAGE_NAME="${IMAGE_NAME}"
           IMAGE_TAG="${SHA}"
           echo "Signing image $IMAGE_NAME:$IMAGE_TAG"
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           # Add Cosign signing logic here
 
   security-summary:
@@ -105,7 +149,7 @@ jobs:
     needs: [security-scan, policy-enforcement, generate-sbom, sign-image]
     if: always()
     steps:
-      - name: DORA job start
+      - name: job-start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
@@ -141,6 +185,6 @@ jobs:
             echo "- Image Signing: ${{ needs.sign-image.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: DORA job finish
+      - name: job-finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
