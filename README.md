@@ -109,7 +109,6 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 ### Collaboration & Planning
 
 - **Team Chat** - Mattermost for real-time collaboration
-- **Project Management** - Focalboard (Notion-like) for sprints and roadmaps
 - **ChatOps** - Deploy and manage from chat
 - **Platform Notifications** - CI/CD, deployments, alerts in chat
 
@@ -117,7 +116,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 - **DORA Metrics** - Automated collection of all 4 key metrics
 - **Metrics & Dashboards** - Prometheus and Grafana
-- **Distributed Tracing** - Jaeger with OpenTelemetry
+- **Distributed Tracing** - Tempo with OpenTelemetry
 - **Log Aggregation** - Loki with OpenTelemetry Collector
 - **Custom Dashboards** - Team-level visibility
 
@@ -129,7 +128,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Policy Enforcement** - Kyverno for Kubernetes policies + OPA/Rego for CI/CD
 - **SBOM Generation** - Syft-based Software Bill of Materials
 - **Image Signing** - Cosign for cryptographic signatures
-- **Secrets Management** - External Secrets Operator + OpenBao
+- **Secrets Management** - External Secrets Operator + Vault (OpenBao planned, ADR-037)
 - **Zero Trust Architecture** - Security-first architecture
 
 **[Learn more about the Security Plane →](.security-plane/README.md)**
@@ -223,8 +222,8 @@ Fawkes is built on a modern, cloud-native architecture:
 │  └────────────────────────────────────────────────────┘    │
 │           │                                                  │
 │  ┌────────┴─────────┬──────────────┬─────────────┐        │
-│  │  Collaboration   │   Project    │    Dojo     │        │
-│  │  (Mattermost)    │ (Focalboard) │  Learning   │        │
+│  │  Collaboration   │   Metrics    │    Dojo     │        │
+│  │  (Mattermost)    │    (DORA)    │  Learning   │        │
 │  └──────────────────┴──────────────┴─────────────┘        │
 │           │                                                  │
 │  ┌────────┴──────────────────────────────────────┐        │
@@ -241,7 +240,6 @@ Fawkes is built on a modern, cloud-native architecture:
 
 - **Backstage** - Developer portal and dojo learning hub
 - **Mattermost** - Team collaboration and ChatOps
-- **Focalboard** - Project management (bundled with Mattermost)
 - **Tekton** - In-cluster CI/CD pipelines with golden paths (see ADR-036)
 - **ArgoCD** - GitOps-driven continuous delivery
 - **Prometheus & Grafana** - Metrics and dashboards

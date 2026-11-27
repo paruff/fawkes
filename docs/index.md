@@ -31,8 +31,8 @@ These capabilities have the strongest positive correlation with deployment frequ
 
 | Capability                                                                                                                     | Purpose                                           | Implementation                                         | Performance Impact               |
 | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
-| ![](assets/images/icons/continuous-delivery.png){ width="24" } **Continuous Delivery**          | Ensuring software is always in a deployable state | [Spinnaker](tools/spinnaker.md), Flux | 2.5x higher deployment frequency |
-| ![](assets/images/icons/automation.png){ width="24" } **Deployment Automation**               | Automating the deployment process                 | [Jenkins](tools/jenkins.md)                            | 3x more frequent deployments     |
+| ![](assets/images/icons/continuous-delivery.png){ width="24" } **Continuous Delivery**          | Ensuring software is always in a deployable state | Argo CD | 2.5x higher deployment frequency |
+| ![](assets/images/icons/automation.png){ width="24" } **Deployment Automation**               | Automating the deployment process                 | Tekton, Argo CD                            | 3x more frequent deployments     |
 | ![](assets/images/icons/continuous-integration.png){ width="24" } **Continuous Integration** | Frequently merging code changes                   | GitHub Actions                                         | 2x higher deployment frequency   |
 | ![](assets/images/icons/infrastructure.png){ width="24" } **Infrastructure as Code**         | Using cloud and infrastructure-as-code            | Terraform                                              | 1.8x more frequent deployments   |
 
@@ -87,7 +87,7 @@ graph TD
     H --> D
 ```
 
-Organizations that implement capabilities across all three categories (Flow, Feedback, Recovery) are **5x more likely** to achieve elite performance across all four key metrics.
+Organizations that implement capabilities across all three categories (Flow, Feedback, Recovery) are **5x more likely** to achieve elite performance across the DORA metrics.
 
 ## 📈 Getting Started
 

@@ -54,7 +54,6 @@ Validate Kubernetes manifests and configurations:
 ```bash
 make k8s-validate
 make terraform-validate
-make validate-jenkins
 ```
 
 ### Security Validation

@@ -365,12 +365,6 @@ vibe-start: ## Start vibe coding session
 	@echo "5. Iterate: Edit → Deploy → Test"
 	@echo "6. Sync: make sync ENVIRONMENT=dev"
 
-validate-jcasc: ## Validate Jenkins Configuration as Code (JCasC) files
-	@echo "🔍 Validating Jenkins Configuration as Code..."
-	@python scripts/validate-jcasc.py
-
-validate-jenkins: validate-jcasc ## Alias for validate-jcasc
-
 validate-issue-109: ## Validate Code Quality Standards implementation (Issue #109)
 	@./scripts/validate-issue-109.sh
 
@@ -458,16 +452,13 @@ azure-access: ## Show access information for Azure cluster and services
 	@./scripts/access-summary.sh azure
 
 ## Platform Access Management
-.PHONY: access access-argocd access-jenkins access-backstage access-grafana
+.PHONY: access access-argocd access-backstage access-grafana
 
 access: ## Show access information for all platform services
 	@./scripts/access-summary.sh
 
 access-argocd: ## Show ArgoCD access information and open port-forward
 	@./scripts/access-summary.sh argocd
-
-access-jenkins: ## Show Jenkins access information and open port-forward
-	@./scripts/access-summary.sh jenkins
 
 access-backstage: ## Show Backstage access information and open port-forward
 	@./scripts/access-summary.sh backstage
