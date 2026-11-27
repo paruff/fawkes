@@ -1,0 +1,109 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Known version-pin violations (ADR-040). Remove an entry when its issue fixes it;
+# the guard fails on a stale entry as well as on a new violation.
+- component: "chart:argo-cd"
+  versions: ["", "7.7.12", "7.7.14"]
+  issue: "#2371"
+- component: "chart:backstage"
+  versions: ["", "1.10.0", "2.3.0"]
+  issue: "#2375"
+- component: "chart:cert-manager"
+  versions: ["v1.15.3", "v1.16.2"]
+  issue: "#2381"
+- component: "chart:grafana"
+  versions: ["latest"]
+  issue: "#2382"
+- component: "chart:ingress-nginx"
+  versions: ["4.11.3", "4.15.1"]
+  issue: "#2376"
+- component: "chart:kube-prometheus-stack"
+  versions: ["67.9.0", "89.2.2"]
+  issue: "#1735"
+- component: "chart:vault"
+  versions: ["0.28.1", "0.29.1"]
+  issue: "#2380"
+- component: "image-tag:platform/apps/backstage/backstage-application.yaml"
+  versions: ["latest"]
+  issue: "#2375"
+- component: "image-tag:platform/apps/backstage/values.yaml"
+  versions: ["latest"]
+  issue: "#2375"
+- component: "image:anomaly-detection"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:ghcr.io/paruff/ai-code-review"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:ghcr.io/paruff/nps"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:harbor.fawkes.local/my-team/my-service"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:harbor.fawkes.local/platform-team/sample-java-app"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:harbor.fawkes.local/platform-team/sample-nodejs-app"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:harbor.fawkes.local/platform-team/sample-python-app"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:maven-eclipse-temurin-21"
+  versions: ["3.9.16", "3.9.9"]
+  issue: "#2379"
+- component: "image:nps-service"
+  versions: ["latest"]
+  issue: "#2393"
+- component: "image:python-slim"
+  versions: ["3.11", "3.13.14", "3.13.15", "3.13.18"]
+  issue: "#2379"
+- component: "tool:golangci-lint"
+  versions: ["v2.12.2", "v2.15.0"]
+  issue: "#2385"
+- component: "image-tag:extensions/data-platform/datahub-application.yaml"
+  versions: ["head"]
+  issue: "#2392"
+- component: "chart:jenkins"
+  versions: [""]
+  issue: "#2394"
+- component: "chart:mattermost-team-edition"
+  versions: [""]
+  issue: "#2394"
+- component: "chart:postgresql"
+  versions: [""]
+  issue: "#2394"
+- component: "url:argoproj/argo-cd"
+  versions: ["stable"]
+  issue: "#2394"
+- component: "url:Homebrew/install"
+  versions: ["HEAD"]
+  reason: "Homebrew publishes its installer from HEAD only; developer-machine bootstrap, not a stack component"
+- component: "image:docker.com/paruff/fawkesproxy"
+  versions: [""]
+  issue: "#2393"
+- component: "tool:gitleaks"
+  versions: ["v8.18.1", "v8.30.1"]
+  issue: "#2385"
+- component: "tool:trivy"
+  versions: ["v0.73.0", "v0.74.0"]
+  issue: "#2385"
