@@ -207,6 +207,21 @@ spec:
                 expr: fawkes_repo_deployment_frequency_per_day{repo="paruff/fawkes"}
               - record: "dora:fawkes_repo_lead_time_hours:avg30d"
                 expr: fawkes_repo_lead_time_hours{repo="paruff/fawkes"}
+              - record: "dora:deployment_frequency:rate30d_by_app"
+                expr: |
+                  sum by (name) (increase(argocd_app_sync_total{phase="Succeeded"}[30d])) / 30
+              - record: "dora:change_failure_rate:ratio30d_by_app"
+                expr: |
+                  (
+                    sum by (name) (increase(argocd_app_sync_total{phase="Failed"}[30d]))
+                    or
+                    0 * sum by (name) (increase(argocd_app_sync_total[30d]))
+                  )
+                  /
+                  sum by (name) (increase(argocd_app_sync_total[30d]))
+              - record: "dora:fdrt_hours:current_by_app"
+                expr: |
+                  avg by (name) (time() - ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"}) / 3600
               - record: "dora:rework_rate:ratio"
                 expr: |
                   (
