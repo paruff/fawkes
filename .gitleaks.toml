@@ -1,17 +1,216 @@
 title = "Fawkes Gitleaks Configuration"
 
+# Without this, a custom config REPLACES the default rules and every scan checks
+# nothing (issue #684). Guarded by tests/unit/test_gitleaks_config.py.
+[extend]
+useDefault = true
+
+# Allowlists must work in gitleaks 8.24.3 (shared security workflow) and 8.30.1
+# (pre-commit): use [[rules.allowlists]], never top-level [[allowlists]]. Add to
+# the narrowest rule. Record: docs/runbooks/incident-684-kube-local-key.md
+
 [allowlist]
-description = "Allow placeholders used in educational materials and test fixtures"
+description = "Placeholders used in educational materials and test fixtures"
 regexes = [
-  '''PLACEHOLDER_BASE64_VALUE''',
-  '''CHANGEME_NOT_COMMITTED''',
-  '''REDACTED_EXAMPLE''',
-  '''CHANGE_ME_.*''',
-  '''test-password-123'''
+  '''^PLACEHOLDER_BASE64_VALUE$''',
+  '''^CHANGEME_NOT_COMMITTED$''',
+  '''^REDACTED_EXAMPLE$''',
+  '''^CHANGE_ME_[A-Z0-9_]*$''',
+  '''^test-password-123$''',
+]
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Committed local-dev defaults, exact values only. Delete with #1797."
+condition = "AND"
+paths = [
+  '''(^|/)platform/apps/devlake/devlake-application\.yaml$''',
+  '''(^|/)platform/apps/postgresql/db-sonarqube-credentials\.yaml$''',
+  '''(^|/)platform/apps/tekton/eventlistener-github-skeleton\.yaml$''',
+]
+regexes = [
+  '''^0EqeLoljUelpo1UmtyPWPsUO$''',
+  '''^2veFWHWogn3OnTMvJiSueTCQ$''',
+  '''^7i0xnKeONqDOvIHM5whRDyW9$''',
+  '''^XuzzgQEPbUA9jA1qRLEcgVNU$''',
+  '''^abbeb71904a363c4a62b3ce6c71638838d4b6359$''',
+  '''^oEbystrTP4gmgfz9zJKO3S5K$''',
+]
+
+[[rules.allowlists]]
+description = "SealedSecret manifests: ciphertext or the unsealed placeholder only"
+condition = "AND"
+paths = [
+  '''-sealed\.yaml$''',
+]
+regexes = [
+  '''^Ag[A-Za-z0-9+/=]{100,}$''',
+  '''^UFJPRFVDVElPTl9TRUFMX1dJVEhfS1VCRVNFQUw=?$''',
+]
+
+[[rules.allowlists]]
+description = "Test directories hold fixtures"
+paths = [
+  '''^tests/.*''',
+]
+
+[[rules.allowlists]]
+description = "Example credentials in docs and READMEs (old and moved paths)"
+paths = [
+  '''(^|/)(EXPERIMENTATION_IMPLEMENTATION_SUMMARY|FEEDBACK_ANALYTICS_IMPLEMENTATION|FEEDBACK_AUTOMATION_IMPLEMENTATION|FEEDBACK_WIDGET_ENHANCED)\.md$''',
+  '''(^|/)docs/dojo/Module 3 GitOps Principles\.md$''',
+  '''(^|/)docs/how-to/development/code-quality-standards\.md$''',
+  '''(^|/)docs/how-to/penpot-access-controls\.md$''',
+  '''(^|/)docs/how-to/security/secrets-management\.md$''',
+  '''(^|/)docs/reference/api/jenkins-webhook\.md$''',
+  '''(^|/)docs/tutorials/3-consume-vault-secret\.md$''',
+  '''(^|/)docs/validation/prometheus-stack-validation\.md$''',
+  '''(^|/)platform/apps/backstage/plugins/README-feedback\.md$''',
+  '''(^|/)platform/apps(-deferred)?/(experimentation|grafana|harbor|trivy)/README\.md$''',
+  '''(^|/)services/feedback/README\.md$''',
+  '''(^|/)services/nps/DEPLOYMENT\.md$''',
+  '''^search/search_index\.json$''',
+]
+
+[[rules.allowlists]]
+description = "Fake tokens that exercise secret detection"
+paths = [
+  '''(^|/)scripts/test-check-secret-detection\.sh$''',
+  '''(^|/)services/ai-code-review/prompts/security\.txt$''',
+]
+
+[[rules.allowlists]]
+description = "History only: removed test certificate, Jenkins plugin versions, scrape config without credentials"
+condition = "AND"
+commits = [
+  "a2ad53bfcc4997121cb38c8184931c486539d8d9",
+  "6a86adf9aab0ddefa7be6fbb346855fd3c75b586",
+  "b627a71d046a0aeccf750e79d474c8f378abcfb1",
+  "ab41a53f6e8be7aade596ac30a3bec554c3acde7",
 ]
 paths = [
-  '''tests/.*''',
-  '''.*test.*\.py''',
-  '''.*conftest\.py''',
-  '''\.kube\.local\.yaml'''
+  '''^platform/apps/ingress-nginx/test-ingress\.yaml$''',
+  '''^platform/apps/jenkins/values\.yaml$''',
+  '''^infra/platform/k8s-eks/prometheus/additional-scrape-configs(-secret)?\.yaml$''',
+]
+
+[[rules]]
+id = "curl-auth-header"
+
+[[rules.allowlists]]
+description = "Example credentials in docs and READMEs (old and moved paths)"
+paths = [
+  '''(^|/)(EXPERIMENTATION_IMPLEMENTATION_SUMMARY|FEEDBACK_ANALYTICS_IMPLEMENTATION|FEEDBACK_AUTOMATION_IMPLEMENTATION|FEEDBACK_WIDGET_ENHANCED)\.md$''',
+  '''(^|/)docs/dojo/Module 3 GitOps Principles\.md$''',
+  '''(^|/)docs/how-to/development/code-quality-standards\.md$''',
+  '''(^|/)docs/how-to/penpot-access-controls\.md$''',
+  '''(^|/)docs/how-to/security/secrets-management\.md$''',
+  '''(^|/)docs/reference/api/jenkins-webhook\.md$''',
+  '''(^|/)docs/tutorials/3-consume-vault-secret\.md$''',
+  '''(^|/)docs/validation/prometheus-stack-validation\.md$''',
+  '''(^|/)platform/apps/backstage/plugins/README-feedback\.md$''',
+  '''(^|/)platform/apps(-deferred)?/(experimentation|grafana|harbor|trivy)/README\.md$''',
+  '''(^|/)services/feedback/README\.md$''',
+  '''(^|/)services/nps/DEPLOYMENT\.md$''',
+  '''^search/search_index\.json$''',
+]
+
+[[rules]]
+id = "curl-auth-user"
+
+[[rules.allowlists]]
+description = "Example credentials in docs and READMEs (old and moved paths)"
+paths = [
+  '''(^|/)(EXPERIMENTATION_IMPLEMENTATION_SUMMARY|FEEDBACK_ANALYTICS_IMPLEMENTATION|FEEDBACK_AUTOMATION_IMPLEMENTATION|FEEDBACK_WIDGET_ENHANCED)\.md$''',
+  '''(^|/)docs/dojo/Module 3 GitOps Principles\.md$''',
+  '''(^|/)docs/how-to/development/code-quality-standards\.md$''',
+  '''(^|/)docs/how-to/penpot-access-controls\.md$''',
+  '''(^|/)docs/how-to/security/secrets-management\.md$''',
+  '''(^|/)docs/reference/api/jenkins-webhook\.md$''',
+  '''(^|/)docs/tutorials/3-consume-vault-secret\.md$''',
+  '''(^|/)docs/validation/prometheus-stack-validation\.md$''',
+  '''(^|/)platform/apps/backstage/plugins/README-feedback\.md$''',
+  '''(^|/)platform/apps(-deferred)?/(experimentation|grafana|harbor|trivy)/README\.md$''',
+  '''(^|/)services/feedback/README\.md$''',
+  '''(^|/)services/nps/DEPLOYMENT\.md$''',
+  '''^search/search_index\.json$''',
+]
+
+[[rules.allowlists]]
+description = "Local OpenSearch default login in a validation script"
+condition = "AND"
+paths = [
+  '''(^|/)scripts/validate-golden-path-observability\.sh$''',
+]
+regexTarget = "line"
+regexes = [
+  '''-u "admin:admin"''',
+]
+
+[[rules]]
+id = "jwt"
+
+[[rules.allowlists]]
+description = "Fake tokens that exercise secret detection"
+paths = [
+  '''(^|/)scripts/test-check-secret-detection\.sh$''',
+  '''(^|/)services/ai-code-review/prompts/security\.txt$''',
+]
+
+[[rules]]
+id = "github-pat"
+
+[[rules.allowlists]]
+description = "Fake tokens that exercise secret detection"
+paths = [
+  '''(^|/)scripts/test-check-secret-detection\.sh$''',
+  '''(^|/)services/ai-code-review/prompts/security\.txt$''',
+]
+
+[[rules]]
+id = "stripe-access-token"
+
+[[rules.allowlists]]
+description = "Fake tokens that exercise secret detection"
+paths = [
+  '''(^|/)scripts/test-check-secret-detection\.sh$''',
+  '''(^|/)services/ai-code-review/prompts/security\.txt$''',
+]
+
+[[rules]]
+id = "private-key"
+
+[[rules.allowlists]]
+description = "History only: removed test certificate, Jenkins plugin versions, scrape config without credentials"
+condition = "AND"
+commits = [
+  "a2ad53bfcc4997121cb38c8184931c486539d8d9",
+  "6a86adf9aab0ddefa7be6fbb346855fd3c75b586",
+  "b627a71d046a0aeccf750e79d474c8f378abcfb1",
+  "ab41a53f6e8be7aade596ac30a3bec554c3acde7",
+]
+paths = [
+  '''^platform/apps/ingress-nginx/test-ingress\.yaml$''',
+  '''^platform/apps/jenkins/values\.yaml$''',
+  '''^infra/platform/k8s-eks/prometheus/additional-scrape-configs(-secret)?\.yaml$''',
+]
+
+[[rules]]
+id = "kubernetes-secret-yaml"
+
+[[rules.allowlists]]
+description = "History only: removed test certificate, Jenkins plugin versions, scrape config without credentials"
+condition = "AND"
+commits = [
+  "a2ad53bfcc4997121cb38c8184931c486539d8d9",
+  "6a86adf9aab0ddefa7be6fbb346855fd3c75b586",
+  "b627a71d046a0aeccf750e79d474c8f378abcfb1",
+  "ab41a53f6e8be7aade596ac30a3bec554c3acde7",
+]
+paths = [
+  '''^platform/apps/ingress-nginx/test-ingress\.yaml$''',
+  '''^platform/apps/jenkins/values\.yaml$''',
+  '''^infra/platform/k8s-eks/prometheus/additional-scrape-configs(-secret)?\.yaml$''',
 ]
