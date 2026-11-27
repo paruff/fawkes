@@ -334,4 +334,4 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 #### Step 9: DevEx service
 
 - Check: `ruff check . && pytest tests/` in `services/fawkes-devex-service`; `docker build -f services/fawkes-devex-service/Dockerfile services/`, then `curl /health`
-- Result: not yet run
+- Result: 2 passed; image built, `/health` answered 200
