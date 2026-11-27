@@ -17,28 +17,20 @@ REFERENCE_RULES = "platform/apps/prometheus/rules/dora.yml"
 PROM_APP = "platform/apps/prometheus/prometheus-application.yaml"
 DASHBOARDS_DIR = "platform/apps/grafana-dashboards"
 
-# Tracked in paruff/fawkes#2310: in the reference copy, missing from the live rule map.
-KNOWN_MISSING_FROM_LIVE = {
-    "dora:fawkes_repo_deployment_frequency:rate30d",
-    "dora:fawkes_repo_lead_time_hours:avg30d",
-}
+# All empty since #2310. Add an entry only with an issue that will remove it.
+KNOWN_MISSING_FROM_LIVE: set[str] = set()
 KNOWN_ALERTS_MISSING_FROM_LIVE: set[str] = set()
+KNOWN_UNPRODUCED_SERIES: set[str] = set()
+KNOWN_UNPROVISIONED_UIDS: set[str] = set()
 
-# Tracked in paruff/fawkes#2310: queried by a deployed dashboard, produced by nothing in fawkes.
-# dora_* gauges come only from uFawkesObs dora-api; the two records are the gap above.
-KNOWN_UNPRODUCED_SERIES = {
-    "dora:fawkes_repo_deployment_frequency:rate30d",
-    "dora:fawkes_repo_lead_time_hours:avg30d",
-    "dora_cfr_pct",
-    "dora_deployment_frequency_per_week",
-    "dora_fdrt_p50_hours",
-    "dora_lead_time_p50_hours",
-    "dora_lead_time_p95_hours",
-    "dora_rework_rate_pct",
+# These rule names also exist in uFawkesObs, sometimes with another unit, so a panel states ours (#2310).
+SHARED_RULE_UNITS = {
+    "dora:deployment_frequency:rate30d": "(per day)",
+    "dora:lead_time_hours:p50_30d": "(hours)",
+    "dora:change_failure_rate:ratio30d": "(%)",
+    "dora:fdrt_hours:p50_30d": "(hours)",
+    "dora:rework_rate:ratio": "(extra syncs per app)",
 }
-
-# Tracked in paruff/fawkes#2310: dashboard datasource uid that no manifest provisions.
-KNOWN_UNPROVISIONED_UIDS = {"ufawkesres-postgres"}
 
 # Series fawkes does not produce itself; every entry is used by a live or reference rule.
 EXTERNAL_SERIES = {
@@ -216,6 +208,21 @@ def test_dashboard_datasource_uids_are_provisioned() -> None:
     assert {u for _, _, u in gaps} == KNOWN_UNPROVISIONED_UIDS, (
         f"unprovisioned datasource uids (file, panel, uid): {sorted(gaps)}"
     )
+
+
+def test_one_dora_dashboard_is_deployed() -> None:
+    assert [name for name, _ in _dashboards(ROOT)] == ["dora-metrics-dashboard-configmap.yaml"]
+
+
+def test_shared_rule_panels_name_their_unit() -> None:
+    missing = [
+        (panel, rule)
+        for _, _, panel, expr in dashboard_expressions(ROOT)
+        for rule, unit in SHARED_RULE_UNITS.items()
+        # `count(...)` health checks show how many series exist, not the value.
+        if rule in expr and not expr.startswith("count(") and unit not in panel
+    ]
+    assert not missing, f"panel title must state the unit: {missing}"
 
 
 # --- red paths on fixtures --------------------------------------------------
