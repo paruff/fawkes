@@ -319,7 +319,7 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 #### Step 6: `/metrics` route
 
 - Check: `cd services/common && pytest tests/test_metrics.py`
-- Result: not yet run
+- Result: 1 passed
 
 #### Step 7: log format and pin drift
 
