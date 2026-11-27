@@ -5417,10 +5417,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#other-history-findings-needing-triage-values-not-recorded-here" class="md-nav__link">
+  <a href="#full-history-scan-2026-11-27" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Other history findings needing triage (values not recorded here)
+        Full history scan, 2026-11-27
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevention
       
     </span>
   </a>
@@ -5492,23 +5503,87 @@ the default rules (2694 commits, <code>--max-target-megabytes 2</code>) reports 
 <td>agent</td>
 </tr>
 <tr>
-<td>Fix <code>.gitleaks.toml</code>: <code>[extend] useDefault = true</code>, drop blanket path allowlists, add rule-scoped allowlists</td>
-<td>Pending triage of the findings below</td>
-<td>human</td>
+<td>Fix <code>.gitleaks.toml</code>: <code>[extend] useDefault = true</code>, replace blanket path allowlists with rule-scoped allowlists</td>
+<td>Done 2026-11-27</td>
+<td>agent</td>
 </tr>
 </tbody>
 </table>
-<h2 id="other-history-findings-needing-triage-values-not-recorded-here">Other history findings needing triage (values not recorded here)</h2>
-<p>Mostly false positives: SealedSecret ciphertext (<code>*-sealed.yaml</code>), doc and README
-curl/API-key examples. Review whether these are real or intended dev defaults:</p>
+<h2 id="full-history-scan-2026-11-27">Full history scan, 2026-11-27</h2>
+<p><strong>Decision (owner, <a href="https://github.com/paruff/fawkes/issues/684">#684</a>): no further history rewrite.</strong>
+The repo is public, so anything pushed is already out, and a force-push breaks every clone and fork.</p>
+<p><code>gitleaks git --redact</code> (8.30.1, default rules) over <code>main</code> (2,958 commits) found 69 hits and no
+live credential:</p>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docs and README examples (curl auth headers, default logins, sample API keys)</td>
+<td>Examples</td>
+</tr>
+<tr>
+<td><code>*-sealed.yaml</code></td>
+<td>SealedSecret ciphertext</td>
+</tr>
+<tr>
+<td><code>platform/apps/ingress-nginx/test-ingress.yaml</code> private key</td>
+<td>Self-signed test certificate, removed from <code>main</code></td>
+</tr>
+<tr>
+<td><code>platform/apps/jenkins/values.yaml</code></td>
+<td>Plugin version strings, file removed</td>
+</tr>
+<tr>
+<td><code>infra/platform/k8s-eks/prometheus/additional-scrape-configs*.yaml</code></td>
+<td>Scrape config without credentials, removed</td>
+</tr>
+<tr>
+<td><code>scripts/</code>, <code>services/ai-code-review/prompts/security.txt</code></td>
+<td>Test fixtures and a local default login</td>
+</tr>
+<tr>
+<td><code>platform/apps/tekton/eventlistener-github-skeleton.yaml</code> (<code>secretToken</code>)</td>
+<td>Local-dev-only value, still on <code>main</code></td>
+</tr>
+<tr>
+<td><code>platform/apps/devlake/devlake-application.yaml</code> (MySQL passwords; an admin password in history only)</td>
+<td>Local-dev-only values, MySQL ones still on <code>main</code></td>
+</tr>
+<tr>
+<td><code>platform/apps/postgresql/db-sonarqube-credentials.yaml</code></td>
+<td>Local-dev-only values, still on <code>main</code></td>
+</tr>
+</tbody>
+</table>
+<p>The last three files hold real committed values. On 2026-11-27 the owner chose to excuse those six
+exact values (not the files) in <code>.gitleaks.toml</code>, so the security checks pass and a new secret still
+fails them. This replaces the earlier plan to keep reporting them.
+<a href="https://github.com/paruff/fawkes/issues/1797">#1797</a> replaces the values; delete the allowlist entry
+in the same change. They are committed local-dev defaults, not credentials for any shared system, so
+nothing is rotated.</p>
+<p>Still open from the kubeconfig incident above: the Docker Desktop reset and the GitHub Support request.
+Off <code>main</code>, the all-ref scan found no kubeconfig reachable from a remote branch or tag. The built
+search index on <code>gh-pages</code> (227 versions) only repeats examples from pages on <code>main</code>.</p>
+<p>To repeat the scan:</p>
+<div class="highlight"><pre><span></span><code>gitleaks<span class="w"> </span>git<span class="w"> </span>--redact<span class="w"> </span>--log-opts<span class="o">=</span>origin/main<span class="w"> </span>.
+</code></pre></div>
+<h2 id="prevention">Prevention</h2>
 <ul>
-<li><code>platform/apps/devlake/devlake-application.yaml</code>, <code>devlake-db-credentials-dev.yaml</code></li>
-<li><code>platform/apps/postgresql/db-sonarqube-credentials.yaml</code></li>
-<li><code>platform/apps/tekton/eventlistener-github-skeleton.yaml</code></li>
-<li><code>platform/apps/jenkins/values.yaml</code></li>
-<li><code>platform/apps/ingress-nginx/test-ingress.yaml</code> (private-key)</li>
-<li><code>infra/platform/k8s-eks/prometheus/additional-scrape-configs*.yaml</code></li>
-<li><code>scripts/test-check-secret-detection.sh</code>, <code>services/ai-code-review/prompts/security.txt</code> (test fixtures)</li>
+<li><code>.gitleaks.toml</code> loads the default rules. Before this it had none, so every run that loaded it
+  passed while checking nothing. <code>tests/unit/test_gitleaks_config.py</code> guards this.</li>
+<li>The <code>gitleaks</code> pre-commit hook checks staged changes on developer machines.</li>
+<li>The shared <code>Security Scanning</code> job runs gitleaks 8.24.3 over every branch; pre-commit and
+  <code>Security &amp; Terraform Validation</code> run 8.30.1. Write allowlists as <code>[[rules.allowlists]]</code>: 8.24.3
+  silently ignores top-level <code>[[allowlists]]</code>.</li>
+<li><code>Security &amp; Terraform Validation</code> scans the checked-out tree on pull requests and pushes to <code>main</code>.</li>
+<li>Gap: the <code>gitleaks</code> step in <code>.github/workflows/pre-commit.yml</code> scans only staged changes, and CI
+  has none, so that step checks nothing.</li>
+<li>Gap: GitHub secret scanning is on (no alerts on 2026-11-27), but push protection is off.</li>
 </ul>
 
 
