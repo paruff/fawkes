@@ -329,7 +329,7 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 #### Step 8: telemetry engine
 
 - Check: `ruff check . && pytest tests/` in `services/fawkes-telemetry-engine`; `docker build -f services/fawkes-telemetry-engine/Dockerfile services/`, then `curl /health`
-- Result: not yet run
+- Result: 2 passed; image built, `/health` answered 200
 
 #### Step 9: DevEx service
 
