@@ -19,6 +19,9 @@ bears on an Alpha criterion.
 | AC-FAWKES-03 | paruff/fawkes#2004 and paruff/fawkes#1797 closed, with linked PRs |
 | AC-FAWKES-04 | The suite's AC-SUITE-01 check, plus a README review |
 
+paruff/fawkes#2344: `scripts/run-unit-tests.sh` passes without the removed suite,
+and `git grep emit-dora-event` finds only the changelog and this plan.
+
 ### Make commands
 
 Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` runs the hooks and needs no cluster; `make validate-cluster` checks manifests in a running one. `make lint` is an alias of `make validate`.
