@@ -162,6 +162,10 @@ spec:
         # ALERTS_FOR_STATE once an alert resolves, so this can't yet compute
         # a true historical p50. Good enough to be honestly real-time,
         # not yet a full 30d distribution.
+        # Units. uFawkesObs uses the same rule names, sometimes in another unit
+        # (its deployment frequency is a per-week sum):
+        #   deployment_frequency per day | lead_time and fdrt hours |
+        #   change_failure_rate ratio 0-1 | rework_rate extra syncs per app
         additionalPrometheusRulesMap:
           dora-alerts:
             groups:
@@ -199,6 +203,10 @@ spec:
                     avg(time() - ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"})
                     or vector(0)
                   ) / 3600
+              - record: "dora:fawkes_repo_deployment_frequency:rate30d"
+                expr: fawkes_repo_deployment_frequency_per_day{repo="paruff/fawkes"}
+              - record: "dora:fawkes_repo_lead_time_hours:avg30d"
+                expr: fawkes_repo_lead_time_hours{repo="paruff/fawkes"}
               - record: "dora:rework_rate:ratio"
                 expr: |
                   (

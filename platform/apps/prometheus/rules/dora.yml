@@ -84,11 +84,13 @@ groups:
 - name: dora-metrics
   interval: 30s
   rules:
+  # Unit: per day (uFawkesObs's rule of this name is a per-week sum).
   # Deployment Frequency: successful ArgoCD syncs per day, 30d window.
   - record: dora:deployment_frequency:rate30d
     expr: |
       sum(increase(argocd_app_sync_total{phase="Succeeded"}[30d])) / 30
 
+  # Unit: hours.
   # Lead Time for Changes: median Tekton PipelineRun duration.
   # Proxy: pipeline-execution time (commit-received-by-CI to build/deploy-done),
   # not full idea-to-production lead time - no commit-timestamp correlation
@@ -99,6 +101,7 @@ groups:
         sum(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}) by (le)
       ) / 3600
 
+  # Unit: ratio, 0 to 1.
   # Change Failure Rate: failed syncs / total syncs, 30d window.
   - record: dora:change_failure_rate:ratio30d
     expr: |
@@ -106,6 +109,7 @@ groups:
       /
       sum(increase(argocd_app_sync_total[30d]))
 
+  # Unit: hours.
   # Failed Deployment Recovery Time (MTTR): real Alertmanager-backed
   # incident data (see the dora-alerts group above and the file header
   # comment for what's still simplified about this).
@@ -129,6 +133,7 @@ groups:
   - record: dora:fawkes_repo_lead_time_hours:avg30d
     expr: fawkes_repo_lead_time_hours{repo="paruff/fawkes"}
 
+  # Unit: extra syncs per app, not a ratio despite the name.
   # Rework Rate: PROXY - average number of extra syncs per app beyond the
   # first, over the full counter history (not yet windowed to 30d since
   # argocd_app_sync_total has no per-sync timestamp to bucket by age
