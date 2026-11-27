@@ -47,10 +47,12 @@ live credential:
 | `platform/apps/devlake/devlake-application.yaml` (MySQL passwords; an admin password in history only) | Local-dev-only values, MySQL ones still on `main` |
 | `platform/apps/postgresql/db-sonarqube-credentials.yaml` | Local-dev-only values, still on `main` |
 
-The last three are **not** allowlisted. They are replaced under
-[#1797](https://github.com/paruff/fawkes/issues/1797); until then a scan reports them and the
-`Security & Terraform Validation` workflow (not a required check) fails. They are committed local-dev
-defaults, not credentials for any shared system, so nothing is rotated.
+The last three files hold real committed values. On 2026-11-27 the owner chose to excuse those six
+exact values (not the files) in `.gitleaks.toml`, so the security checks pass and a new secret still
+fails them. This replaces the earlier plan to keep reporting them.
+[#1797](https://github.com/paruff/fawkes/issues/1797) replaces the values; delete the allowlist entry
+in the same change. They are committed local-dev defaults, not credentials for any shared system, so
+nothing is rotated.
 
 Still open from the kubeconfig incident above: the Docker Desktop reset and the GitHub Support request.
 Off `main`, the all-ref scan found no kubeconfig reachable from a remote branch or tag. The built

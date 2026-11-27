@@ -23,6 +23,23 @@ regexes = [
 id = "generic-api-key"
 
 [[rules.allowlists]]
+description = "Committed local-dev defaults, exact values only. Delete with #1797."
+condition = "AND"
+paths = [
+  '''(^|/)platform/apps/devlake/devlake-application\.yaml$''',
+  '''(^|/)platform/apps/postgresql/db-sonarqube-credentials\.yaml$''',
+  '''(^|/)platform/apps/tekton/eventlistener-github-skeleton\.yaml$''',
+]
+regexes = [
+  '''^0EqeLoljUelpo1UmtyPWPsUO$''',
+  '''^2veFWHWogn3OnTMvJiSueTCQ$''',
+  '''^7i0xnKeONqDOvIHM5whRDyW9$''',
+  '''^XuzzgQEPbUA9jA1qRLEcgVNU$''',
+  '''^abbeb71904a363c4a62b3ce6c71638838d4b6359$''',
+  '''^oEbystrTP4gmgfz9zJKO3S5K$''',
+]
+
+[[rules.allowlists]]
 description = "SealedSecret manifests: ciphertext or the unsealed placeholder only"
 condition = "AND"
 paths = [

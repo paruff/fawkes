@@ -11,7 +11,14 @@ from pathlib import Path
 
 import pytest
 
-CONFIG = Path(__file__).resolve().parents[2] / ".gitleaks.toml"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CONFIG = REPO_ROOT / ".gitleaks.toml"
+# Hold committed local-dev defaults that are excused by value until #1797.
+DEV_DEFAULT_FILES = [
+    "platform/apps/devlake/devlake-application.yaml",
+    "platform/apps/postgresql/db-sonarqube-credentials.yaml",
+    "platform/apps/tekton/eventlistener-github-skeleton.yaml",
+]
 
 
 def test_default_rules_are_enabled() -> None:
@@ -70,6 +77,8 @@ def test_planted_token_is_found(tmp_path: Path, path: str) -> None:
             "scripts/validate-golden-path-observability.sh",
             "curl " + '-u "admin:admin{}" https://example.com',
         ),
+        # Excusing the dev defaults must not excuse anything else in those files.
+        *[(path, 'password: "{}"') for path in DEV_DEFAULT_FILES],
     ],
 )
 def test_allowlists_do_not_hide_real_values(tmp_path: Path, path: str, template: str) -> None:
@@ -78,3 +87,11 @@ def test_allowlists_do_not_hide_real_values(tmp_path: Path, path: str, template:
     result = scan(tmp_path, path, template.format(value))
 
     assert result.returncode == 1, result.stderr
+
+
+@needs_gitleaks
+@pytest.mark.parametrize("path", DEV_DEFAULT_FILES)
+def test_known_dev_defaults_are_excused(tmp_path: Path, path: str) -> None:
+    result = scan(tmp_path, path, (REPO_ROOT / path).read_text())
+
+    assert result.returncode == 0, result.stderr
