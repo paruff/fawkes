@@ -324,7 +324,7 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 #### Step 7: log format and pin drift
 
 - Check: `cd services/common && pytest tests/test_logging.py tests/test_pins.py`
-- Result: not yet run
+- Result: 2 passed; the pin test is skipped until a monolith exists
 
 #### Step 8: telemetry engine
 

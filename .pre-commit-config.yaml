@@ -375,6 +375,8 @@ repos:
           ' --
         language: python
         additional_dependencies: ["mypy==2.4.0"]
+        # One process: parallel batches share .mypy_cache and crash mypy with INTERNAL ERROR.
+        require_serial: true
         files: ^(services|extensions)/.*\.py$
         exclude: (^|/)(tests?|conftest)(/|\.py$)|test_
 
