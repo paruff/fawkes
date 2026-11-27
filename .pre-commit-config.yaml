@@ -400,6 +400,17 @@ repos:
         pass_filenames: false
         files: ^design-system/.*\.(ts|tsx|json)$
 
+  # Design tokens (#2311): the shared colour scales against the vendored copy of
+  # https://ufawkes.dev/design/tokens.json. Refresh the copy when the suite changes it.
+  - repo: local
+    hooks:
+      - id: design-token-sync
+        name: Design system colours match suite tokens
+        entry: python3 scripts/check-design-token-sync.py design-system/tokens.json
+        language: system
+        pass_filenames: false
+        files: ^(design-system/(tokens\.json|src/tokens/colors\.ts)|scripts/check-design-token-sync\.py)$
+
   # ============================================================================
   # Shared shift-left hooks from uFawkesPipe (keep last: the stamps record that
   # every hook above ran). Tools that aren't hooks run through scripts/shift-left.sh.
