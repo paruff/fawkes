@@ -5478,6 +5478,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#change-failure-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Failure Rate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-related-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5668,6 +5679,31 @@ that any degradation is caught early.</p>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="change-failure-rate">Change Failure Rate</h2>
+<p><strong>Recording rule:</strong> <code>dora:change_failure_rate:ratio30d</code>, defined in
+<code>platform/apps/prometheus/rules/dora.yml</code> and deployed through
+<code>prometheus-application.yaml</code>. Shown on the "Fawkes — DORA Metrics" dashboard.</p>
+<div class="highlight"><pre><span></span><code><span class="k">sum</span><span class="o">(</span><span class="kr">increase</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">"</span><span class="s">Failed</span><span class="p">"}[</span><span class="s">30d</span><span class="p">]</span><span class="o">))</span>
+<span class="o">/</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">increase</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">[</span><span class="s">30d</span><span class="p">]</span><span class="o">))</span>
+</code></pre></div>
+<p><strong>What it measures:</strong> the share of Argo CD sync operations in the last 30 days that
+ended <code>Failed</code>, across all applications. The unit is a ratio from 0 to 1.</p>
+<p><strong>Known limitations.</strong> Read it as a proxy, not as DORA's change failure rate:</p>
+<ul>
+<li>A sync that succeeds and then breaks the service is not counted. DORA counts
+  deployments that cause a failure in production; this counts syncs that fail to apply.</li>
+<li>Retries of one bad change each count. So do syncs that change no application code.</li>
+<li>It is not split by service, so it cannot yet satisfy AC-BETA-05 (per adopter service).</li>
+<li>With no syncs in the window the result is empty or <code>NaN</code>, not zero.</li>
+<li>Data maturity: the rules were checked against a development cluster on 2026-09-16
+  with only a handful of real runs. There is no production history behind any value.</li>
+</ul>
+<p><strong>Rework rate has two meanings here.</strong> Section 1 (AI-assisted PRs, computed by
+<code>scripts/weekly-metrics.sh</code>) is the definition of record. The dashboard panel
+"Rework Rate (extra syncs per app)" reads <code>dora:rework_rate:ratio</code>, a different proxy
+from Argo CD sync counts. Do not compare the two.</p>
 <hr />
 <h2 id="5-related-metrics">5. Related Metrics</h2>
 <p>The following DORA metrics are tracked alongside rework rate.
