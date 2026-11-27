@@ -1,17 +1,69 @@
 title = "Fawkes Gitleaks Configuration"
 
-[allowlist]
-description = "Allow placeholders used in educational materials and test fixtures"
+# Without this, a custom config REPLACES the default rules and every scan checks
+# nothing (issue #684). Guarded by tests/unit/test_gitleaks_config.py.
+[extend]
+useDefault = true
+
+# Keep every allowlist below scoped to rules (targetRules): a path-only entry
+# hides every kind of secret in that file. Record: docs/runbooks/incident-684-kube-local-key.md
+
+[[allowlists]]
+description = "Placeholders used in educational materials and test fixtures"
 regexes = [
   '''PLACEHOLDER_BASE64_VALUE''',
   '''CHANGEME_NOT_COMMITTED''',
   '''REDACTED_EXAMPLE''',
   '''CHANGE_ME_.*''',
-  '''test-password-123'''
+  '''test-password-123''',
 ]
+
+[[allowlists]]
+description = "SealedSecret manifests are ciphertext"
+targetRules = ["generic-api-key"]
+paths = ['''-sealed\.yaml$''']
+
+[[allowlists]]
+description = "Example credentials in docs and READMEs (old and moved paths)"
+targetRules = ["curl-auth-header", "curl-auth-user", "generic-api-key"]
 paths = [
-  '''tests/.*''',
-  '''.*test.*\.py''',
-  '''.*conftest\.py''',
-  '''\.kube\.local\.yaml'''
+  '''(^|/)(EXPERIMENTATION_IMPLEMENTATION_SUMMARY|FEEDBACK_ANALYTICS_IMPLEMENTATION|FEEDBACK_AUTOMATION_IMPLEMENTATION|FEEDBACK_WIDGET_ENHANCED)\.md$''',
+  '''(^|/)docs/dojo/Module 3 GitOps Principles\.md$''',
+  '''(^|/)docs/how-to/development/code-quality-standards\.md$''',
+  '''(^|/)docs/how-to/penpot-access-controls\.md$''',
+  '''(^|/)docs/how-to/security/secrets-management\.md$''',
+  '''(^|/)docs/reference/api/jenkins-webhook\.md$''',
+  '''(^|/)docs/tutorials/3-consume-vault-secret\.md$''',
+  '''(^|/)docs/validation/prometheus-stack-validation\.md$''',
+  '''(^|/)platform/apps/backstage/plugins/README-feedback\.md$''',
+  '''(^|/)platform/apps(-deferred)?/(experimentation|grafana|harbor|trivy)/README\.md$''',
+  '''(^|/)services/feedback/README\.md$''',
+  '''(^|/)services/nps/DEPLOYMENT\.md$''',
+]
+
+[[allowlists]]
+description = "Fake tokens that exercise secret detection"
+targetRules = ["jwt", "stripe-access-token", "generic-api-key"]
+paths = [
+  '''(^|/)scripts/test-check-secret-detection\.sh$''',
+  '''(^|/)services/ai-code-review/prompts/security\.txt$''',
+]
+
+[[allowlists]]
+description = "Local OpenSearch default login in a validation script"
+targetRules = ["curl-auth-user"]
+condition = "AND"
+paths = ['''(^|/)scripts/validate-golden-path-observability\.sh$''']
+regexTarget = "line"
+regexes = ['''admin:admin''']
+
+# History only: these files or values are no longer on main.
+[[allowlists]]
+description = "Self-signed test certificate, Jenkins plugin versions, scrape config without credentials"
+targetRules = ["private-key", "generic-api-key", "kubernetes-secret-yaml"]
+commits = [
+  "a2ad53bfcc4997121cb38c8184931c486539d8d9",
+  "6a86adf9aab0ddefa7be6fbb346855fd3c75b586",
+  "b627a71d046a0aeccf750e79d474c8f378abcfb1",
+  "ab41a53f6e8be7aade596ac30a3bec554c3acde7",
 ]
