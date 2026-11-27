@@ -82,6 +82,9 @@ metadata:
   name: platform-applications
   namespace: argocd
 spec:
+  # Never delete a generated Application: a dropped path must not take its resources with it (#2323).
+  syncPolicy:
+    applicationsSync: create-update
   goTemplate: true
   # ArgoCD's own docs recommend this as standard practice: a template
   # referencing a key that doesn't exist in a given source file errors

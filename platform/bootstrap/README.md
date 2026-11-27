@@ -197,6 +197,29 @@ jenkins              Synced        Healthy
 ...
 ```
 
+## Retiring an Application
+
+Both ApplicationSets set `applicationsSync: create-update`, so the controller
+creates and updates Applications but never deletes them (#2323). Removing a path
+from a file list leaves the Application running. To retire a component, remove
+its path, merge, then delete the Application on purpose:
+
+```bash
+kubectl delete application <name> -n argocd   # also deletes what it deployed
+```
+
+The policy only works if the controller allows per-ApplicationSet overrides
+(`applicationsetcontroller.enable.policy.override: "true"`). The argo-cd Helm
+chart sets a controller policy by default, which would otherwise win. Check a
+running cluster:
+
+```bash
+kubectl get cm argocd-cmd-params-cm -n argocd \
+  -o jsonpath='{.data.applicationsetcontroller\.enable\.policy\.override}'   # must print true
+```
+
+A cluster installed before this change needs its Argo CD Helm release upgraded.
+
 ## Adding New Applications
 
 ### Using ApplicationSet Auto-Discovery

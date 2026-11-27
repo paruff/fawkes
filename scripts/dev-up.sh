@@ -111,6 +111,7 @@ helm upgrade --install argocd argo/argo-cd \
   --namespace "${ARGOCD_NS}" \
   --set server.service.type=ClusterIP \
   --set configs.params."server\.insecure"=true \
+  --set configs.params."applicationsetcontroller\.enable\.policy\.override"=true \
   --wait --timeout 5m
 ok "ArgoCD installed (namespace: ${ARGOCD_NS})"
 
