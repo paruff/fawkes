@@ -314,7 +314,7 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 #### Step 5: database sessions
 
 - Check: `cd services/common && pytest tests/test_database.py`
-- Result: not yet run
+- Result: 4 passed
 
 #### Step 6: `/metrics` route
 
