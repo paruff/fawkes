@@ -68,7 +68,7 @@ happens; #2004 was approved as decision C12.
 | Verdict | Issues |
 | --- | --- |
 | **Close: accepted risk** (C12) | #2004 |
-| **Close: superseded** (owner to approve) | #1153 (duplicate of #1569); #1680 (DevLake, replaced by ADR-038) |
+| **Close: superseded** (approved and closed 2026-11-27) | #1153 (duplicate of #1569); #1680 (DevLake, replaced by ADR-038) |
 | **Close when this plan merges** | #2191 (the path to Beta is now defined); #2298 once its comments are posted |
 | **Resolved, not verified** | #2081 (built in PR #2144; its rules are missing from the live map, G2); #2079 (`dora:change_failure_rate:ratio30d` exists; verify in G2, then close); #1661 (verify with #1858's run, G1) |
 | **Beta, G1** | #1804, #1808, #1797, #1858, #2188, #2325 (BDD tests read a deleted workflow) |
