@@ -18,6 +18,12 @@ def test_default_rules_are_enabled() -> None:
     assert tomllib.loads(CONFIG.read_text()).get("extend", {}).get("useDefault") is True
 
 
+def test_no_syntax_that_ci_gitleaks_ignores() -> None:
+    # The shared security workflow pins gitleaks 8.24.3, which silently ignores
+    # top-level [[allowlists]]. Scope allowlists with [[rules.allowlists]].
+    assert "allowlists" not in tomllib.loads(CONFIG.read_text())
+
+
 # #684: the unit-test runner has no gitleaks binary, so these run locally only.
 needs_gitleaks = pytest.mark.skipif(shutil.which("gitleaks") is None, reason="gitleaks not installed")
 

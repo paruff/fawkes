@@ -25,7 +25,7 @@ the default rules (2694 commits, `--max-target-megabytes 2`) reports 127 finding
 | Purge from history (`git filter-repo --path .kube.local.yaml --invert-paths`), force-push, re-clone | Done 2026-10-16 for `main`, all other branches and tags. Everyone must re-clone | human |
 | Ask GitHub Support to drop cached views and GC the old commits `353afabf`, `9a2a3bec`, `03d36dba`, still reachable from `refs/pull/*/head` (read-only refs) | Pending | human |
 | Re-run `gitleaks detect --log-opts="--all"` on a fresh remote clone | Done 2026-10-16: 0 hits reachable from branches/tags; 3 remain only via `refs/pull/*` | agent |
-| Fix `.gitleaks.toml`: `[extend] useDefault = true`, drop blanket path allowlists, add rule-scoped allowlists | Done 2026-11-27 | agent |
+| Fix `.gitleaks.toml`: `[extend] useDefault = true`, replace blanket path allowlists with rule-scoped allowlists | Done 2026-11-27 | agent |
 
 ## Full history scan, 2026-11-27
 
@@ -53,7 +53,8 @@ The last three are **not** allowlisted. They are replaced under
 defaults, not credentials for any shared system, so nothing is rotated.
 
 Still open from the kubeconfig incident above: the Docker Desktop reset and the GitHub Support request.
-Off `main`, the all-ref scan found no kubeconfig reachable from a remote branch or tag.
+Off `main`, the all-ref scan found no kubeconfig reachable from a remote branch or tag. The built
+search index on `gh-pages` (227 versions) only repeats examples from pages on `main`.
 
 To repeat the scan:
 
@@ -66,6 +67,9 @@ gitleaks git --redact --log-opts=origin/main .
 - `.gitleaks.toml` loads the default rules. Before this it had none, so every run that loaded it
   passed while checking nothing. `tests/unit/test_gitleaks_config.py` guards this.
 - The `gitleaks` pre-commit hook checks staged changes on developer machines.
+- The shared `Security Scanning` job runs gitleaks 8.24.3 over every branch; pre-commit and
+  `Security & Terraform Validation` run 8.30.1. Write allowlists as `[[rules.allowlists]]`: 8.24.3
+  silently ignores top-level `[[allowlists]]`.
 - `Security & Terraform Validation` scans the checked-out tree on pull requests and pushes to `main`.
 - Gap: the `gitleaks` step in `.github/workflows/pre-commit.yml` scans only staged changes, and CI
   has none, so that step checks nothing.
