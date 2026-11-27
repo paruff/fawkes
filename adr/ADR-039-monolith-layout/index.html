@@ -5428,6 +5428,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#amendment-2026-11-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amendment (2026-11-27)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#alternatives-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5468,7 +5479,7 @@
 
 <h1 id="adr-039-layout-of-the-two-domain-monoliths-and-servicescommon">ADR-039: Layout of the Two Domain Monoliths and <code>services/common</code></h1>
 <blockquote>
-<p><strong>Status:</strong> Proposed. It becomes Accepted when the maintainer merges it; steps 4 to 9 of paruff/fawkes#2299 wait for that.
+<p><strong>Status:</strong> Accepted (merged 2026-11-14, paruff/fawkes#2321). Amended 2026-11-27; see <a href="#amendment-2026-11-27">Amendment</a>.
 <strong>Date:</strong> 2026-11-14
 <strong>Author:</strong> AI-assisted, awaiting approval by @paruff
 <strong>DORA Capability:</strong> Cap 5 — Working in Small Batches</p>
@@ -5507,7 +5518,7 @@ one answer each. This ADR answers them.</p>
 <p>We will lay the monoliths out as below.</p>
 <div class="highlight"><pre><span></span><code>services/
 ├── common/
-│   ├── fawkes_common/          # the importable package: config.py, database.py, metrics.py, logging.py
+│   ├── fawkes_common/          # the importable package: config.py, database.py, metrics.py, logging.py (text format)
 │   ├── tests/
 │   └── requirements.txt        # exact pins, only what fawkes_common imports
 ├── fawkes-telemetry-engine/
@@ -5534,15 +5545,17 @@ one answer each. This ADR answers them.</p>
    (<code>dora-metrics</code> → <code>app/dora_metrics/</code>). Nothing else about the name changes.</li>
 <li><strong>URL paths.</strong> Every module's routes are mounted under <code>/&lt;service-name&gt;</code>,
    with the hyphen kept (<code>/dora-metrics/...</code>, <code>/nps/survey/{token}</code>). The
-   monolith owns <code>/health</code>, <code>/ready</code> and <code>/metrics</code>. Old root-level paths do
+   monolith owns <code>/health</code> and <code>/metrics</code>, and adds <code>/ready</code> with the first
+   module that has a dependency to check. Old root-level paths do
    not keep working: the three collisions above make that impossible for six
    services, and one rule for all is easier to check than a per-service
    exception. The PR that migrates a service also changes its callers.</li>
 <li><strong>Pins.</strong> Each monolith has one <code>requirements.txt</code>. For a package its
    member services pin today, it starts at the highest version any member
-   pins. <code>services/common/requirements.txt</code> may only name a package at the
-   version both monoliths pin, and a test in <code>services/common/tests/</code> fails
-   when it doesn't.</li>
+   pins. A package that <code>services/common/requirements.txt</code> names is the
+   exception: both monoliths start at the highest version any member of
+   either one pins, because <code>common</code> may only name a package at the version
+   both pin. A test in <code>services/common/tests/</code> fails when they differ.</li>
 <li><strong>Migrations.</strong> Each module that owns tables has <code>app/&lt;name&gt;/migrations/</code>
    (its own Alembic environment) and its own version table,
    <code>alembic_version_&lt;name&gt;</code>. One database per monolith, as the plan says. A
@@ -5601,6 +5614,24 @@ one answer each. This ADR answers them.</p>
   <code>/&lt;directory-name&gt;</code>.</li>
 <li>Don't add a package to <code>services/common/requirements.txt</code> at a version that
   differs from either monolith's pin.</li>
+</ul>
+<h2 id="amendment-2026-11-27">Amendment (2026-11-27)</h2>
+<p>Made after phase 1 (paruff/fawkes#2299, #2358 to #2363) showed where the
+decision didn't match what could be built. The maintainer merged those pull
+requests as written and approved this amendment.</p>
+<ul>
+<li><strong>Rule 5, pins.</strong> As first written it contradicted itself: the highest pin
+  among each monolith's own members gave different versions of <code>fastapi</code>
+  (0.141.1 and 0.128.0) and <code>pydantic-settings</code> (2.6.0 and 2.6.1), while
+  <code>common</code> had to match both. Packages <code>common</code> names now take the higher of
+  the two: <code>fastapi</code> 0.141.1 and <code>pydantic-settings</code> 2.6.1.</li>
+<li><strong>Logging.</strong> #2299 asked for a structured logging helper, and also allowed
+  into <code>common</code> only what two or more services already had. No service emits
+  JSON logs, so <code>fawkes_common.logging</code> configures the plain text format they
+  share. Structured (JSON) logging is not decided here; it needs its own change.</li>
+<li><strong>Rule 4, <code>/ready</code>.</strong> The scaffolds serve <code>/health</code> and <code>/metrics</code>. With no
+  database or upstream yet, a readiness check would only repeat the health
+  check.</li>
 </ul>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <table>
