@@ -2,6 +2,8 @@
 # shift-left spec R3). uFawkesPipe's parity check (shift-left-parity) fails
 # when a hook is neither run by .github/workflows/pre-commit.yml nor listed here.
 local-only:
+  - id: design-token-sync
+    reason: design-system/src/tokens/suiteTokens.test.ts runs the same script in code-quality.yml's TypeScript job
   - id: conventional-commit-msg
     reason: ci-commit-lint.yml checks every PR commit against the same regex
   - id: terraform_validate

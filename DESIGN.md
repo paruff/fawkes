@@ -186,13 +186,19 @@ The design system's components keep their own CSS
 - Don't use `#16a34a` (3.30:1) or `#6366f1` with white text (4.47:1).
 - Don't add gradients, web fonts or breakpoints beyond 767px and 640px.
 
-## Today (measured 2026-10-24 on `main`)
+## Today (measured 2026-11-27 on `main`)
 
-| Rule                              | What the code has                                                                                         |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Primary button: Flame, Night label| Indigo 600 `#4f46e5` with a white label (`Button.css`, `--fawkes-primary-600`); docs site primary is Indigo |
-| Radii 4px and 8px                 | Scale from 2px to 24px plus full; buttons use 6px (`radii.ts`, `Button.css`)                               |
-| Spacing in multiples of 8px       | 4px base scale (`spacing.ts`); its steps of 8px and up line up                                             |
-| Breakpoints 767px and 640px       | 640, 768, 1024, 1280, 1536px (`breakpoints.ts`)                                                            |
-| No secondary hue                  | Teal `secondary` scale (`#14b8a6`)                                                                         |
-| System fonts only                 | `display` names "Inter", which no file loads                                                               |
+The shared indigo and neutral scales match the tokens; the `design-token-sync`
+hook checks them. The rows below are departures the code still has. Each is kept
+until someone changes the code or the rule.
+
+| Rule                               | Departure the code keeps                                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Primary button: Flame, Night label | Indigo 600 `#4f46e5` with a white label (`Button.css`, `--fawkes-primary-600`); docs site primary is Indigo |
+| Radii 4px and 8px                  | `radii.ts` has 0, 2, 4, 6, 8, 12, 16, 24px and full; buttons use 6px (`Button.css`)                        |
+| Spacing in multiples of 8px        | 4px base scale (`spacing.ts`); its steps of 8px and up line up                                             |
+| Breakpoints 767px and 640px        | 640, 768, 1024, 1280, 1536px (`breakpoints.ts`)                                                            |
+| No secondary hue                   | Teal `secondary` scale (`#14b8a6`) in `colors.ts`                                                          |
+| No `#16a34a` (3.30:1)              | `success.600` in `colors.ts` is `#16a34a`; do not use it for text                                          |
+| Fail is Red 700                    | `--fawkes-error` is `#ef4444` (`global.css`); only the danger button uses Red 700                          |
+| System fonts only                  | `display` in `typography.ts` names "Inter", which no file loads                                            |
