@@ -3,7 +3,7 @@
 Covers the four security-plane feature files (sbom, signing, scanning,
 policies). Assertions are repo-static checks against the real reusable
 workflows (`.github/workflows/reusable-sbom-generation.yml`,
-`reusable-image-signing.yml`; the scan workflow is fetched from uFawkesPipe) and the
+`reusable-image-signing.yml`), the calls to uFawkesPipe's scan, and the
 repository's security configuration (`.gitleaks.toml`,
 `.pre-commit-config.yaml`, `.trivyignore`), so the suite produces a real
 signal without requiring a live cluster.
@@ -13,10 +13,10 @@ from __future__ import annotations
 
 import re
 import subprocess
-import urllib.request
 from functools import cache
 from pathlib import Path
 
+import yaml
 from pytest_bdd import given, parsers, scenarios, then, when
 
 scenarios("../features/security-plane-sbom.feature")
@@ -34,21 +34,50 @@ def _read_repo_file(relative_path: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-@cache
-def _pipe_security_scanning() -> str:
-    """Fetch uFawkesPipe's reusable security scan at the SHA code-quality.yml pins.
+_PIPE_SCAN = "paruff/ufawkespipe/.github/workflows/reusable-security-scanning.yml@"
 
-    The local copy was removed in #2247. A pinned SHA is immutable, so this stays
-    reproducible; an unreachable Pipe fails the test rather than passing silently.
+
+@cache
+def _scan_callers() -> tuple[tuple[str, dict], ...]:
+    """(job, inputs) for every job here that calls uFawkesPipe's reusable security scan.
+
+    The scan itself lives in uFawkesPipe (#2247); its behaviour is tested there. What
+    fawkes owns is the call: pinned to an immutable SHA, with the gate inputs stated.
     """
-    caller = _read_repo_file(".github/workflows/code-quality.yml")
-    match = re.search(
-        r"ufawkespipe/\.github/workflows/reusable-security-scanning\.yml@([0-9a-f]{40})", caller, re.IGNORECASE
+    callers = []
+    for workflow in sorted((_REPO_ROOT / ".github" / "workflows").glob("*.y*ml")):
+        for name, job in (yaml.safe_load(workflow.read_text(encoding="utf-8")).get("jobs") or {}).items():
+            uses = str(job.get("uses", ""))
+            if not uses.lower().startswith(_PIPE_SCAN):
+                continue
+            where = f"{workflow.name}:{name}"
+            assert re.fullmatch(r"[0-9a-f]{40}", uses.split("@", 1)[1]), f"{where} must pin the scan by SHA: {uses}"
+            inputs = job.get("with") or {}
+            missing = {"severity-threshold", "fail-on-critical"} - inputs.keys()
+            assert not missing, f"{where} does not pass {sorted(missing)}"
+            callers.append((where, inputs))
+    assert callers, "no workflow calls uFawkesPipe's reusable security scan"
+    return tuple(callers)
+
+
+def _assert_scan_runs(kind: str) -> None:
+    """Some caller runs this kind of scan. An omitted scan-type means "all" in the reusable."""
+    assert any(inputs.get("scan-type", "all") in ("all", kind) for _, inputs in _scan_callers()), (
+        f"no caller runs the {kind} scan"
     )
-    assert match, "code-quality.yml no longer pins uFawkesPipe's reusable-security-scanning.yml"
-    url = f"https://raw.githubusercontent.com/paruff/uFawkesPipe/{match[1]}/.github/workflows/reusable-security-scanning.yml"
-    with urllib.request.urlopen(url, timeout=20) as resp:
-        return resp.read().decode("utf-8")
+
+
+def _assert_a_scan_blocks() -> None:
+    """Some caller fails the run on CRITICAL findings."""
+    assert any(
+        inputs["fail-on-critical"] is True and "CRITICAL" in str(inputs["severity-threshold"])
+        for _, inputs in _scan_callers()
+    ), "no caller blocks on CRITICAL findings"
+
+
+def _assert_sarif_uploads() -> None:
+    """Some caller leaves SARIF upload on (the reusable's default)."""
+    assert any(inputs.get("upload-sarif", True) is True for _, inputs in _scan_callers()), "SARIF upload is off"
 
 
 def _config_flag(workflow: str, flag: str) -> bool:
@@ -86,15 +115,13 @@ def step_given_cosign_configured():
 @given("Trivy vulnerability scanner is available")
 def step_given_trivy_available():
     """Verify Trivy is configured in the reusable security-scanning workflow."""
-    scanning = _pipe_security_scanning()
-    assert "trivy" in scanning
+    _assert_scan_runs("vulnerabilities")
 
 
 @given("Gitleaks secret scanner is available")
 def step_given_gitleaks_available():
     """Verify Gitleaks is configured in the reusable security-scanning workflow."""
-    scanning = _pipe_security_scanning()
-    assert "gitleaks" in scanning
+    _assert_scan_runs("secrets")
 
 
 @given("OPA/Conftest is installed")
@@ -381,8 +408,7 @@ def step_when_sarif_enabled():
 @then("no hardcoded secrets should be found")
 def step_then_no_secrets():
     """Verify Gitleaks scan runs and would flag secrets."""
-    scanning = _pipe_security_scanning()
-    assert "gitleaks" in scanning
+    _assert_scan_runs("secrets")
 
 
 @then("the scan should check for API keys")
@@ -397,8 +423,7 @@ def step_then_secret_types_checked():
 @then("the scan should fail")
 def step_then_scan_fails():
     """Verify the workflow fails on critical findings."""
-    scanning = _pipe_security_scanning()
-    assert "exit-code" in scanning
+    _assert_a_scan_blocks()
 
 
 @then("the secret should be reported")
@@ -411,8 +436,7 @@ def step_then_secret_reported():
 @then("all dependencies should be scanned")
 def step_then_deps_scanned():
     """Verify dependency scanning is configured."""
-    scanning = _pipe_security_scanning()
-    assert "dependencies" in scanning
+    _assert_scan_runs("dependencies")
 
 
 @then("vulnerabilities should be reported by severity")
@@ -431,8 +455,7 @@ def step_then_image_layers_scanned():
 @then("results should be uploaded to GitHub Security")
 def step_then_uploaded_gh_security():
     """Verify SARIF upload to GitHub Security is configured."""
-    scanning = _pipe_security_scanning()
-    assert "upload-sarif" in scanning
+    _assert_sarif_uploads()
 
 
 @then("critical vulnerabilities should be listed")
@@ -463,8 +486,7 @@ def step_then_pr_not_blocked():
 @then("pip packages should be scanned")
 def step_then_pip_scanned():
     """Verify pip dependency scanning is configured."""
-    scanning = _pipe_security_scanning()
-    assert "safety check" in scanning
+    _assert_scan_runs("dependencies")
 
 
 @then("vulnerable packages should be identified")
@@ -476,8 +498,7 @@ def step_then_vuln_packages_identified():
 @then("npm packages should be scanned")
 def step_then_npm_scanned():
     """Verify npm dependency scanning is configured."""
-    scanning = _pipe_security_scanning()
-    assert "npm audit" in scanning
+    _assert_scan_runs("dependencies")
 
 
 @then("vulnerabilities should be reported")
@@ -489,15 +510,13 @@ def step_then_npm_vulns_reported():
 @then("results should be formatted as SARIF")
 def step_then_sarif_formatted():
     """Verify results are formatted as SARIF."""
-    scanning = _pipe_security_scanning()
-    assert "sarif" in scanning.lower()
+    _assert_sarif_uploads()
 
 
 @then("SARIF should be uploaded to GitHub Security tab")
 def step_then_sarif_uploaded():
     """Verify SARIF is uploaded to GitHub Security."""
-    scanning = _pipe_security_scanning()
-    assert "upload-sarif" in scanning
+    _assert_sarif_uploads()
 
 
 @then("vulnerabilities should appear in security alerts")
@@ -508,22 +527,19 @@ def step_then_security_alerts():
 @then("secret scanning should execute")
 def step_then_secret_scan_executes():
     """Verify scan-type 'all' runs secret scanning."""
-    scanning = _pipe_security_scanning()
-    assert "scan-type == 'all'" in scanning
+    _assert_scan_runs("secrets")
 
 
 @then("vulnerability scanning should execute")
 def step_then_vuln_scan_executes():
     """Verify scan-type 'all' runs vulnerability scanning."""
-    scanning = _pipe_security_scanning()
-    assert "vulnerabilities" in scanning
+    _assert_scan_runs("vulnerabilities")
 
 
 @then("dependency scanning should execute")
 def step_then_dep_scan_executes():
     """Verify scan-type 'all' runs dependency scanning."""
-    scanning = _pipe_security_scanning()
-    assert "dependencies" in scanning
+    _assert_scan_runs("dependencies")
 
 
 @then("all results should be aggregated")
@@ -534,8 +550,7 @@ def step_then_results_aggregated():
 @then("only HIGH and CRITICAL issues should be reported")
 def step_then_high_critical_only():
     """Verify the severity threshold filters to HIGH and CRITICAL."""
-    scanning = _pipe_security_scanning()
-    assert "severity-threshold" in scanning
+    assert any(inputs["severity-threshold"] == "CRITICAL,HIGH" for _, inputs in _scan_callers())
 
 
 @then("LOW and MEDIUM issues should be suppressed")
