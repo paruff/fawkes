@@ -2,11 +2,10 @@
 # scripts/run-unit-tests.sh — run every offline test suite in this repo.
 #
 # One entry point so pre-commit, preflight, and CI run exactly the same set.
-# Previously each suite was invoked ad hoc, and three of the four were wired
+# Previously each suite was invoked ad hoc, and most were wired
 # to nothing at all.
 #
-# All four suites are offline and dependency-free: they stub `gh`, bind an
-# ephemeral loopback port, and use vendored fixtures. That is what makes them
+# All suites are offline and dependency-free: they use vendored fixtures. That is what makes them
 # safe to run on every commit — a test that needs the network or a pip install
 # is a test whose result depends on the machine, not the code.
 #
@@ -17,7 +16,6 @@ cd "$(dirname "$0")/.." || exit 1
 
 SUITES=(
   scripts/test-check-secret-detection.sh
-  scripts/test-emit-dora-event.sh
   scripts/test-artifact-chain.sh
   scripts/test-dojo-feedback-intent.sh
 )

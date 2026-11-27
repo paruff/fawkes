@@ -28,7 +28,7 @@
 | **AI Productivity Paradox** — individual output up 21%, PRs merged up 98%, but organizational delivery metrics flat                                                                                                | Faros.ai telemetry (10k devs) + DORA 2025           | Stacks must include delivery metrics (DORA), not just coding metrics                                        |
 | **ROI framework** — AI creates ROI when org converts local speed → stable delivery, reduced rework, better experiments, reinvested engineering capacity                                                            | DORA ROI of AI-Assisted Software Development 2026   | Each stack must demonstrate end-to-end flow improvement                                                     |
 | **7 team archetypes** need different AI strategies                                                                                                                                                                 | DORA 2025                                           | Offer stack profiles for different maturity levels                                                          |
-| **VSM as force multiplier** — Value Stream Management ensures local gains translate to product outcomes                                                                                                            | DORA 2025 + Honeycomb analysis                      | uFawkesDORA connects value streams to delivery metrics                                                      |
+| **VSM as force multiplier** — Value Stream Management ensures local gains translate to product outcomes                                                                                                            | DORA 2025 + Honeycomb analysis                      | uFawkesObs connects value streams to delivery metrics                                                       |
 
 ### CNCF Platform Engineering Research
 
@@ -65,11 +65,11 @@
 | --------------- | ---------- | ------------------------------------------ | --------- | ------------------------------------------------ |
 | **fawkes**      | ✅ Exists  | Modular GitOps IDP — core platform         | 6 topics  | Quality internal platform                        |
 | **uFawkesObs**  | ✅ Fixed   | Observability — Prometheus + Grafana + AI  | 8 topics  | Healthy data ecosystem, AI-accessible data       |
-| **uFawkesPipe** | ✅ Exists  | CI/CD — Jenkins + Buildpacks + DevSecOps   | 13 topics | Strong version control, working in small batches |
+| **uFawkesPipe** | ✅ Exists  | CI/CD — Tekton + Buildpacks + DevSecOps     | 13 topics | Strong version control, working in small batches |
 | **uFawkesAI**   | ✅ Exists  | Agent templates for golden paths           | 10 topics | Clear AI stance, user-centric focus              |
 | **uFawkesDevX** | ✅ Fixed   | Golden paths + developer experience        | 7 topics  | Quality internal platform, user-centric focus    |
-| **uFawkesDORA** | ✅ Created | DORA dashboards + VSM + metrics            | 8 topics  | All 7 capabilities measured                      |
-| **uFawkesSec**  | ✅ Created | Policy-as-code + guardrails + supply chain | 7 topics  | Quality internal platform                        |
+| **uFawkesDORA** | Merged    | Merged into uFawkesObs                     | 8 topics  | All 7 capabilities measured                      |
+| **uFawkesSec**  | Merged    | Merged into uFawkesPipe                    | 7 topics  | Quality internal platform                        |
 | **uFawkes.dev** | ✅ Live    | Marketing site + learning hub              | Set       | Drives adoption                                  |
 
 ### Marketing Site (uFawkes.dev)
@@ -89,11 +89,11 @@
 | --------------- | ------------------------------------------ | ----- | ------------------------------------------------ | -------------------------- |
 | **fawkes**      | Modular GitOps IDP — core platform         | 1     | Quality internal platform                        | CNCF Platforms White Paper |
 | **uFawkesObs**  | Observability — Prometheus + Grafana + AI  | 0     | Healthy data ecosystem, AI-accessible data       | DORA AI Capabilities       |
-| **uFawkesPipe** | CI/CD — Jenkins + Buildpacks + DevSecOps   | 0     | Strong version control, working in small batches | CNCF App Delivery, DORA    |
+| **uFawkesPipe** | CI/CD — Tekton + Buildpacks + DevSecOps     | 0     | Strong version control, working in small batches | CNCF App Delivery, DORA    |
 | **uFawkesAI**   | Agent templates for golden paths           | 2     | Clear AI stance, user-centric focus              | DORA AI Capabilities       |
 | **uFawkesDevX** | Golden paths + developer experience        | 0     | Quality internal platform, user-centric focus    | CNCF Platforms, SPACE      |
-| **uFawkesDORA** | DORA dashboards + VSM + metrics            | 0     | All 7 capabilities measured                      | DORA metrics, VSM          |
-| **uFawkesSec**  | Policy-as-code + guardrails + supply chain | 0     | Quality internal platform                        | CNCF Security, SLSA, SSDF  |
+| **uFawkesDORA** | Merged into uFawkesObs                     | 0     | All 7 capabilities measured                      | DORA metrics, VSM          |
+| **uFawkesSec**  | Merged into uFawkesPipe                    | 0     | Quality internal platform                        | CNCF Security, SLSA, SSDF  |
 | **uFawkes.dev** | Marketing site + learning hub              | N/A   | —                                                | Drives adoption            |
 
 ---
@@ -153,7 +153,7 @@
 | Stack    | Deliverable                                              | DORA Capability                 | Status                              |
 | -------- | -------------------------------------------------------- | ------------------------------- | ----------------------------------- |
 | **Obs**  | Prometheus + Grafana + DORA dashboards pre-wired         | Observability, Data ecosystem   | In progress (ufawkesobs exists)     |
-| **Pipe** | Jenkins + Buildpacks + DORA metric emission              | Small batches, Version control  | In progress (uFawkesPipe exists)    |
+| **Pipe** | Tekton + Buildpacks + DORA metric emission               | Small batches, Version control  | In progress (uFawkesPipe exists)    |
 | **DORA** | Unified dashboard: 4 keys + AI capability maturity + VSM | All 7 capabilities measured     | Repo created, ready for development |
 | **Sec**  | Policy-as-code (OPA/Rego), supply chain scanning         | Quality platform, AI stance     | Repo created, ready for development |
 | **DevX** | Backstage-alternative templates, golden path scaffolding | User-centric, Internal platform | Repo created, ready for development |
