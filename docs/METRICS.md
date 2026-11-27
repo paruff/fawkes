@@ -115,6 +115,38 @@ Every **Monday at 09:00 UTC** (or the first working day of the week).
 
 ---
 
+## Change Failure Rate
+
+**Recording rule:** `dora:change_failure_rate:ratio30d`, defined in
+`platform/apps/prometheus/rules/dora.yml` and deployed through
+`prometheus-application.yaml`. Shown on the "Fawkes — DORA Metrics" dashboard.
+
+```promql
+sum(increase(argocd_app_sync_total{phase="Failed"}[30d]))
+/
+sum(increase(argocd_app_sync_total[30d]))
+```
+
+**What it measures:** the share of Argo CD sync operations in the last 30 days that
+ended `Failed`, across all applications. The unit is a ratio from 0 to 1.
+
+**Known limitations.** Read it as a proxy, not as DORA's change failure rate:
+
+- A sync that succeeds and then breaks the service is not counted. DORA counts
+  deployments that cause a failure in production; this counts syncs that fail to apply.
+- Retries of one bad change each count. So do syncs that change no application code.
+- It is not split by service, so it cannot yet satisfy AC-BETA-05 (per adopter service).
+- With no syncs in the window the result is empty or `NaN`, not zero.
+- Data maturity: the rules were checked against a development cluster on 2026-09-16
+  with only a handful of real runs. There is no production history behind any value.
+
+**Rework rate has two meanings here.** Section 1 (AI-assisted PRs, computed by
+`scripts/weekly-metrics.sh`) is the definition of record. The dashboard panel
+"Rework Rate (extra syncs per app)" reads `dora:rework_rate:ratio`, a different proxy
+from Argo CD sync counts. Do not compare the two.
+
+---
+
 ## 5. Related Metrics
 
 The following DORA metrics are tracked alongside rework rate.
