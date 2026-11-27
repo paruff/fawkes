@@ -69,10 +69,13 @@ spec:
     - name: error-rate
       # Run this metric check every 60s during canary rollout.
       interval: 60s
-      # Count of consecutive failures before marking canary as failed.
-      # 3 failures x 60s interval = 3 minute observation window.
+      # Number of measurements: 3 x 60s = a 3 minute observation window.
+      # failureLimit 0 below means the first failed measurement aborts.
       count: 3
       successCondition: "result[0] < {{args.error-rate-threshold}}"
+      # No traffic gives NaN, which matches neither condition: Inconclusive, so
+      # the rollout pauses for a person instead of rolling back (#2322).
+      failureCondition: "result[0] >= {{args.error-rate-threshold}}"
       # If the metric doesn't exist or Prometheus errors out, fail
       # conservatively — a missing error metric should not be treated as
       # success during a canary.
@@ -88,10 +91,12 @@ spec:
           # a plain Counter, no "app" label. namespace/service come from the
           # ServiceMonitor's auto-injected target labels, not the metric
           # itself.
+          # `or vector(0)`: a service that has never returned a 5xx has no such
+          # series. The denominator has no fallback, so a missing metric errors.
           query: |
-            sum(rate(http_requests_total{
+            (sum(rate(http_requests_total{
               namespace="{{args.namespace}}", service="{{args.service-name}}", status=~"5.."
-            }[2m]))
+            }[2m])) or vector(0))
             /
             sum(rate(http_requests_total{
               namespace="{{args.namespace}}", service="{{args.service-name}}"
