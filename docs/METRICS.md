@@ -136,7 +136,8 @@ ended `Failed`, across all applications. The unit is a ratio from 0 to 1.
   deployments that cause a failure in production; this counts syncs that fail to apply.
 - Retries of one bad change each count. So do syncs that change no application code.
 - Per service, use `dora:change_failure_rate:ratio30d_by_app` (one value per Argo CD
-  application). There is no per-service lead time yet.
+  application). Per-service lead time is
+  `dora:lead_time_hours:p50_30d_by_app`.
 - With no syncs in the window the result is empty or `NaN`, not zero.
 - Data maturity: the rules were checked against a development cluster on 2026-09-16
   with only a handful of real runs. There is no production history behind any value.

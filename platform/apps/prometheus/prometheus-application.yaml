@@ -222,6 +222,14 @@ spec:
               - record: "dora:fdrt_hours:current_by_app"
                 expr: |
                   avg by (name) (time() - ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"}) / 3600
+              - record: "dora:lead_time_hours:p50_30d_by_app"
+                expr: |
+                  label_replace(
+                    histogram_quantile(0.5,
+                      sum by (le, pipeline) (tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success", pipeline=~".+-pipeline"})
+                    ) / 3600,
+                    "name", "$1", "pipeline", "(.+)-pipeline"
+                  )
               - record: "dora:rework_rate:ratio"
                 expr: |
                   (
