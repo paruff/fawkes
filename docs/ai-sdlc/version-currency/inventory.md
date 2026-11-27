@@ -97,6 +97,7 @@ status. Dates are publication dates. "n/r" means not read. State is **current**,
 | conftest, yq, Helm CLI | workflows | 0.69.0, v4.53.3, unpinned or n/r | v0.71.1, v4.54.3, v4.3.2 | n/r | behind #2385 |
 | Argo CD CLI | `pre-commit.yml` | v3.5.0 (2026-08-04) | v3.6.3 (2026-11-24) | 3.5 supported | behind #2371 |
 | Prometheus Operator CRDs | `idp-e2e-tests.yml` | v0.93.1 (2026-08-10) | v0.95.2 (2026-11-12) | n/r | behind #1735 |
+| uFawkesPipe (reusable workflows, hooks) | `.github/workflows/`, `.pre-commit-config.yaml`; `AGENTS.md` | v1.16.0-beta.1 pre-release; `AGENTS.md` says v1.2.0 | v2.0.1 (2026-11-20) | n/r | behind #2397 |
 | gitleaks | pre-commit, workflows, `.gitops-templates/` | v8.30.1, v8.18.1 (2023-11-17) | v8.30.1 (2026-03-21) | n/r | behind #2385 |
 | kubeconform | pre-commit workflow | v0.8.0 (2026-06-04) | v0.8.0 | n/r | current |
 | kustomize, shfmt | workflows | v5.8.1 (2026-02-09), v3.8.0 (2024-02-11) | v5.8.3 (2026-10-08), v3.14.1 (2026-09-06) | n/r | behind #2385 |
