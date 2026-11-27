@@ -1,0 +1,115 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "ADR-040. Only what Dependabot cannot read; see docs/ai-sdlc/version-currency/automation.md (#2386).",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "argocd",
+    "custom.regex",
+    "dockerfile",
+    "gomod",
+    "kubernetes",
+    "npm",
+    "tekton"
+  ],
+  "ignorePaths": [
+    "platform/apps-deferred/**",
+    "platform/apps/tekton/upstream/**",
+    "**/node_modules/**"
+  ],
+  "minimumReleaseAge": "7 days",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
+  "argocd": {
+    "managerFilePatterns": [
+      "/-application\\.yaml$/",
+      "/helm-release\\.ya?ml$/"
+    ]
+  },
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/^(platform|templates|services|extensions)/.+\\.yaml$/"
+    ]
+  },
+  "tekton": {
+    "managerFilePatterns": [
+      "/^platform/apps/tekton/.+\\.yaml$/",
+      "/tekton-pipeline\\.yaml$/"
+    ]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^scripts/dev-up\\.sh$/"
+      ],
+      "matchStrings": [
+        "ARGOCD_CHART_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "argo-cd",
+      "registryUrlTemplate": "https://argoproj.github.io/argo-helm",
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^scripts/dev-up\\.sh$/"
+      ],
+      "matchStrings": [
+        "BACKSTAGE_CHART_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "backstage",
+      "registryUrlTemplate": "https://backstage.github.io/charts",
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^scripts/dev-up\\.sh$/"
+      ],
+      "matchStrings": [
+        "PROMETHEUS_CHART_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "kube-prometheus-stack",
+      "registryUrlTemplate": "https://prometheus-community.github.io/helm-charts",
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^scripts/dev-up\\.sh$/"
+      ],
+      "matchStrings": [
+        "VAULT_CHART_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "vault",
+      "registryUrlTemplate": "https://helm.releases.hashicorp.com",
+      "datasourceTemplate": "helm"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "minimumReleaseAge": "30 days",
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Held until dependencies ship wheels, as in dependabot.yml",
+      "matchDepNames": [
+        "python"
+      ],
+      "allowedVersions": "<3.14"
+    },
+    {
+      "description": "Dependabot owns this image",
+      "matchFileNames": [
+        "services/mcp-k8s-server/**"
+      ],
+      "enabled": false
+    }
+  ]
+}
