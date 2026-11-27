@@ -1,6 +1,6 @@
 # ADR-039: Layout of the Two Domain Monoliths and `services/common`
 
-> **Status:** Proposed. It becomes Accepted when the maintainer merges it; steps 4 to 9 of paruff/fawkes#2299 wait for that.
+> **Status:** Accepted (merged 2026-11-14, paruff/fawkes#2321). Amended 2026-11-27; see [Amendment](#amendment-2026-11-27).
 > **Date:** 2026-11-14
 > **Author:** AI-assisted, awaiting approval by @paruff
 > **DORA Capability:** Cap 5 — Working in Small Batches
@@ -44,7 +44,7 @@ We will lay the monoliths out as below.
 ```text
 services/
 ├── common/
-│   ├── fawkes_common/          # the importable package: config.py, database.py, metrics.py, logging.py
+│   ├── fawkes_common/          # the importable package: config.py, database.py, metrics.py, logging.py (text format)
 │   ├── tests/
 │   └── requirements.txt        # exact pins, only what fawkes_common imports
 ├── fawkes-telemetry-engine/
@@ -71,15 +71,17 @@ services/
    (`dora-metrics` → `app/dora_metrics/`). Nothing else about the name changes.
 4. **URL paths.** Every module's routes are mounted under `/<service-name>`,
    with the hyphen kept (`/dora-metrics/...`, `/nps/survey/{token}`). The
-   monolith owns `/health`, `/ready` and `/metrics`. Old root-level paths do
+   monolith owns `/health` and `/metrics`, and adds `/ready` with the first
+   module that has a dependency to check. Old root-level paths do
    not keep working: the three collisions above make that impossible for six
    services, and one rule for all is easier to check than a per-service
    exception. The PR that migrates a service also changes its callers.
 5. **Pins.** Each monolith has one `requirements.txt`. For a package its
    member services pin today, it starts at the highest version any member
-   pins. `services/common/requirements.txt` may only name a package at the
-   version both monoliths pin, and a test in `services/common/tests/` fails
-   when it doesn't.
+   pins. A package that `services/common/requirements.txt` names is the
+   exception: both monoliths start at the highest version any member of
+   either one pins, because `common` may only name a package at the version
+   both pin. A test in `services/common/tests/` fails when they differ.
 6. **Migrations.** Each module that owns tables has `app/<name>/migrations/`
    (its own Alembic environment) and its own version table,
    `alembic_version_<name>`. One database per monolith, as the plan says. A
@@ -139,6 +141,25 @@ services/
   `/<directory-name>`.
 - Don't add a package to `services/common/requirements.txt` at a version that
   differs from either monolith's pin.
+
+## Amendment (2026-11-27)
+
+Made after phase 1 (paruff/fawkes#2299, #2358 to #2363) showed where the
+decision didn't match what could be built. The maintainer merged those pull
+requests as written and approved this amendment.
+
+- **Rule 5, pins.** As first written it contradicted itself: the highest pin
+  among each monolith's own members gave different versions of `fastapi`
+  (0.141.1 and 0.128.0) and `pydantic-settings` (2.6.0 and 2.6.1), while
+  `common` had to match both. Packages `common` names now take the higher of
+  the two: `fastapi` 0.141.1 and `pydantic-settings` 2.6.1.
+- **Logging.** #2299 asked for a structured logging helper, and also allowed
+  into `common` only what two or more services already had. No service emits
+  JSON logs, so `fawkes_common.logging` configures the plain text format they
+  share. Structured (JSON) logging is not decided here; it needs its own change.
+- **Rule 4, `/ready`.** The scaffolds serve `/health` and `/metrics`. With no
+  database or upstream yet, a readiness check would only repeat the health
+  check.
 
 ## Alternatives Considered
 
