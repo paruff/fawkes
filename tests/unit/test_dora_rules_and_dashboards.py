@@ -225,6 +225,22 @@ def test_shared_rule_panels_name_their_unit() -> None:
     assert not missing, f"panel title must state the unit: {missing}"
 
 
+# AC-BETA-05: per service. Lead time is missing: the Tekton metric has no service label.
+PER_APP_RULES = {
+    "dora:deployment_frequency:rate30d_by_app",
+    "dora:change_failure_rate:ratio30d_by_app",
+    "dora:fdrt_hours:current_by_app",
+}
+
+
+def test_per_app_rules_are_live_grouped_by_app_and_shown() -> None:
+    rules = {r["record"]: r["expr"] for r in _rules(ROOT, False) if "record" in r}
+    assert PER_APP_RULES <= set(rules)
+    assert all("by (name)" in rules[name] for name in PER_APP_RULES)
+    shown = {s for _, _, _, expr in dashboard_expressions(ROOT) for s in series_in_expr(expr)}
+    assert PER_APP_RULES <= shown, f"no panel shows: {sorted(PER_APP_RULES - shown)}"
+
+
 # --- red paths on fixtures --------------------------------------------------
 
 

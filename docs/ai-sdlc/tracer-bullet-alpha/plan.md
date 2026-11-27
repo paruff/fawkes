@@ -26,6 +26,10 @@ paruff/fawkes#2322: `tests/unit/test_canary_analysis_template.py` for the two
 conditions, the query run through `promtool test rules`, and then an AnalysisRun
 from a cluster for a rollout that has served no 5xx.
 
+paruff/fawkes#2314, per-service panels: `tests/unit/test_dora_rules_and_dashboards.py`
+requires the three `_by_app` rules in the live map and on the dashboard, and the
+queries are run through `promtool test rules`. Values still need a cluster.
+
 ### Make commands
 
 Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` runs the hooks and needs no cluster; `make validate-cluster` checks manifests in a running one. `make lint` is an alias of `make validate`.

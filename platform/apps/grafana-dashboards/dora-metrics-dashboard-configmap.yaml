@@ -1641,6 +1641,102 @@ data:
             "textMode": "value_and_name",
             "wideLayout": true
           }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 44
+          },
+          "id": 700,
+          "title": "Per service (Argo CD application) \u2014 no per-service lead time yet",
+          "type": "row"
+        },
+        {
+          "id": 70,
+          "type": "timeseries",
+          "title": "Deployment Frequency by service (per day)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 45
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "dora:deployment_frequency:rate30d_by_app{name=~\"$app\"}",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 71,
+          "type": "timeseries",
+          "title": "Change Failure Rate by service (%)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 45
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "dora:change_failure_rate:ratio30d_by_app{name=~\"$app\"}",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "type": "timeseries",
+          "title": "Failed Deployment Recovery Time by service (hours)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 45
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "dora:fdrt_hours:current_by_app{name=~\"$app\"}",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ]
         }
       ],
       "refresh": "30s",
@@ -1667,6 +1763,24 @@ data:
             "regex": "",
             "skipUrlSync": false,
             "type": "datasource"
+          },
+          {
+            "name": "app",
+            "label": "Service",
+            "type": "query",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "query": "label_values(argocd_app_sync_total, name)",
+            "includeAll": true,
+            "multi": true,
+            "allValue": ".*",
+            "refresh": 2,
+            "current": {
+              "text": "All",
+              "value": "$__all"
+            }
           }
         ]
       },
