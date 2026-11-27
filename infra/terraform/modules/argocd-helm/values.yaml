@@ -111,6 +111,8 @@ configs:
   # carefully tuned, so treat them as a starting point to re-validate
   # rather than a fixed target.
   params:
+    # The chart sets a controller policy, which silently ignores an ApplicationSet's applicationsSync (#2323).
+    applicationsetcontroller.enable.policy.override: "true"
     reposerver.parallelism.limit: "2"
     controller.status.processors: "5"
     controller.operation.processors: "5"

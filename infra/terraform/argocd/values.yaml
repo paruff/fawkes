@@ -146,6 +146,8 @@ configs:
   # added (and a controller restart) after the first install completes -
   # not expressible via this chart's values.
   params:
+    # The chart sets a controller policy, which silently ignores an ApplicationSet's applicationsSync (#2323).
+    applicationsetcontroller.enable.policy.override: "true"
     application.namespaces: "fawkes"
 
   # Admin credentials

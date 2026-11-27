@@ -46,6 +46,9 @@ metadata:
   name: path-based-applications
   namespace: argocd
 spec:
+  # Never delete a generated Application: a dropped path must not take its resources with it (#2323).
+  syncPolicy:
+    applicationsSync: create-update
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:

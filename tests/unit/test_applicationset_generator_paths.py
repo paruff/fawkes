@@ -118,6 +118,29 @@ def test_real_repo_is_actually_checked() -> None:
     assert checked_paths(REPO_ROOT), "no non-glob generator path was checked"
 
 
+def appsets_that_may_delete(root: Path) -> list[str]:
+    """ApplicationSets whose controller may delete an Application (issue #2323)."""
+    return [
+        f"{file.relative_to(root)}: {(doc.get('metadata') or {}).get('name')}"
+        for file, doc in load_applicationsets(root)
+        if ((doc.get("spec") or {}).get("syncPolicy") or {}).get("applicationsSync") != "create-update"
+    ]
+
+
+def test_applicationsets_never_delete_applications() -> None:
+    assert not appsets_that_may_delete(REPO_ROOT)
+
+
+def test_argocd_installs_let_an_applicationset_set_its_own_policy() -> None:
+    """The argo-cd chart sets a controller policy, which silently overrides applicationsSync."""
+    key = "applicationsetcontroller.enable.policy.override"
+    for relative in ("infra/terraform/argocd/values.yaml", "infra/terraform/modules/argocd-helm/values.yaml"):
+        values = yaml.safe_load((REPO_ROOT / relative).read_text())
+        assert str(values["configs"]["params"].get(key)).lower() == "true", relative
+    dev_up = (REPO_ROOT / "scripts/dev-up.sh").read_text()
+    assert 'configs.params."applicationsetcontroller\\.enable\\.policy\\.override"=true' in dev_up
+
+
 def write_bootstrap(root: Path, text: str) -> None:
     bootstrap = root / "platform" / "bootstrap"
     bootstrap.mkdir(parents=True)

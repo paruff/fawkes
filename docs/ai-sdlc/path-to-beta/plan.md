@@ -335,3 +335,8 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 
 - Check: `ruff check . && pytest tests/` in `services/fawkes-devex-service`; `docker build -f services/fawkes-devex-service/Dockerfile services/`, then `curl /health`
 - Result: 2 passed; image built, `/health` answered 200
+
+### ApplicationSets never delete Applications (#2323)
+
+- Check: `pytest tests/unit/test_applicationset_generator_paths.py`; live, drop one entry from a generator under chart 7.7.14 and see whether its Application is deleted
+- Result: 15 passed. Live: with chart defaults a `create-update` Application was still deleted; with policy override enabled it survived, and the unguarded control was deleted
