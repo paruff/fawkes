@@ -111,7 +111,6 @@ Aggregate multiple AT validations for a complete epic.
 | `validate-security-plane.sh` | Platform security posture (RBAC, network policies, secrets) |
 | `validate-research-structure.py` | Research documentation structure |
 | `validate-issue-*.sh` | Ad-hoc issue validation |
-| `verify-dora-metrics-service.sh` | DORA metrics service health |
 | `check-ai-readiness.sh` | AI-assisted development readiness |
 | `validate-jcasc.py` | Jenkins Configuration as Code |
 | `seal-secrets.py` | SealedSecrets management |

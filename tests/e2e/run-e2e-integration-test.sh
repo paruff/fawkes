@@ -20,7 +20,6 @@ NC='\033[0m' # No Color
 NAMESPACE="${NAMESPACE:-fawkes}"
 ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-fawkes}"
 MONITORING_NAMESPACE="${MONITORING_NAMESPACE:-monitoring}"
-DEVLAKE_NAMESPACE="${DEVLAKE_NAMESPACE:-fawkes-devlake}"
 TEST_SERVICE_NAME="${TEST_SERVICE_NAME:-e2e-test-service}"
 SKIP_CLEANUP="${SKIP_CLEANUP:-false}"
 VERBOSE="${VERBOSE:-false}"
@@ -85,7 +84,6 @@ OPTIONS:
     -n, --namespace         Fawkes namespace (default: $NAMESPACE)
     -a, --argocd-ns         ArgoCD namespace (default: $ARGOCD_NAMESPACE)
     -m, --monitoring-ns     Monitoring namespace (default: $MONITORING_NAMESPACE)
-    -d, --devlake-ns        DevLake namespace (default: $DEVLAKE_NAMESPACE)
     -s, --service-name      Test service name (default: $TEST_SERVICE_NAME)
     -t, --timeout           Timeout in seconds (default: $TIMEOUT)
     -r, --report-dir        Report directory (default: $REPORT_DIR)
@@ -169,7 +167,7 @@ check_prerequisites() {
   log_success "Kubernetes cluster accessible"
 
   # Check namespaces exist
-  local namespaces=("$NAMESPACE" "$ARGOCD_NAMESPACE" "$MONITORING_NAMESPACE" "$DEVLAKE_NAMESPACE")
+  local namespaces=("$NAMESPACE" "$ARGOCD_NAMESPACE" "$MONITORING_NAMESPACE")
   for ns in "${namespaces[@]}"; do
     if ! kubectl get namespace "$ns" &> /dev/null; then
       log_error "Namespace does not exist: $ns"
@@ -191,7 +189,6 @@ check_component_health() {
     "jenkins:$NAMESPACE:jenkins"
     "prometheus:$MONITORING_NAMESPACE:prometheus-kube-prometheus-prometheus"
     "grafana:$MONITORING_NAMESPACE:prometheus-grafana"
-    "devlake:$DEVLAKE_NAMESPACE:devlake"
   )
 
   for component_def in "${components[@]}"; do
@@ -377,36 +374,14 @@ test_gitops_deployment() {
 test_dora_metrics() {
   log_header "Phase 5: DORA Metrics Collection"
 
-  log_section "Validating DevLake DORA metrics service"
+  log_section "Validating DORA recording rules"
 
-  # Check DevLake is running
-  if kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app=devlake &> /dev/null; then
-    log_success "DevLake is deployed"
-  else
-    log_warning "DevLake not found in namespace $DEVLAKE_NAMESPACE"
-    log_info "DORA metrics may be collected via alternative method"
-  fi
-
-  # Check for webhook configurations
-  if [ -f "platform/apps/devlake/webhooks.yaml" ] \
-    || [ -f "platform/apps/devlake/argocd-notifications.yaml" ]; then
-    log_success "DevLake webhook configurations exist"
-  else
-    log_warning "DevLake webhook configurations may be missing"
-  fi
-
-  # Validate metrics can be collected
-  log_section "Validating metrics collection endpoints"
-
-  local metrics_endpoints=(
-    "deployment-frequency"
-    "lead-time-for-changes"
-    "change-failure-rate"
-    "mean-time-to-restore"
-  )
-
-  for metric in "${metrics_endpoints[@]}"; do
-    log_verbose "Metric supported: $metric"
+  local rule
+  for rule in deployment_frequency:rate30d lead_time_hours:p50_30d change_failure_rate:ratio30d fdrt_hours:p50_30d; do
+    if ! grep -q "record: dora:${rule}" platform/apps/prometheus/rules/dora.yml; then
+      log_error "Missing recording rule dora:${rule}"
+      return 1
+    fi
   done
 
   log_success "DORA metrics collection validated"
@@ -591,13 +566,6 @@ test_no_manual_intervention() {
     log_warning "No ArgoCD applications have automated sync enabled"
   fi
 
-  # Check for webhook configurations
-  if grep -r "webhook" platform/apps/devlake/*.yaml 2> /dev/null | grep -q "url"; then
-    log_success "Webhook automation configured"
-  else
-    log_info "Webhook configurations may need validation"
-  fi
-
   # Check CI/CD automation
   if [ -f "jenkins-shared-library/vars/goldenPathPipeline.groovy" ]; then
     if grep -q "checkout scm" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
@@ -673,7 +641,6 @@ save_report() {
     echo "  Namespace: $NAMESPACE"
     echo "  ArgoCD Namespace: $ARGOCD_NAMESPACE"
     echo "  Monitoring Namespace: $MONITORING_NAMESPACE"
-    echo "  DevLake Namespace: $DEVLAKE_NAMESPACE"
     echo ""
     echo "Results:"
     echo "  Total Tests: $TESTS_TOTAL"
@@ -703,10 +670,6 @@ main() {
         ;;
       -m | --monitoring-ns)
         MONITORING_NAMESPACE="$2"
-        shift 2
-        ;;
-      -d | --devlake-ns)
-        DEVLAKE_NAMESPACE="$2"
         shift 2
         ;;
       -s | --service-name)

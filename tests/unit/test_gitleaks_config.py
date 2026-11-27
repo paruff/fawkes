@@ -15,7 +15,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 CONFIG = REPO_ROOT / ".gitleaks.toml"
 # Hold committed local-dev defaults that are excused by value until #1797.
 DEV_DEFAULT_FILES = [
-    "platform/apps/devlake/devlake-application.yaml",
     "platform/apps/postgresql/db-sonarqube-credentials.yaml",
     "platform/apps/tekton/eventlistener-github-skeleton.yaml",
 ]

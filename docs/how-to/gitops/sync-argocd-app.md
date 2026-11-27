@@ -360,7 +360,6 @@ argocd app sync my-service-dev
 After mastering ArgoCD sync:
 
 - [Configure Ingress for External Access](../networking/configure-ingress-tls.md)
-- [View DORA Metrics in DevLake](../observability/view-dora-metrics-devlake.md)
 - [Troubleshoot Kyverno Policy Violations](../policy/troubleshoot-kyverno-violation.md)
 - [Debug Deployment Failures](../../troubleshooting.md)
 
