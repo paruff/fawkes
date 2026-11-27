@@ -303,3 +303,35 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.
 | The monoliths are deployed from git               | Applications Synced and Healthy                                           | `scripts/render-all-applications.sh`; live check                    |
 | The footprint claim has a number                  | `docs/METRICS.md` entry with before, after and command                    | `kubectl top` on the Beta cluster                                   |
 | Each phase is done                                | A linked `golden-path-verification` run                                   | `AGENTS.md` §9                                                      |
+
+### Phase 1, steps 4 to 9 (#2299)
+
+#### Step 4: settings base class
+
+- Check: `cd services/common && pytest tests/test_config.py`
+- Result: 3 passed
+
+#### Step 5: database sessions
+
+- Check: `cd services/common && pytest tests/test_database.py`
+- Result: 4 passed
+
+#### Step 6: `/metrics` route
+
+- Check: `cd services/common && pytest tests/test_metrics.py`
+- Result: 1 passed
+
+#### Step 7: log format and pin drift
+
+- Check: `cd services/common && pytest tests/test_logging.py tests/test_pins.py`
+- Result: not yet run
+
+#### Step 8: telemetry engine
+
+- Check: `ruff check . && pytest tests/` in `services/fawkes-telemetry-engine`; `docker build -f services/fawkes-telemetry-engine/Dockerfile services/`, then `curl /health`
+- Result: not yet run
+
+#### Step 9: DevEx service
+
+- Check: `ruff check . && pytest tests/` in `services/fawkes-devex-service`; `docker build -f services/fawkes-devex-service/Dockerfile services/`, then `curl /health`
+- Result: not yet run
