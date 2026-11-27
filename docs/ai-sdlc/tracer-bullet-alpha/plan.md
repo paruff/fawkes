@@ -19,10 +19,8 @@ bears on an Alpha criterion.
 | AC-FAWKES-03 | paruff/fawkes#2004 and paruff/fawkes#1797 closed, with linked PRs |
 | AC-FAWKES-04 | The suite's AC-SUITE-01 check, plus a README review |
 
-paruff/fawkes#2310: `tests/unit/test_dora_rules_and_dashboards.py` passes with every
-known-gap list empty, and requires one deployed dashboard whose panel titles state
-the unit of each shared rule. It reads files only; the screenshot in AC-FAWKES-02
-still needs a cluster.
+paruff/fawkes#2344: `scripts/run-unit-tests.sh` passes without the removed suite,
+and `git grep emit-dora-event` finds only the changelog and this plan.
 
 ### Make commands
 
