@@ -17,9 +17,9 @@ GLOB_CHARS = ("*", "?", "[", "{")
 TEMPLATE_KEY = re.compile(r"\{\{-?\s*\.([A-Za-z0-9_.]+)\s*-?\}\}")
 
 
-def load_applicationsets(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+def load_applicationsets(root: Path, directory: str = "platform/bootstrap") -> list[tuple[Path, dict[str, Any]]]:
     found: list[tuple[Path, dict[str, Any]]] = []
-    bootstrap = root / "platform" / "bootstrap"
+    bootstrap = root / directory
     for file in sorted([*bootstrap.glob("*.yaml"), *bootstrap.glob("*.yml")]):
         for doc in yaml.safe_load_all(file.read_text()):
             if isinstance(doc, dict) and doc.get("kind") == "ApplicationSet":

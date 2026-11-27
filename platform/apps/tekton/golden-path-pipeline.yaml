@@ -93,6 +93,12 @@ spec:
       type: string
       description: owner/repo of the GitOps config repo to raise the promotion PR against
       default: paruff/python-fawkes-path-gitops
+    - name: gitops-branch
+      type: string
+      description: >-
+        Branch of gitops-repo to promote to. Only main counts as production;
+        the lab cluster passes lab.
+      default: main
     - name: app-repo
       type: string
       description: >-
@@ -378,6 +384,8 @@ spec:
       params:
         - name: gitops-repo
           value: $(params.gitops-repo)
+        - name: gitops-branch
+          value: $(params.gitops-branch)
         - name: app-repo
           value: $(params.app-repo)
         - name: image-name
@@ -387,6 +395,8 @@ spec:
       taskSpec:
         params:
           - name: gitops-repo
+            type: string
+          - name: gitops-branch
             type: string
           - name: app-repo
             type: string
@@ -410,12 +420,13 @@ spec:
 
               WORK=/tmp/gitops
               rm -rf "$WORK"
-              git clone --depth 1 \
+              git clone --depth 1 --branch "$(params.gitops-branch)" \
                 "https://x-access-token:${GH_TOKEN}@github.com/$(params.gitops-repo).git" \
                 "$WORK"
               cd "$WORK"
 
-              BRANCH="promote/$(params.new-tag)"
+              BRANCH="promote/$(params.gitops-branch)/$(params.new-tag)"
+              [ "$(params.gitops-branch)" = "main" ] && BRANCH="promote/$(params.new-tag)"
               git config user.email "tekton@fawkes.local"
               git config user.name "fawkes-tekton"
               git checkout -b "$BRANCH"
@@ -433,10 +444,15 @@ spec:
               gh pr create \
                 --repo "$(params.gitops-repo)" \
                 --head "$BRANCH" \
-                --base main \
+                --base "$(params.gitops-branch)" \
                 --title "chore: promote image to $(params.new-tag)" \
                 --body "Automated promotion from the Tekton golden-path pipeline."
               gh pr merge "$BRANCH" --repo "$(params.gitops-repo)" --squash --admin
+
+              if [ "$(params.gitops-branch)" != "main" ]; then
+                echo "promoted to $(params.gitops-branch): not production, no GitHub Deployment recorded"
+                exit 0
+              fi
 
               # Record a GitHub Deployment against the APPLICATION repo (not
               # the GitOps repo) now that the promotion actually landed. This
