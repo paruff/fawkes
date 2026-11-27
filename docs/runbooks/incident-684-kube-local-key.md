@@ -44,13 +44,16 @@ live credential:
 | `infra/platform/k8s-eks/prometheus/additional-scrape-configs*.yaml` | Scrape config without credentials, removed |
 | `scripts/`, `services/ai-code-review/prompts/security.txt` | Test fixtures and a local default login |
 | `platform/apps/tekton/eventlistener-github-skeleton.yaml` (`secretToken`) | Local-dev-only value, still on `main` |
-| `platform/apps/devlake/devlake-application.yaml` (MySQL and admin passwords) | Local-dev-only values, still on `main` |
+| `platform/apps/devlake/devlake-application.yaml` (MySQL passwords; an admin password in history only) | Local-dev-only values, MySQL ones still on `main` |
 | `platform/apps/postgresql/db-sonarqube-credentials.yaml` | Local-dev-only values, still on `main` |
 
 The last three are **not** allowlisted. They are replaced under
 [#1797](https://github.com/paruff/fawkes/issues/1797); until then a scan reports them and the
-`Security & Terraform Validation` workflow (not a required check) fails. They are per-install dev
-defaults, so there is nothing to rotate.
+`Security & Terraform Validation` workflow (not a required check) fails. They are committed local-dev
+defaults, not credentials for any shared system, so nothing is rotated.
+
+Still open from the kubeconfig incident above: the Docker Desktop reset and the GitHub Support request.
+Off `main`, the all-ref scan found no kubeconfig reachable from a remote branch or tag.
 
 To repeat the scan:
 

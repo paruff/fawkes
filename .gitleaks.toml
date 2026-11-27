@@ -5,23 +5,29 @@ title = "Fawkes Gitleaks Configuration"
 [extend]
 useDefault = true
 
-# Keep every allowlist below scoped to rules (targetRules): a path-only entry
-# hides every kind of secret in that file. Record: docs/runbooks/incident-684-kube-local-key.md
+# Scope path and commit allowlists to rules (targetRules), or they hide every
+# kind of secret there. Record: docs/runbooks/incident-684-kube-local-key.md
 
 [[allowlists]]
 description = "Placeholders used in educational materials and test fixtures"
 regexes = [
-  '''PLACEHOLDER_BASE64_VALUE''',
-  '''CHANGEME_NOT_COMMITTED''',
-  '''REDACTED_EXAMPLE''',
-  '''CHANGE_ME_.*''',
-  '''test-password-123''',
+  '''^PLACEHOLDER_BASE64_VALUE$''',
+  '''^CHANGEME_NOT_COMMITTED$''',
+  '''^REDACTED_EXAMPLE$''',
+  '''^CHANGE_ME_[A-Z0-9_]*$''',
+  '''^test-password-123$''',
 ]
 
 [[allowlists]]
 description = "SealedSecret manifests are ciphertext"
 targetRules = ["generic-api-key"]
+condition = "AND"
 paths = ['''-sealed\.yaml$''']
+regexes = [
+  '''^Ag[A-Za-z0-9+/=]{100,}$''',
+  # base64 of PRODUCTION_SEAL_WITH_KUBESEAL
+  '''^UFJPRFVDVElPTl9TRUFMX1dJVEhfS1VCRVNFQUw=?$''',
+]
 
 [[allowlists]]
 description = "Example credentials in docs and READMEs (old and moved paths)"
@@ -55,12 +61,18 @@ targetRules = ["curl-auth-user"]
 condition = "AND"
 paths = ['''(^|/)scripts/validate-golden-path-observability\.sh$''']
 regexTarget = "line"
-regexes = ['''admin:admin''']
+regexes = ['''-u "admin:admin"''']
 
 # History only: these files or values are no longer on main.
 [[allowlists]]
 description = "Self-signed test certificate, Jenkins plugin versions, scrape config without credentials"
 targetRules = ["private-key", "generic-api-key", "kubernetes-secret-yaml"]
+condition = "AND"
+paths = [
+  '''^platform/apps/ingress-nginx/test-ingress\.yaml$''',
+  '''^platform/apps/jenkins/values\.yaml$''',
+  '''^infra/platform/k8s-eks/prometheus/additional-scrape-configs(-secret)?\.yaml$''',
+]
 commits = [
   "a2ad53bfcc4997121cb38c8184931c486539d8d9",
   "6a86adf9aab0ddefa7be6fbb346855fd3c75b586",
