@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="../../../assets/images/flame.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -6087,6 +6087,37 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="phase-1-steps-4-to-9-2299">Phase 1, steps 4 to 9 (#2299)</h3>
+<h4 id="step-4-settings-base-class">Step 4: settings base class</h4>
+<ul>
+<li>Check: <code>cd services/common &amp;&amp; pytest tests/test_config.py</code></li>
+<li>Result: 3 passed</li>
+</ul>
+<h4 id="step-5-database-sessions">Step 5: database sessions</h4>
+<ul>
+<li>Check: <code>cd services/common &amp;&amp; pytest tests/test_database.py</code></li>
+<li>Result: not yet run</li>
+</ul>
+<h4 id="step-6-metrics-route">Step 6: <code>/metrics</code> route</h4>
+<ul>
+<li>Check: <code>cd services/common &amp;&amp; pytest tests/test_metrics.py</code></li>
+<li>Result: not yet run</li>
+</ul>
+<h4 id="step-7-log-format-and-pin-drift">Step 7: log format and pin drift</h4>
+<ul>
+<li>Check: <code>cd services/common &amp;&amp; pytest tests/test_logging.py tests/test_pins.py</code></li>
+<li>Result: not yet run</li>
+</ul>
+<h4 id="step-8-telemetry-engine">Step 8: telemetry engine</h4>
+<ul>
+<li>Check: <code>ruff check . &amp;&amp; pytest tests/</code> in <code>services/fawkes-telemetry-engine</code>; <code>docker build -f services/fawkes-telemetry-engine/Dockerfile services/</code>, then <code>curl /health</code></li>
+<li>Result: not yet run</li>
+</ul>
+<h4 id="step-9-devex-service">Step 9: DevEx service</h4>
+<ul>
+<li>Check: <code>ruff check . &amp;&amp; pytest tests/</code> in <code>services/fawkes-devex-service</code>; <code>docker build -f services/fawkes-devex-service/Dockerfile services/</code>, then <code>curl /health</code></li>
+<li>Result: not yet run</li>
+</ul>
 
 
 
@@ -6145,7 +6176,7 @@ footprint claim has a number, and the Beta bar from Phase 0 has evidence.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
