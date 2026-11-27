@@ -65,3 +65,16 @@ def test_pipeline_can_promote_to_another_branch_without_counting_it_as_productio
     assert '--base "$(params.gitops-branch)"' in script
     assert '--branch "$(params.gitops-branch)"' in script
     assert script.index('!= "main"') < script.index("DEPLOY_PAYLOAD=")
+
+
+def test_lab_ingress_differs_only_where_arm_needs_it() -> None:
+    """defaultbackend-amd64 cannot run on the ARM node and blocks the admission webhook setup."""
+    real = read("platform/apps/ingress-nginx/ingress-nginx-application.yaml")
+    lab = read("platform/lab/ingress-nginx-application.yaml")
+    assert lab["spec"]["source"]["helm"]["valuesObject"]["defaultBackend"] == {"enabled": False}
+    for doc in (real, lab):
+        del doc["spec"]["source"]["helm"]["valuesObject"]["defaultBackend"]
+    assert lab == real
+    assert "platform/lab/ingress-nginx-application.yaml" in generator_paths(
+        appsets("platform/lab")["lab-platform"]["generators"]
+    )
