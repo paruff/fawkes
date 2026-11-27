@@ -5469,6 +5469,9 @@ and <code>git grep emit-dora-event</code> finds only the changelog and this plan
 <p>paruff/fawkes#2322: <code>tests/unit/test_canary_analysis_template.py</code> for the two
 conditions, the query run through <code>promtool test rules</code>, and then an AnalysisRun
 from a cluster for a rollout that has served no 5xx.</p>
+<p>paruff/fawkes#2314, per-service panels: <code>tests/unit/test_dora_rules_and_dashboards.py</code>
+requires the three <code>_by_app</code> rules in the live map and on the dashboard, and the
+queries are run through <code>promtool test rules</code>. Values still need a cluster.</p>
 <h3 id="make-commands">Make commands</h3>
 <p>Per <a href="https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands">the suite's rule for <code>make</code> commands</a>. <code>make validate</code> runs the hooks and needs no cluster; <code>make validate-cluster</code> checks manifests in a running one. <code>make lint</code> is an alias of <code>make validate</code>.</p>
 <table>
