@@ -12,7 +12,7 @@ status. Dates are publication dates. "n/r" means not read. State is **current**,
 
 | Component | Set in | Pinned (date) | Latest stable (date) | Support / EOL | State |
 |---|---|---|---|---|---|
-| Argo CD chart | `scripts/dev-up.sh`; `infra/terraform/argocd/{variables.tf,README.md}`; `modules/argocd-helm/{variables.tf,README.md,terraform.tfvars.example}` | 10.20.0 (2026-11-25), app v3.6.3 | 10.20.0 (2026-11-25), app v3.6.3 | n/r | current (#2371, verified on k3s v1.35.0 2026-11-28). `infra/local-dev/deploy-local.sh` still installs from `stable`: #2394 |
+| Argo CD chart | `scripts/dev-up.sh`; `infra/terraform/argocd/{variables.tf,README.md}`; `modules/argocd-helm/{variables.tf,README.md,terraform.tfvars.example}`; `platform/apps/README.md` | 10.20.0 (2026-11-25), app v3.6.3 | 10.20.0 (2026-11-25), app v3.6.3 | n/r | current (#2371, verified on k3s v1.35.0 2026-11-28). `infra/local-dev/deploy-local.sh` still installs from `stable`: #2394 |
 | Argo Rollouts | `platform/apps/argo-rollouts/` | 2.43.1 (2026-09-09) | 2.43.12 (2026-11-09) | n/r | behind #2388 |
 | Backstage | `platform/apps/backstage/`; `scripts/dev-up.sh` | 1.10.0 (2024-10-10), 2.3.0; image `latest` | 2.11.0 (2026-11-17) | n/r | behind #2375 |
 | cert-manager | `platform/apps/cert-manager/`; `platform/networking/cert-manager/` | v1.15.3 (2024-08-16), v1.16.2 | v1.21.3 (2026-10-23) | 1.21 supported | behind #2381 |
