@@ -5418,6 +5418,9 @@ guard exception and updates its inventory row.</p>
 and tracked; metrics scraped from another namespace; the ApplicationSet
 <code>applicationsSync</code> override honoured; the <code>dev-up.sh</code> Argo CD block on a clean
 cluster; empty and range <code>chart_version</code> rejected.</p>
+<p>For the Grafana chart (#2382): nothing applied the removed file, so there is no
+cluster change to check. Verify that the guard passes without its exception and
+that the Loki data source assertions read the live Grafana configuration.</p>
 
 
 
