@@ -54,7 +54,7 @@ resource "helm_release" "argocd" {
   name             = var.release_name
   repository       = var.chart_repo
   chart            = var.chart_name
-  version          = var.chart_version != "" ? var.chart_version : null
+  version          = var.chart_version
   namespace        = var.namespace
   create_namespace = true
   # Install CRDs via Helm to shift CRD management from the bootstrap script to Terraform/Helm

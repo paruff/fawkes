@@ -37,9 +37,14 @@ variable "chart_name" {
 }
 
 variable "chart_version" {
-  description = "Optional chart version pin (leave empty for latest)"
+  description = "Exact argo-cd chart version (ADR-040); 10.20.0 is Argo CD v3.6.3"
   type        = string
-  default     = ""
+  default     = "10.20.0"
+
+  validation {
+    condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+$", var.chart_version))
+    error_message = "chart_version must be an exact version such as 10.20.0 (ADR-040)."
+  }
 }
 
 variable "namespace" {

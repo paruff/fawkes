@@ -55,7 +55,6 @@ func TestArgoCDHelmModule(t *testing.T) {
 			"namespace":            "argocd-test",
 			"create_namespace":     true,
 			"kubeconfig_path":      kubeconfigPath,
-			"chart_version":        "5.51.6",
 			"server_replicas":      1,
 			"repo_server_replicas": 1,
 			"controller_replicas":  1,
