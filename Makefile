@@ -1,4 +1,4 @@
-.PHONY: clean doctor terraform-clean help deploy-local test-bdd validate validate-cluster sync pre-commit-setup format format-check lint lint-base lint-lang lint-tool lint-platform validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
+.PHONY: clean doctor terraform-clean help deploy-local test-bdd validate validate-cluster sync pre-commit-setup format format-check lint lint-base lint-lang lint-tool lint-platform validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -233,9 +233,6 @@ validate-at-e1-005: ## Run AT-E1-005 acceptance test validation for DevSecOps Se
 
 validate-at-e1-006: ## Run AT-E1-006 acceptance test validation for Observability Stack (Prometheus/Grafana)
 	@./scripts/validate-at-e1-006.sh --namespace monitoring --argocd-namespace $(ARGO_NAMESPACE)
-
-validate-at-e1-007: ## Run AT-E1-007 acceptance test validation for DORA Metrics
-	@./scripts/validate-at-e1-007.sh --namespace $(ARGO_NAMESPACE)
 
 validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Container Registry
 	@./scripts/validate-at-e1-009.sh --namespace $(ARGO_NAMESPACE)

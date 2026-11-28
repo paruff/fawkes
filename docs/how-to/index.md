@@ -42,7 +42,6 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 | Guide                                                                      | Description                                        | Status                                                             |
 | -------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------ |
 | [Trace Requests with Grafana Tempo](observability/trace-request-tempo.md)  | Debug latency and errors using distributed tracing | ✅ Available                                                       |
-| [View DORA Metrics in DevLake](observability/view-dora-metrics-devlake.md) | Access and analyze deployment performance metrics  | ✅ Available                                                       |
 | Configure Alerts                                                           | Set up proactive notifications                     | 🚧 Coming soon                                                     |
 | Aggregate Logs                                                             | Centralize logging with OpenSearch                 | See [Centralized Logging](../observability/centralized-logging.md) |
 

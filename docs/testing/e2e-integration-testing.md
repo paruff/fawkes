@@ -468,7 +468,6 @@ make validate-at-e1-002  # ArgoCD
 make validate-at-e1-003  # Backstage
 make validate-at-e1-004  # Jenkins
 make validate-at-e1-006  # Observability
-make validate-at-e1-007  # DORA Metrics
 
 # Integration points
 kubectl get applications -n fawkes
@@ -604,7 +603,6 @@ E2E tests are compatible with:
 
 - [Architecture Overview](../architecture.md)
 - [Golden Path Templates](../golden-path-usage.md)
-- [DORA Metrics](../../platform/apps/devlake/README.md)
 - [Security Scanning](../how-to/security/quality-gates-configuration.md)
 - [GitOps Guide](../how-to/gitops-deployment.md)
 

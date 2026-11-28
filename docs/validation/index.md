@@ -34,7 +34,6 @@ make validate-at-e1-003  # Backstage
 make validate-at-e1-004  # Jenkins
 make validate-at-e1-005  # Security scanning
 make validate-at-e1-006  # Observability
-make validate-at-e1-007  # DORA metrics
 ```
 
 ## Platform Validation

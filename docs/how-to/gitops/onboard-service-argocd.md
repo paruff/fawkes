@@ -292,7 +292,6 @@ argocd app sync platform-root
 After successfully onboarding your service:
 
 - [Configure Ingress for External Access](../networking/configure-ingress-tls.md)
-- [Set Up Monitoring Dashboards](../observability/view-dora-metrics-devlake.md)
 - [Implement Security Scanning](../../security.md)
 - [Configure Policy Enforcement](../policy/troubleshoot-kyverno-violation.md)
 

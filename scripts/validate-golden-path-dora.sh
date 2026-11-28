@@ -1,19 +1,11 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-dora.sh
-# Purpose: Validate the DORA plane of the python-fawkes-path golden path
-#          (#1751 Phase 3, updated #1909): DevLake has a configured project
-#          for the service and its latest pipeline actually completed - not
-#          just that DevLake's pods are Running.
-#
-#          This script previously checked for a "dora-metrics" pod/service
-#          that does not exist in this platform - DORA collection here is
-#          done by DevLake (platform/apps/devlake), configured via its own
-#          REST API (see docs/KNOWN_LIMITATIONS.md KL-09 for the current
-#          known blocker: DevLake's github_graphql collector fails for any
-#          repo, tracked in #1855). This script now checks DevLake itself.
-# Usage: ./scripts/validate-golden-path-dora.sh [--namespace NAMESPACE] [--project NAME]
-# Requires: kubectl (cluster access), curl, jq
+# Purpose: Validate the DORA plane of the python-fawkes-path golden path:
+#          Prometheus has a value for the service from Fawkes's own recording
+#          rules (ADR-038), not merely that the rules exist.
+# Usage: ./scripts/validate-golden-path-dora.sh [--namespace NS] [--service NAME]
+# Requires: kubectl (cluster access), jq
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
 
@@ -25,19 +17,20 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-NAMESPACE="${NAMESPACE:-fawkes}"
-PROJECT_NAME="${PROJECT_NAME:-python-fawkes-path}"
-DEVLAKE_SERVICE="devlake-lake"
-DEVLAKE_PORT=8080
-LOCAL_PORT=18080
+NAMESPACE="${NAMESPACE:-monitoring}"
+SERVICE_NAME="${SERVICE_NAME:-python-fawkes-path}"
+PROMETHEUS_SERVICE="${PROMETHEUS_SERVICE:-prometheus-prometheus}"
 REPORT_FILE="reports/golden-path-dora-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
+RULES=(
+  dora:deployment_frequency:rate30d_by_app
+  dora:change_failure_rate:ratio30d_by_app
+)
 
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
 declare -a TEST_RESULTS=()
-PF_PID=""
 
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
@@ -48,12 +41,11 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the DORA plane: DevLake has a project configured for '$PROJECT_NAME'
-and its most recent pipeline run actually completed successfully.
+Validate the DORA plane: Prometheus has per-service DORA values for '$SERVICE_NAME'.
 
 OPTIONS:
-    -n, --namespace NAMESPACE   Cluster namespace DevLake runs in (default: $NAMESPACE)
-    -p, --project NAME          DevLake project name to check (default: $PROJECT_NAME)
+    -n, --namespace NAMESPACE   Namespace Prometheus runs in (default: $NAMESPACE)
+    -s, --service NAME          Argo CD application name (default: $SERVICE_NAME)
     -h, --help                  Show this help message
 EOF
 }
@@ -71,68 +63,19 @@ record_test() {
   TEST_RESULTS+=("$(jq -n --arg n "$test_name" --arg s "$status" --arg m "$message" '{name:$n,status:$s,message:$m}')")
 }
 
-cleanup() {
-  if [ -n "$PF_PID" ]; then
-    kill "$PF_PID" &> /dev/null || true
-  fi
-}
-trap cleanup EXIT
-
-check_pods_running() {
-  log_info "Checking DevLake pods are Running in namespace '$NAMESPACE'..."
-  local pods_json ready_count total_count
-  pods_json=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=devlake -o json 2> /dev/null || echo '{"items":[]}')
-  total_count=$(echo "$pods_json" | jq '.items | length')
-
-  if [ "$total_count" -eq 0 ]; then
-    record_test "DevLake Pods Running" "FAIL" "No DevLake pods found in namespace '$NAMESPACE'"
+# Query through the API server's service proxy: no port-forward to clean up.
+check_rule() {
+  local rule="$1" response count query
+  query=$(jq -rn --arg q "${rule}{name=\"${SERVICE_NAME}\"}" '$q|@uri')
+  if ! response=$(kubectl get --raw "/api/v1/namespaces/${NAMESPACE}/services/${PROMETHEUS_SERVICE}:9090/proxy/api/v1/query?query=${query}" 2>&1); then
+    record_test "$rule" "FAIL" "Prometheus query failed: ${response:0:200}"
     return 1
   fi
-
-  ready_count=$(echo "$pods_json" | jq '[.items[] | select(.status.containerStatuses[]?.ready==true)] | length')
-  if [ "$ready_count" -eq "$total_count" ]; then
-    record_test "DevLake Pods Running" "PASS" "$ready_count/$total_count DevLake pod(s) Ready"
+  count=$(echo "$response" | jq '.data.result | length' 2> /dev/null || true)
+  if [ "${count:-0}" -gt 0 ]; then
+    record_test "$rule" "PASS" "value for '$SERVICE_NAME': $(echo "$response" | jq -r '.data.result[0].value[1]')"
   else
-    record_test "DevLake Pods Running" "FAIL" "$ready_count/$total_count DevLake pod(s) Ready"
-    return 1
-  fi
-}
-
-check_project_and_pipeline() {
-  log_info "Checking DevLake project '$PROJECT_NAME' and its latest pipeline..."
-  kubectl port-forward -n "$NAMESPACE" "svc/$DEVLAKE_SERVICE" "$LOCAL_PORT:$DEVLAKE_PORT" &> /tmp/devlake-dora-pf.log &
-  PF_PID=$!
-  sleep 3
-
-  local project_json blueprint_id
-  project_json=$(curl -s --connect-timeout 10 "http://localhost:$LOCAL_PORT/projects/$PROJECT_NAME" 2> /dev/null || echo "")
-  if [ -z "$project_json" ] || [ "$(echo "$project_json" | jq -r '.name // empty')" != "$PROJECT_NAME" ]; then
-    record_test "DevLake Project" "FAIL" "No DevLake project named '$PROJECT_NAME' found - run the DevLake connection/project setup first"
-    return 1
-  fi
-  record_test "DevLake Project" "PASS" "DevLake project '$PROJECT_NAME' exists"
-
-  blueprint_id=$(echo "$project_json" | jq -r '.blueprint.id // empty')
-  if [ -z "$blueprint_id" ]; then
-    record_test "DevLake Blueprint" "FAIL" "Project '$PROJECT_NAME' has no blueprint configured"
-    return 1
-  fi
-  record_test "DevLake Blueprint" "PASS" "Project '$PROJECT_NAME' has blueprint id $blueprint_id"
-
-  local pipelines_json pipeline_status pipeline_message
-  pipelines_json=$(curl -s --connect-timeout 10 "http://localhost:$LOCAL_PORT/pipelines?blueprint_id=${blueprint_id}&pageSize=1" 2> /dev/null || echo "")
-  if [ -z "$pipelines_json" ] || [ "$(echo "$pipelines_json" | jq '.pipelines | length')" -eq 0 ]; then
-    record_test "DevLake Pipeline Run" "FAIL" "No pipeline runs found for blueprint $blueprint_id - trigger one via POST /blueprints/$blueprint_id/trigger"
-    return 1
-  fi
-
-  pipeline_status=$(echo "$pipelines_json" | jq -r '.pipelines[0].status')
-  pipeline_message=$(echo "$pipelines_json" | jq -r '.pipelines[0].message // ""' | head -c 200)
-
-  if [ "$pipeline_status" = "TASK_COMPLETED" ]; then
-    record_test "DevLake Pipeline Run" "PASS" "Latest pipeline for '$PROJECT_NAME' completed successfully"
-  else
-    record_test "DevLake Pipeline Run" "FAIL" "Latest pipeline for '$PROJECT_NAME' is '$pipeline_status': ${pipeline_message}..."
+    record_test "$rule" "FAIL" "no value for '$SERVICE_NAME'"
     return 1
   fi
 }
@@ -151,7 +94,7 @@ generate_report() {
     --arg plane "dora" \
     --arg test_name "Golden Path - DORA Plane" \
     --arg timestamp "$timestamp" \
-    --arg project "$PROJECT_NAME" \
+    --arg project "$SERVICE_NAME" \
     --argjson total "$TOTAL_TESTS" --argjson passed "$PASSED_TESTS" --argjson failed "$FAILED_TESTS" \
     --arg pass_rate "${pass_rate}%" --argjson results "$results_json" \
     '{plane:$plane,test_name:$test_name,timestamp:$timestamp,project:$project,summary:{total:$total,passed:$passed,failed:$failed,pass_rate:$pass_rate},results:$results}' \
@@ -169,7 +112,7 @@ print_summary() {
     log_success "DORA plane verified ✅"
     return 0
   else
-    log_error "DORA plane has failures ❌ (see docs/KNOWN_LIMITATIONS.md KL-09 if this is the github_graphql collector failure)"
+    log_error "DORA plane has failures ❌"
     return 1
   fi
 }
@@ -181,8 +124,8 @@ main() {
         NAMESPACE="$2"
         shift 2
         ;;
-      -p | --project)
-        PROJECT_NAME="$2"
+      -s | --service)
+        SERVICE_NAME="$2"
         shift 2
         ;;
       -h | --help)
@@ -197,13 +140,12 @@ main() {
     esac
   done
 
-  log_info "Starting golden path dora-plane validation (project: $PROJECT_NAME)..."
-  check_pods_running || {
-    generate_report
-    print_summary
-    exit 1
-  }
-  check_project_and_pipeline
+  log_info "Starting golden path dora-plane validation (service: $SERVICE_NAME)..."
+  local rule
+  for rule in "${RULES[@]}"; do
+    # A failure is recorded and reported; carry on so every rule is shown.
+    check_rule "$rule" || true
+  done
   generate_report
   print_summary
 }

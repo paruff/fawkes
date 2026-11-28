@@ -5,6 +5,9 @@ description: API endpoints for querying DORA metrics from DevLake service
 
 # DORA Metrics API Reference
 
+> **Historical.** DevLake was removed from Fawkes (#2312). DORA metrics come from
+> Prometheus recording rules: `platform/apps/prometheus/rules/dora.yml` (ADR-038).
+
 ## Overview
 
 The DORA Metrics Service (powered by Apache DevLake) exposes REST and GraphQL APIs for querying the five DORA metrics (four key metrics plus operational performance).
@@ -611,7 +614,6 @@ console.log(`Deployment Frequency: ${metrics.deploymentFrequency.value} ${metric
 
 ## Related Documentation
 
-- [View DORA Metrics in DevLake](../how-to/observability/view-dora-metrics-devlake.md)
 - [DORA Metrics Implementation Playbook](../playbooks/dora-metrics-implementation.md)
 - [Architecture: DORA Metrics Service](../architecture.md#6-dora-metrics-service)
 - [ADR-016: DevLake DORA Strategy](../adr/ADR-016%20devlake-dora-strategy.md)

@@ -511,7 +511,6 @@ Think of OpenTelemetry like the **OSI Network Model**:
 ## Related Reading
 
 - **How-To**: [Trace Requests with Tempo](../../how-to/observability/trace-request-tempo.md)
-- **How-To**: [View DORA Metrics](../../how-to/observability/view-dora-metrics-devlake.md)
 - **ADR**: [ADR-013: Distributed Tracing](../../adr/ADR-013%20distributed%20tracing.md)
 - **ADR**: [ADR-011: Centralized Log Management](../../adr/ADR-011%20Centralized%20Log%20Management.md)
 - **ADR**: [ADR-012: Metrics Monitoring](../../adr/ADR-012%20Metrics%20Monitoring%20and%20Management.md)

@@ -30,6 +30,10 @@ paruff/fawkes#2314, per-service panels: `tests/unit/test_dora_rules_and_dashboar
 requires the three `_by_app` rules in the live map and on the dashboard, and the
 queries are run through `promtool test rules`. Values still need a cluster.
 
+paruff/fawkes#2312, DevLake removal: `tests/unit/test_devlake_removed.py` finds no
+DevLake file or receiver, and `tests/unit/test_golden_path_dora_plane.py` runs the
+repointed DORA plane against a stub cluster. A real cluster run is still owed.
+
 paruff/fawkes#2314, per-service lead time: the drift test requires the rule, its
 panel and the `<service>-pipeline` name in every golden-path template; the query is
 run through `promtool test rules`. Values still need a cluster.

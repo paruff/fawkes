@@ -5,6 +5,9 @@ description: Analyze your service's performance using DORA metrics in Apache Dev
 
 # Measure DORA Metrics
 
+> **Historical.** DevLake was removed from Fawkes (#2312). DORA metrics come from
+> Prometheus recording rules: `platform/apps/prometheus/rules/dora.yml` (ADR-038).
+
 **Time to Complete**: 30 minutes
 **Goal**: Understand how your service contributes to team DORA metrics and use data to drive improvements.
 
@@ -478,7 +481,6 @@ kubectl logs -n argocd -l app.kubernetes.io/name=argocd-notifications-controller
 ## Learn More
 
 - **[DORA Capabilities](../capabilities.md)** - All 24 capabilities that drive DORA metrics
-- **[How to View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md)** - Advanced DevLake usage
 - **[Accelerate Book](https://itrevolution.com/product/accelerate/)** - The research behind DORA metrics
 - **[State of DevOps Report](https://cloud.google.com/devops/state-of-devops)** - Annual DORA research
 

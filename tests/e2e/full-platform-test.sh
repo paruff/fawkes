@@ -31,7 +31,7 @@ MAX_TIME=1200 # 20 minutes in seconds
 TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
-EPIC_TESTS=("AT-E1-001" "AT-E1-002" "AT-E1-003" "AT-E1-004" "AT-E1-005" "AT-E1-006" "AT-E1-007" "AT-E1-009")
+EPIC_TESTS=("AT-E1-001" "AT-E1-002" "AT-E1-003" "AT-E1-004" "AT-E1-005" "AT-E1-006" "AT-E1-009")
 
 # Report file
 REPORT_FILE="${ROOT_DIR}/reports/at-e1-012-validation-$(date +%Y%m%d-%H%M%S).json"
@@ -277,16 +277,10 @@ test_synthetic_user_scenario() {
   TESTS_TOTAL=$((TESTS_TOTAL + 1))
 
   if [ "$VERIFY_METRICS" = "true" ]; then
-    # Verify DevLake/DORA metrics service
-    if kubectl get pods -n fawkes-devlake -l app=devlake &> /dev/null 2>&1; then
-      # Check webhook configurations exist
-      if grep -r "webhook" "${ROOT_DIR}/platform/apps/devlake/"*.yaml 2> /dev/null | grep -q "url"; then
-        log_success "DORA metrics collection configured"
-      else
-        log_warning "DORA webhook configuration may be incomplete"
-      fi
+    if grep -q "record: dora:deployment_frequency:rate30d" "${ROOT_DIR}/platform/apps/prometheus/rules/dora.yml"; then
+      log_success "DORA recording rules defined"
     else
-      log_warning "DevLake not found, DORA metrics may use alternative method"
+      log_warning "DORA recording rules not found"
     fi
   else
     log_info "Skipping DORA metrics verification (--verify-metrics not set)"
@@ -498,7 +492,7 @@ check_component_logs() {
 
   TESTS_TOTAL=$((TESTS_TOTAL + 1))
 
-  local namespaces=("fawkes" "monitoring" "fawkes-devlake")
+  local namespaces=("fawkes" "monitoring")
   local error_count=0
 
   for namespace in "${namespaces[@]}"; do

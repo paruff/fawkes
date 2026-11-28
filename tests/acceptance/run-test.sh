@@ -47,7 +47,6 @@ Supported Test IDs:
   AT-E1-004    CI/CD - Jenkins pipelines build/test/deploy
   AT-E1-005    Security - DevSecOps scanning integrated
   AT-E1-006    Observability - Prometheus/Grafana stack deployed
-  AT-E1-007    Metrics - DORA metrics automated (4 key metrics)
   AT-E1-008    Templates - 3 golden paths work end-to-end
   AT-E1-009    Registry - Harbor with security scanning
   AT-E1-010    Performance - Resource usage <70% on cluster
@@ -272,73 +271,6 @@ run_at_e1_005() {
 
   echo ""
   log_success "AT-E1-005 validation completed!"
-  return 0
-}
-
-run_at_e1_007() {
-  log_info "Running AT-E1-007: DORA Metrics validation"
-  echo ""
-
-  # Run the comprehensive validation script
-  log_info "Step 1: Running comprehensive validation..."
-  if [ -f "$ROOT_DIR/scripts/validate-at-e1-007.sh" ]; then
-    if ! "$ROOT_DIR/scripts/validate-at-e1-007.sh"; then
-      log_error "Comprehensive validation failed"
-      return 1
-    fi
-  else
-    log_error "AT-E1-007 validation script not found at $ROOT_DIR/scripts/validate-at-e1-007.sh"
-    return 1
-  fi
-
-  echo ""
-  log_info "Step 2: Running DORA dashboard validation..."
-  if [ -f "$ROOT_DIR/tests/integration/validate-dora-dashboard.sh" ]; then
-    log_info "Running DORA dashboard integration test..."
-    if "$ROOT_DIR/tests/integration/validate-dora-dashboard.sh"; then
-      log_success "DORA dashboard validation passed"
-    else
-      log_warning "DORA dashboard validation failed (dashboard file may need updates)"
-    fi
-  else
-    log_warning "DORA dashboard validation script not found, skipping..."
-  fi
-
-  echo ""
-  log_info "Step 3: Running webhook verification..."
-  if [ -f "$ROOT_DIR/scripts/test-dora-webhooks.sh" ]; then
-    log_info "Running DORA webhook tests..."
-    if "$ROOT_DIR/scripts/test-dora-webhooks.sh"; then
-      log_success "DORA webhook tests passed"
-    else
-      log_warning "DORA webhook tests failed (may require cluster access)"
-    fi
-  else
-    log_warning "DORA webhook test script not found, skipping..."
-  fi
-
-  echo ""
-  log_info "Step 4: Running BDD tests..."
-  cd "$ROOT_DIR"
-
-  # Check if pytest is available
-  if command -v pytest &> /dev/null; then
-    # Run DORA-related BDD tests
-    if [ -f "tests/bdd/features/devlake-dora-metrics.feature" ] || [ -f "tests/bdd/features/dora-webhooks.feature" ]; then
-      log_info "Running DORA metrics BDD tests..."
-      # Run DORA-related tests
-      if pytest tests/bdd -k "dora or devlake" -v --tb=short -m "smoke or local or dora or devlake" 2> /dev/null; then
-        log_success "BDD tests passed"
-      else
-        log_warning "Some BDD tests failed or were skipped (may require cluster with DevLake deployed)"
-      fi
-    fi
-  else
-    log_warning "pytest not available, skipping BDD tests"
-  fi
-
-  echo ""
-  log_success "AT-E1-007 validation completed!"
   return 0
 }
 
@@ -892,9 +824,6 @@ main() {
       ;;
     AT-E1-005)
       run_at_e1_005
-      ;;
-    AT-E1-007)
-      run_at_e1_007
       ;;
     AT-E1-009)
       run_at_e1_009
