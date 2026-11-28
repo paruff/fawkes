@@ -15,3 +15,17 @@ Status lives on the project board, not here.
 
 Each upgrade is one component, verified on a live cluster (#2368), and removes its
 guard exception and updates its inventory row.
+
+## Verification Strategy
+
+Every upgrade, before merge:
+
+- `tests/unit/test_version_pins.py` passes with the component's exception removed.
+- On a live cluster: install the old version, upgrade in place to the new one, and
+  check that what depends on it still works. Also check a fresh install by any
+  second install path. Record in the PR what was not covered.
+
+For Argo CD (#2371) that means: Terraform apply old then new; Applications Synced
+and tracked; metrics scraped from another namespace; the ApplicationSet
+`applicationsSync` override honoured; the `dev-up.sh` Argo CD block on a clean
+cluster; empty and range `chart_version` rejected.
