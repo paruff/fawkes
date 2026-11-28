@@ -290,7 +290,7 @@ curl -X GET "http://localhost:9200/otel-logs-*/_search?pretty" \
 
 ### Grafana Integration
 
-OpenSearch is already configured as a datasource in Grafana (see `platform/apps/grafana/helm-release.yml`):
+Add OpenSearch as a data source under `grafana.additionalDataSources` in `platform/apps/prometheus/prometheus-application.yaml`:
 
 ```yaml
 datasources:

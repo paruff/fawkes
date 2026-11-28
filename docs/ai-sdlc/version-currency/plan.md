@@ -29,3 +29,7 @@ For Argo CD (#2371) that means: Terraform apply old then new; Applications Synce
 and tracked; metrics scraped from another namespace; the ApplicationSet
 `applicationsSync` override honoured; the `dev-up.sh` Argo CD block on a clean
 cluster; empty and range `chart_version` rejected.
+
+For the Grafana chart (#2382): nothing applied the removed file, so there is no
+cluster change to check. Verify that the guard passes without its exception and
+that the Loki data source assertions read the live Grafana configuration.

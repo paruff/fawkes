@@ -143,7 +143,7 @@ def step_then_span_id():
 @given("there are logs from a specific deployment")
 def step_given_explore_access():
     """Verify Grafana's Loki data source is configured."""
-    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "grafana" / "helm-release.yml").read_text(
+    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "prometheus" / "prometheus-application.yaml").read_text(
         encoding="utf-8"
     )
     assert "type: loki" in grafana_datasources
@@ -288,7 +288,7 @@ def step_given_logs_multiple_pods():
 @when("I access the Grafana Explore interface")
 def step_when_access_explore():
     """Verify Grafana's Loki data source is configured."""
-    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "grafana" / "helm-release.yml").read_text(
+    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "prometheus" / "prometheus-application.yaml").read_text(
         encoding="utf-8"
     )
     assert "type: loki" in grafana_datasources
