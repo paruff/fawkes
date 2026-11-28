@@ -19,7 +19,7 @@ module "argocd" {
 
   release_name    = "argocd"
   namespace       = "argocd"
-  chart_version   = "5.51.0"  # Optional: pin to specific version
+  chart_version   = "10.20.0" # Exact version (ADR-040); this is the default
 
   timeout       = 600
   atomic        = true
@@ -61,7 +61,7 @@ output "argocd_admin_password" {
 | release_name     | Helm release name for ArgoCD           | `string` | `"argocd"`                               |    no    |
 | chart_repo       | Helm chart repository URL              | `string` | `"https://argoproj.github.io/argo-helm"` |    no    |
 | chart_name       | Chart name in the repository           | `string` | `"argo-cd"`                              |    no    |
-| chart_version    | Chart version (empty for latest)       | `string` | `""`                                     |    no    |
+| chart_version    | Exact chart version (ADR-040)          | `string` | `"10.20.0"`                              |    no    |
 | namespace        | Kubernetes namespace for ArgoCD        | `string` | `"argocd"`                               |    no    |
 | timeout          | Timeout in seconds for Helm operations | `number` | `600`                                    |    no    |
 | atomic           | Roll back on failure                   | `bool`   | `true`                                   |    no    |

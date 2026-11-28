@@ -12,7 +12,7 @@ status. Dates are publication dates. "n/r" means not read. State is **current**,
 
 | Component | Set in | Pinned (date) | Latest stable (date) | Support / EOL | State |
 |---|---|---|---|---|---|
-| Argo CD chart | `scripts/dev-up.sh`; `infra/terraform/argocd/{variables.tf,README.md}`; `modules/argocd-helm/variables.tf` | 7.7.14 (2025-01-07), 7.7.12, unpinned | 10.20.0 (2026-11-25), app v3.6.3 | app 2.13 EOL 2025-08-13 | behind #2371 |
+| Argo CD chart | `scripts/dev-up.sh`; `infra/terraform/argocd/{variables.tf,README.md}`; `modules/argocd-helm/{variables.tf,README.md,terraform.tfvars.example}` | 10.20.0 (2026-11-25), app v3.6.3 | 10.20.0 (2026-11-25), app v3.6.3 | n/r | current (#2371, verified on k3s v1.35.0 2026-11-28). `infra/local-dev/deploy-local.sh` still installs from `stable`: #2394 |
 | Argo Rollouts | `platform/apps/argo-rollouts/` | 2.43.1 (2026-09-09) | 2.43.12 (2026-11-09) | n/r | behind #2388 |
 | Backstage | `platform/apps/backstage/`; `scripts/dev-up.sh` | 1.10.0 (2024-10-10), 2.3.0; image `latest` | 2.11.0 (2026-11-17) | n/r | behind #2375 |
 | cert-manager | `platform/apps/cert-manager/`; `platform/networking/cert-manager/` | v1.15.3 (2024-08-16), v1.16.2 | v1.21.3 (2026-10-23) | 1.21 supported | behind #2381 |
@@ -95,7 +95,7 @@ status. Dates are publication dates. "n/r" means not read. State is **current**,
 | tfsec | pre-commit workflow | v1.28.14 (2025-05-02) | v1.28.14 | superseded by Trivy | behind #2385 |
 | golangci-lint | pre-commit; `code-quality.yml` | v2.15.0, v2.12.2 | v2.15.0 (2026-10-16) | n/r | behind #2385 |
 | conftest, yq, Helm CLI | workflows | 0.69.0, v4.53.3, unpinned or n/r | v0.71.1, v4.54.3, v4.3.2 | n/r | behind #2385 |
-| Argo CD CLI | `pre-commit.yml` | v3.5.0 (2026-08-04) | v3.6.3 (2026-11-24) | 3.5 supported | behind #2371 |
+| Argo CD CLI | `pre-commit.yml`; `infra/terraform/argocd/README.md` | v3.6.3 (2026-11-24) | v3.6.3 (2026-11-24) | n/r | current (#2371) |
 | Prometheus Operator CRDs | `idp-e2e-tests.yml` | v0.93.1 (2026-08-10) | v0.95.2 (2026-11-12) | n/r | behind #1735 |
 | uFawkesPipe (reusable workflows, hooks) | `.github/workflows/`, `.pre-commit-config.yaml`; `AGENTS.md` | v1.16.0-beta.1 pre-release; `AGENTS.md` says v1.2.0 | v2.0.1 (2026-11-20) | n/r | behind #2397 |
 | gitleaks | pre-commit, workflows, `.gitops-templates/` | v8.30.1, v8.18.1 (2023-11-17) | v8.30.1 (2026-03-21) | n/r | behind #2385 |

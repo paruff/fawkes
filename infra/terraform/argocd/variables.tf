@@ -37,9 +37,9 @@ variable "chart_name" {
 }
 
 variable "chart_version" {
-  description = "Optional chart version pin (leave empty for latest)"
+  description = "Exact argo-cd chart version (ADR-040); 10.20.0 is Argo CD v3.6.3"
   type        = string
-  default     = ""
+  default     = "10.20.0"
 }
 
 variable "namespace" {

@@ -94,12 +94,26 @@ terraform output -raw argocd_admin_password
 cat > terraform.tfvars <<EOF
 kubeconfig_path = "~/.kube/config"
 namespace = "argocd"
-chart_version = "7.7.12"
+chart_version = "10.20.0"
 EOF
 
 # Apply
 terraform apply
 ```
+
+## Upgrading from chart 7.x
+
+Argo CD 2.13 to 3.6 (chart 7.7 to 10.20). Read the upstream
+[upgrade notes](https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/overview/)
+and the [chart changelog](https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/README.md#changelog).
+What affects this platform:
+
+- Resource tracking now uses an annotation, not the label. **Sync every
+  Application once after the upgrade, before removing anything from Git**,
+  or the first removal can be left orphaned in the cluster.
+- The chart now creates NetworkPolicies. `argocd-server` and the metrics ports
+  stay reachable from other namespaces; Redis and the repo-server API do not.
+- Every Argo CD pod restarts, and `argocd_app_sync_total` restarts from zero.
 
 ## Variables
 
@@ -108,7 +122,7 @@ terraform apply
 | release_name    | Helm release name for ArgoCD     | string | "argocd"                               | no       |
 | chart_repo      | Helm chart repository URL        | string | "https://argoproj.github.io/argo-helm" | no       |
 | chart_name      | Helm chart name                  | string | "argo-cd"                              | no       |
-| chart_version   | Chart version (empty for latest) | string | ""                                     | no       |
+| chart_version   | Exact chart version (ADR-040)    | string | "10.20.0"                              | no       |
 | namespace       | Kubernetes namespace             | string | "argocd"                               | no       |
 | kubeconfig_path | Path to kubeconfig file          | string | -                                      | yes      |
 
@@ -191,7 +205,7 @@ Install ArgoCD CLI:
 brew install argocd
 
 # Linux
-curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/download/v3.6.3/argocd-linux-amd64
 chmod +x argocd
 sudo mv argocd /usr/local/bin/
 ```

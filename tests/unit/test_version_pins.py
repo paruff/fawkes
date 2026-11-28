@@ -33,7 +33,11 @@ ARGOCD_TF_DEFAULTS = (
     "infra/terraform/argocd/variables.tf",
     "infra/terraform/modules/argocd-helm/variables.tf",
 )
-ARGOCD_TF_EXAMPLES = ("infra/terraform/argocd/README.md",)
+ARGOCD_TF_EXAMPLES = (
+    "infra/terraform/argocd/README.md",
+    "infra/terraform/modules/argocd-helm/README.md",
+    "infra/terraform/modules/argocd-helm/terraform.tfvars.example",
+)
 WORKFLOW_TOOLS = ("go-version", "node-version", "python-version", "terraform_version", "tflint_version")
 
 # Tools set in more than one kind of file.
@@ -74,7 +78,9 @@ def text_pins(path: str, text: str) -> list[Pin]:
         default = re.search(r'default\s*=\s*"([^"]*)"', block.group(0)) if block else None
         pins.append(("chart:argo-cd", default.group(1) if default else "", path))
     if path in ARGOCD_TF_EXAMPLES:
-        pins += [("chart:argo-cd", v, path) for v in re.findall(r'^chart_version\s*=\s*"([^"]*)"', text, re.MULTILINE)]
+        pins += [
+            ("chart:argo-cd", v, path) for v in re.findall(r'^[ \t]*chart_version\s*=\s*"([^"]*)"', text, re.MULTILINE)
+        ]
     if path.startswith(".github/"):
         for tool in WORKFLOW_TOOLS:
             pins += [
@@ -144,7 +150,7 @@ def violations(pins: list[Pin]) -> dict[str, list[str]]:
 
 def repo_files() -> dict[str, str]:
     names = subprocess.run(["git", "ls-files"], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout
-    wanted = (".yaml", ".yml", ".sh", ".tf", ".md")
+    wanted = (".yaml", ".yml", ".sh", ".tf", ".md", ".tfvars.example")
     return {
         name: (REPO_ROOT / name).read_text()
         for name in names.splitlines()
@@ -191,6 +197,14 @@ def test_guard_reports_two_files_that_disagree() -> None:
         "scripts/dev-up.sh": 'ARGOCD_CHART_VERSION="7.7.14"\n',
     }
     assert violations(collect_pins(files)) == {"chart:argo-cd": ["10.20.0", "7.7.14"]}
+
+
+def test_guard_reads_indented_and_tfvars_examples() -> None:
+    files = {
+        "infra/terraform/modules/argocd-helm/README.md": '  chart_version   = "5.51.0"  # example\n',
+        "infra/terraform/modules/argocd-helm/terraform.tfvars.example": 'chart_version = ""\n',
+    }
+    assert violations(collect_pins(files)) == {"chart:argo-cd": ["", "5.51.0"]}
 
 
 def test_guard_reports_unpinned_and_floating_versions() -> None:
