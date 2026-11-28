@@ -417,7 +417,6 @@ kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector | g
 
 After mastering request tracing:
 
-- [View DORA Metrics in DevLake](view-dora-metrics-devlake.md) - Analyze deployment performance
 - [Configure Alerts](../../observability/centralized-logging.md) - Set up proactive monitoring
 - [Optimize Performance](../../patterns/continuous-delivery.md) - Use trace data to improve latency
 - [Instrument Custom Spans](../../observability/distributed-tracing.md#application-instrumentation) - Add custom tracing

@@ -361,5 +361,4 @@ nodeExporter:
 
 - [Prometheus Official Documentation](https://prometheus.io/docs/)
 - [Prometheus Helm Chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus)
-- [View DORA Metrics](../../how-to/observability/view-dora-metrics-devlake.md)
 - [Unified Telemetry Explanation](../../explanation/observability/unified-telemetry.md)

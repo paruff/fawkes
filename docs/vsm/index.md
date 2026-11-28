@@ -27,7 +27,6 @@ See also:
 
 - [DORA Metrics Tutorial](../tutorials/6-measure-dora-metrics.md) - Getting started with DORA metrics
 - [DORA Metrics Playbook](../playbooks/dora-metrics-implementation.md) - Implementation guide
-- [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md) - Access dashboards
 
 ## Related Documentation
 

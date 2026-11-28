@@ -30,6 +30,10 @@ paruff/fawkes#2314, per-service panels: `tests/unit/test_dora_rules_and_dashboar
 requires the three `_by_app` rules in the live map and on the dashboard, and the
 queries are run through `promtool test rules`. Values still need a cluster.
 
+paruff/fawkes#2312, DevLake removal: `tests/unit/test_devlake_removed.py` finds no
+DevLake file or receiver, and `tests/unit/test_golden_path_dora_plane.py` runs the
+repointed DORA plane against a stub cluster. A real cluster run is still owed.
+
 ### Make commands
 
 Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` runs the hooks and needs no cluster; `make validate-cluster` checks manifests in a running one. `make lint` is an alias of `make validate`.

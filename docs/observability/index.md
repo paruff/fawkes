@@ -22,7 +22,6 @@ Fawkes provides comprehensive observability with metrics, logs, traces, and dash
 ### DORA Metrics
 
 - [Measure DORA Metrics Tutorial](../tutorials/6-measure-dora-metrics.md) - Getting started with DORA metrics
-- [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md) - Access and interpret DORA dashboards
 - [DORA Metrics Implementation Playbook](../playbooks/dora-metrics-implementation.md) - Comprehensive implementation guide
 
 ### Dashboards & Analytics

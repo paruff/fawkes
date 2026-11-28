@@ -5,6 +5,9 @@ description: MySQL database schema for DevLake DORA metrics storage
 
 # DORA Metrics Database Schema
 
+> **Historical.** DevLake was removed from Fawkes (#2312). DORA metrics come from
+> Prometheus recording rules: `platform/apps/prometheus/rules/dora.yml` (ADR-038).
+
 ## Overview
 
 The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creates and manages multiple tables to store raw data from various sources and calculated DORA metrics.
@@ -543,6 +546,5 @@ LIMIT 10;
 ## Related Documentation
 
 - [DORA Metrics API Reference](dora-metrics-api.md)
-- [View DORA Metrics in DevLake](../how-to/observability/view-dora-metrics-devlake.md)
 - [Architecture: DORA Metrics Service](../architecture.md#6-dora-metrics-service)
 - [ADR-016: DevLake DORA Strategy](../adr/ADR-016%20devlake-dora-strategy.md)

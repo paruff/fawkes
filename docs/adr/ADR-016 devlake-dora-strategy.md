@@ -1,5 +1,8 @@
 # ADR-016: DevLake for DORA Metrics Visualization
 
+> **Historical.** DevLake was removed from Fawkes (#2312). DORA metrics come from
+> Prometheus recording rules: `platform/apps/prometheus/rules/dora.yml` (ADR-038).
+
 ## Status
 
 **Superseded by

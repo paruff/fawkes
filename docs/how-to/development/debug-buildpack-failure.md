@@ -552,7 +552,6 @@ After resolving buildpack issues:
 
 - [Onboard Service to ArgoCD](../gitops/onboard-service-argocd.md) - Deploy your application
 - [Configure Ingress TLS](../networking/configure-ingress-tls.md) - Expose your service
-- [View DORA Metrics](../observability/view-dora-metrics-devlake.md) - Track deployment performance
 - [Troubleshooting Guide](../../troubleshooting.md) - Additional debugging help
 
 ## Related Documentation

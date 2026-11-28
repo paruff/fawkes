@@ -68,7 +68,6 @@ This section lists required tools, access, and setup for continuous discovery.
 | Survey Tool (TypeForm/Google Forms)   | N/A             | ✅       | For NPS and satisfaction surveys                                           |
 | Video Conferencing (Zoom/Teams)       | N/A             | ✅       | For user interviews                                                        |
 | Documentation Platform (MkDocs)       | 1.5+            | ✅       | For publishing insights                                                    |
-| DORA Metrics Dashboard                | N/A             | ✅       | [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md)  |
 
 ### Tools & Templates Setup
 
@@ -1726,7 +1725,6 @@ When implementing continuous discovery, refer to:
 - **Reference**: [Interview Guide Template](../research/templates/interview-guide.md)
 - **Reference**: [Journey Map Template](../research/templates/journey-map.md)
 - **Reference**: [Persona Template](../research/templates/persona.md)
-- **How-To**: [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md)
 - **ADR**: [ADR-020: Platform-as-Product Operating Model](../adr/ADR-020%20Platform-as-Product%20Operating%20Model.md)
 
 ### Troubleshooting
