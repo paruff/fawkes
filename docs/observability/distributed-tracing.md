@@ -147,7 +147,7 @@ Key features:
 Grafana is configured with trace correlation:
 
 ```text
-platform/apps/grafana/helm-release.yml
+platform/apps/prometheus/prometheus-application.yaml
 ```
 
 Data sources configured:

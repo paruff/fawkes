@@ -21,7 +21,7 @@ status. Dates are publication dates. "n/r" means not read. State is **current**,
 | DevLake | `platform/apps/devlake/` | 1.0.3-beta15 (2026-07-19), pre-release | v1.0.2 GA (2025-07-02); beta19 (2026-11-02) | n/r | behind #2391 |
 | external-dns | `platform/networking/external-dns/` | 1.15.0 (2024-09-11) | 1.24.0 (2026-11-19) | n/r | behind #2391 |
 | External Secrets | `platform/apps/external-secrets/` | 0.9.19 (2024-06-04) | 2.15.0 (2026-11-10) | n/r | behind #2373 |
-| Grafana chart | `platform/apps/grafana/helm-release.yml` (appears not applied) | `latest` | 10.5.15 (2026-01-30), deprecated; community 14.6.1 (2026-11-26) | chart deprecated | behind #2382 |
+| Grafana chart | none: Grafana comes from `kube-prometheus-stack` | removed (#2382): unapplied `helm-release.yml` with `latest` | n/a | n/a | current |
 | ingress-nginx | `platform/apps/ingress-nginx/` (2 files); `platform/networking/ingress-controller/` | 4.15.1 (2026-03-19), 4.11.3 | 4.15.1 (2026-03-19) | **upstream archived** | behind #2376 |
 | kube-prometheus-stack | `platform/apps/prometheus/`; `scripts/dev-up.sh` | 89.2.2 (2026-09-04), 67.9.0 | 94.2.0 (2026-11-27) | n/r | behind #1735 |
 | Kyverno | `platform/apps/kyverno/` | 3.3.3 (2026-11-11 in index) | 3.10.0 (2026-11-11) | app 1.13 not among current cycles | behind #2372 |
