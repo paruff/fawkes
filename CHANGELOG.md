@@ -5,6 +5,40 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.165](https://github.com/paruff/fawkes/compare/v0.3.164...v0.3.165) (2026-11-28)
+
+
+### Added
+
+* **observability:** DORA rules and panels per service ([#2314](https://github.com/paruff/fawkes/issues/2314)) ([#2406](https://github.com/paruff/fawkes/issues/2406)) ([b7175c4](https://github.com/paruff/fawkes/commit/b7175c4871ee381e993031583450eebd2823500a))
+* **observability:** lead time per service ([#2314](https://github.com/paruff/fawkes/issues/2314)) ([#2408](https://github.com/paruff/fawkes/issues/2408)) ([0f1a386](https://github.com/paruff/fawkes/commit/0f1a386220c102261efae266c99addce49a386c1))
+
+
+### Fixed
+
+* **design-system:** check suite tokens and use Red 700 danger ([#2311](https://github.com/paruff/fawkes/issues/2311)) ([#2405](https://github.com/paruff/fawkes/issues/2405)) ([66f48d9](https://github.com/paruff/fawkes/commit/66f48d9ac1fdadacf07ad26e1127dcd3596a15fe))
+* **infra:** raise Argo CD controller memory limit to 2Gi ([#2371](https://github.com/paruff/fawkes/issues/2371)) ([#2416](https://github.com/paruff/fawkes/issues/2416)) ([7f776a6](https://github.com/paruff/fawkes/commit/7f776a6b68fa80a8d3a4ef3522b917729ba86be7))
+* **observability:** one DORA dashboard fed by fawkes's rules ([#2310](https://github.com/paruff/fawkes/issues/2310)) ([#2400](https://github.com/paruff/fawkes/issues/2400)) ([ec4f918](https://github.com/paruff/fawkes/commit/ec4f918c06d4bbdaca195e9aae8beae95623e595))
+* **platform:** do not abort a healthy canary on empty data ([#2322](https://github.com/paruff/fawkes/issues/2322)) ([#2403](https://github.com/paruff/fawkes/issues/2403)) ([ac790b4](https://github.com/paruff/fawkes/commit/ac790b4311748040deda6e0279e85608e0ff6a66))
+* **platform:** remove unapplied Grafana release pinned to latest ([#2382](https://github.com/paruff/fawkes/issues/2382)) ([#2410](https://github.com/paruff/fawkes/issues/2410)) ([5ac1c17](https://github.com/paruff/fawkes/commit/5ac1c17abd16fa94f01da257f93f4f8efeb5e367))
+* **platform:** stop ApplicationSets deleting Applications ([#2323](https://github.com/paruff/fawkes/issues/2323)) ([#2364](https://github.com/paruff/fawkes/issues/2364)) ([2db8ef0](https://github.com/paruff/fawkes/commit/2db8ef0471c91d7b686f80ab85c85d25ed8d2243))
+
+
+### Docs
+
+* **adr:** amend ADR-039 to match what phase 1 built ([#2299](https://github.com/paruff/fawkes/issues/2299)) ([#2369](https://github.com/paruff/fawkes/issues/2369)) ([febe2c7](https://github.com/paruff/fawkes/commit/febe2c7b5aadb7d262bea0b35b2c297289a0ea63))
+* **adr:** inventory stack versions and propose ADR-040 ([#2366](https://github.com/paruff/fawkes/issues/2366)) ([#2395](https://github.com/paruff/fawkes/issues/2395)) ([e9afe1b](https://github.com/paruff/fawkes/commit/e9afe1bec31ed62f6fb33dc7e63054bace32ed40))
+* drop retired parts and names from docs and Makefile ([#2312](https://github.com/paruff/fawkes/issues/2312)) ([#2402](https://github.com/paruff/fawkes/issues/2402)) ([2dcf3cc](https://github.com/paruff/fawkes/commit/2dcf3ccfbba477783301cf907f32706d1de6b6a7))
+* **metrics:** document the Change Failure Rate method ([#1948](https://github.com/paruff/fawkes/issues/1948)) ([#2404](https://github.com/paruff/fawkes/issues/2404)) ([da5de9e](https://github.com/paruff/fawkes/commit/da5de9e7351a8fd2b17df95fbabbaf337d9970ca))
+
+
+### Chores
+
+* **platform:** pin Argo CD chart 10.20.0 everywhere ([#2371](https://github.com/paruff/fawkes/issues/2371)) ([#2409](https://github.com/paruff/fawkes/issues/2409)) ([cf5d8e8](https://github.com/paruff/fawkes/commit/cf5d8e84e1274be0a473641a0c501be270cba247))
+* **platform:** remove DevLake and its tests ([#2312](https://github.com/paruff/fawkes/issues/2312)) ([#2407](https://github.com/paruff/fawkes/issues/2407)) ([e192e54](https://github.com/paruff/fawkes/commit/e192e546d964e33f6c6fabd296bab7be6ec462c0))
+* **renovate:** add config for pins Dependabot cannot read ([#2386](https://github.com/paruff/fawkes/issues/2386)) ([#2399](https://github.com/paruff/fawkes/issues/2399)) ([e91aee3](https://github.com/paruff/fawkes/commit/e91aee391b8ce6fc9c8bc14e3993ba31f4ddd53a))
+* **scripts:** delete unused emit-dora-event.sh ([#2344](https://github.com/paruff/fawkes/issues/2344)) ([#2401](https://github.com/paruff/fawkes/issues/2401)) ([b54ac84](https://github.com/paruff/fawkes/commit/b54ac84174d3dcdd9ba0968746e3497917fe2059))
+
 ## [0.3.164](https://github.com/paruff/fawkes/compare/v0.3.163...v0.3.164) (2026-11-27)
 
 
