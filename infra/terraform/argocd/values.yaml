@@ -80,7 +80,8 @@ controller:
       memory: 256Mi
     limits:
       cpu: 1000m
-      memory: 1Gi
+      # 1Gi was OOMKilled syncing the whole platform after the upgrade to 3.6 (#2371).
+      memory: 2Gi
   # #2117: same gap as server.metrics below - port 8082 existed, nothing scraped it.
   metrics:
     enabled: true

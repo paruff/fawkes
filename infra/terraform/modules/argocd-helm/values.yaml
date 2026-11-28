@@ -64,7 +64,8 @@ controller:
       memory: 256Mi
     limits:
       cpu: 1000m
-      memory: 1Gi
+      # 1Gi was OOMKilled syncing the whole platform after the upgrade to 3.6 (#2371).
+      memory: 2Gi
 
 # Repo server configuration
 repoServer:

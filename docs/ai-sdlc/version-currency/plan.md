@@ -33,3 +33,7 @@ cluster; empty and range `chart_version` rejected.
 For the Grafana chart (#2382): nothing applied the removed file, so there is no
 cluster change to check. Verify that the guard passes without its exception and
 that the Loki data source assertions read the live Grafana configuration.
+
+For the Argo CD controller memory limit (#2371): on a cluster running the whole
+platform, sync every Application and check that the controller is not restarted
+and that its memory stays below the limit.
