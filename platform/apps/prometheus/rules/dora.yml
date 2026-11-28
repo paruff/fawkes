@@ -134,7 +134,8 @@ groups:
     expr: fawkes_repo_lead_time_hours{repo="paruff/fawkes"}
 
   # Per service (AC-BETA-05): the same signals split by Argo CD application.
-  # No per-service lead time: the Tekton duration metric has no service label.
+  # Lead time reads the `<service>-pipeline` name every golden-path template
+  # uses, and assumes the Argo CD application is named <service>.
   # Unit: per day.
   - record: dora:deployment_frequency:rate30d_by_app
     expr: |
@@ -150,6 +151,16 @@ groups:
       )
       /
       sum by (name) (increase(argocd_app_sync_total[30d]))
+
+  # Unit: hours. Same proxy as the total: pipeline duration, all-time buckets.
+  - record: dora:lead_time_hours:p50_30d_by_app
+    expr: |
+      label_replace(
+        histogram_quantile(0.5,
+          sum by (le, pipeline) (tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success", pipeline=~".+-pipeline"})
+        ) / 3600,
+        "name", "$1", "pipeline", "(.+)-pipeline"
+      )
 
   # Unit: hours, apps degraded now.
   - record: dora:fdrt_hours:current_by_app

@@ -1651,7 +1651,7 @@ data:
             "y": 44
           },
           "id": 700,
-          "title": "Per service (Argo CD application) \u2014 no per-service lead time yet",
+          "title": "Per service (Argo CD application)",
           "type": "row"
         },
         {
@@ -1664,7 +1664,7 @@ data:
           },
           "gridPos": {
             "h": 8,
-            "w": 8,
+            "w": 6,
             "x": 0,
             "y": 45
           },
@@ -1692,8 +1692,8 @@ data:
           },
           "gridPos": {
             "h": 8,
-            "w": 8,
-            "x": 8,
+            "w": 6,
+            "x": 6,
             "y": 45
           },
           "fieldConfig": {
@@ -1720,8 +1720,8 @@ data:
           },
           "gridPos": {
             "h": 8,
-            "w": 8,
-            "x": 16,
+            "w": 6,
+            "x": 12,
             "y": 45
           },
           "fieldConfig": {
@@ -1733,6 +1733,34 @@ data:
           "targets": [
             {
               "expr": "dora:fdrt_hours:current_by_app{name=~\"$app\"}",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 73,
+          "type": "timeseries",
+          "title": "Lead Time for Changes by service (hours)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 6,
+            "x": 18,
+            "y": 45
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "dora:lead_time_hours:p50_30d_by_app{name=~\"$app\"}",
               "legendFormat": "{{name}}",
               "refId": "A"
             }

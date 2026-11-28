@@ -34,6 +34,10 @@ paruff/fawkes#2312, DevLake removal: `tests/unit/test_devlake_removed.py` finds 
 DevLake file or receiver, and `tests/unit/test_golden_path_dora_plane.py` runs the
 repointed DORA plane against a stub cluster. A real cluster run is still owed.
 
+paruff/fawkes#2314, per-service lead time: the drift test requires the rule, its
+panel and the `<service>-pipeline` name in every golden-path template; the query is
+run through `promtool test rules`. Values still need a cluster.
+
 ### Make commands
 
 Per [the suite's rule for `make` commands](https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands). `make validate` runs the hooks and needs no cluster; `make validate-cluster` checks manifests in a running one. `make lint` is an alias of `make validate`.

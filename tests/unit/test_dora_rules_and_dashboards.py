@@ -225,10 +225,11 @@ def test_shared_rule_panels_name_their_unit() -> None:
     assert not missing, f"panel title must state the unit: {missing}"
 
 
-# AC-BETA-05: per service. Lead time is missing: the Tekton metric has no service label.
+# AC-BETA-05: per service, labelled `name` like the Argo CD application.
 PER_APP_RULES = {
     "dora:deployment_frequency:rate30d_by_app",
     "dora:change_failure_rate:ratio30d_by_app",
+    "dora:lead_time_hours:p50_30d_by_app",
     "dora:fdrt_hours:current_by_app",
 }
 
@@ -236,9 +237,20 @@ PER_APP_RULES = {
 def test_per_app_rules_are_live_grouped_by_app_and_shown() -> None:
     rules = {r["record"]: r["expr"] for r in _rules(ROOT, False) if "record" in r}
     assert PER_APP_RULES <= set(rules)
-    assert all("by (name)" in rules[name] for name in PER_APP_RULES)
+    lead_time = rules.pop("dora:lead_time_hours:p50_30d_by_app")
+    assert all("by (name)" in rules[name] for name in PER_APP_RULES & set(rules))
+    # Tekton has no service label: the name comes from the `<service>-pipeline` convention.
+    assert "label_replace(" in lead_time
+    assert '"name", "$1", "pipeline", "(.+)-pipeline"' in lead_time
     shown = {s for _, _, _, expr in dashboard_expressions(ROOT) for s in series_in_expr(expr)}
     assert PER_APP_RULES <= shown, f"no panel shows: {sorted(PER_APP_RULES - shown)}"
+
+
+def test_golden_path_pipelines_follow_the_name_the_lead_time_rule_reads() -> None:
+    skeletons = list((ROOT / "templates").glob("*/skeleton/tekton-pipeline.yaml"))
+    assert skeletons
+    for file in skeletons:
+        assert "kind: Pipeline\nmetadata:\n  name: ${{ values.name }}-pipeline\n" in file.read_text(), file
 
 
 # --- red paths on fixtures --------------------------------------------------
