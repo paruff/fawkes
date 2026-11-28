@@ -4,6 +4,7 @@ A custom config replaces the default rules. Without `useDefault` every scan that
 loads it passes while checking nothing.
 """
 
+import re
 import shutil
 import subprocess
 import tomllib
@@ -18,6 +19,17 @@ DEV_DEFAULT_FILES = [
     "platform/apps/postgresql/db-sonarqube-credentials.yaml",
     "platform/apps/tekton/eventlistener-github-skeleton.yaml",
 ]
+
+
+# Deleted files whose dev defaults are still in git history, which CI scans in full.
+HISTORY_ONLY_FILES = ["platform/apps/devlake/devlake-application.yaml"]  # removed in #2312
+
+
+@pytest.mark.parametrize("path", HISTORY_ONLY_FILES)
+def test_deleted_files_with_values_in_history_stay_allowlisted(path: str) -> None:
+    rules = tomllib.loads(CONFIG.read_text())["rules"]
+    patterns = [p for rule in rules for allow in rule.get("allowlists", []) for p in allow.get("paths", [])]
+    assert any(re.search(p, path) for p in patterns), f"{path} is no longer allowlisted"
 
 
 def test_default_rules_are_enabled() -> None:
