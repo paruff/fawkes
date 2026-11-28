@@ -5445,6 +5445,9 @@ queries are run through <code>promtool test rules</code>. Values still need a cl
 <p>paruff/fawkes#2312, DevLake removal: <code>tests/unit/test_devlake_removed.py</code> finds no
 DevLake file or receiver, and <code>tests/unit/test_golden_path_dora_plane.py</code> runs the
 repointed DORA plane against a stub cluster. A real cluster run is still owed.</p>
+<p>paruff/fawkes#2314, per-service lead time: the drift test requires the rule, its
+panel and the <code>&lt;service&gt;-pipeline</code> name in every golden-path template; the query is
+run through <code>promtool test rules</code>. Values still need a cluster.</p>
 <h3 id="make-commands">Make commands</h3>
 <p>Per <a href="https://github.com/paruff/uFawkes.dev/blob/main/docs/ai-sdlc/suite-release/spec.md#make-verification-commands">the suite's rule for <code>make</code> commands</a>. <code>make validate</code> runs the hooks and needs no cluster; <code>make validate-cluster</code> checks manifests in a running one. <code>make lint</code> is an alias of <code>make validate</code>.</p>
 <table>
