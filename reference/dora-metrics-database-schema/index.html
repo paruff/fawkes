@@ -1084,8 +1084,6 @@
       
         
       
-        
-      
     
     
     
@@ -1148,34 +1146,6 @@
     
   
     Trace Requests with Tempo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    View DORA Metrics
   
 
     
@@ -5717,6 +5687,10 @@
 
 
 <h1 id="dora-metrics-database-schema">DORA Metrics Database Schema</h1>
+<blockquote>
+<p><strong>Historical.</strong> DevLake was removed from Fawkes (#2312). DORA metrics come from
+Prometheus recording rules: <code>platform/apps/prometheus/rules/dora.yml</code> (ADR-038).</p>
+</blockquote>
 <h2 id="overview">Overview</h2>
 <p>The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creates and manages multiple tables to store raw data from various sources and calculated DORA metrics.</p>
 <p><strong>Database Name</strong>: <code>lake</code>
@@ -6186,7 +6160,6 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
 <li><a href="../dora-metrics-api/">DORA Metrics API Reference</a></li>
-<li><a href="../../how-to/observability/view-dora-metrics-devlake/">View DORA Metrics in DevLake</a></li>
 <li><a href="../architecture.md#6-dora-metrics-service">Architecture: DORA Metrics Service</a></li>
 <li><a href="../../adr/ADR-016%20devlake-dora-strategy/">ADR-016: DevLake DORA Strategy</a></li>
 </ul>
