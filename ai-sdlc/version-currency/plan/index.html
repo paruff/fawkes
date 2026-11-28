@@ -5364,6 +5364,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#verification-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5395,6 +5406,18 @@ Facts: <a href="../inventory/">inventory</a>, <a href="../automation/">automatio
 </ol>
 <p>Each upgrade is one component, verified on a live cluster (#2368), and removes its
 guard exception and updates its inventory row.</p>
+<h2 id="verification-strategy">Verification Strategy</h2>
+<p>Every upgrade, before merge:</p>
+<ul>
+<li><code>tests/unit/test_version_pins.py</code> passes with the component's exception removed.</li>
+<li>On a live cluster: install the old version, upgrade in place to the new one, and
+  check that what depends on it still works. Also check a fresh install by any
+  second install path. Record in the PR what was not covered.</li>
+</ul>
+<p>For Argo CD (#2371) that means: Terraform apply old then new; Applications Synced
+and tracked; metrics scraped from another namespace; the ApplicationSet
+<code>applicationsSync</code> override honoured; the <code>dev-up.sh</code> Argo CD block on a clean
+cluster; empty and range <code>chart_version</code> rejected.</p>
 
 
 
